@@ -14,14 +14,16 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 3. Correo electronico: 23308060610674@cetis61.edu.mx
 4. Grupo:5D
 5. Especialidad: Programacion
-6. ![FotoOmar](Imagen_OmarOrtega.jpg)
+6. Institucion: CETis 61
+7. ![FotoOmar](Imagen_OmarOrtega.jpg)
 ### Integrante 2:
 1. Nombre: Miguel Angel Roman Padilla 
 2. Numero control: 23308060610314
 3. Correo electronico:  23308060610314@cetis61.edu.mx
 4. Grupo:5D
 5. Especialidad:Programacion
-6. ![FotoMiguel](Imagen_MiguelPadilla.jpg)
+6. Institucion: CETis 61
+7. ![FotoMiguel](Imagen_MiguelPadilla.jpg)
 
 
   
