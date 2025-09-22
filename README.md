@@ -1,4 +1,4 @@
-# ODOVProyectoFinal
+# Documentacion de la aplicacion
 ## Proyecto Final 
   1.  Objetivo
   2.  Integrantes
