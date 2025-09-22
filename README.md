@@ -10,8 +10,8 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 ## Integrantes
 Nombre: Omar Daniel Ortega Valtierra
 Numero control: 23308060610674 
-Nombre:
-Numero control:
+Nombre: Miguel Angel Roman Padilla 
+Numero control: 23308060610314
 Grupo:5D
 Especialidad: Programacion 
 
