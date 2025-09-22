@@ -15,5 +15,5 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 5. Grupo:5D
 6. Especialidad: Programacion 
  
-## Analisis de la Base de Datos 
+## Analisis de la Base de Dato
 
