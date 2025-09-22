@@ -20,7 +20,7 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 2. Numero control: 23308060610314
 3. Correo electronico:  23308060610314@cetis61.edu.mx
 4. Grupo:5D
-5. Especialidad: Programacion
+5. Especialidad:Programacion
 6.![FotoMiguel](Imagen_MiguelPadilla.jpg)
 
 
