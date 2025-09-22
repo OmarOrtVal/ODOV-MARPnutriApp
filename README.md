@@ -4,16 +4,16 @@
   2.  Integrantes
   3.  Analisis de la base de datos
    
-## Objetivo 
+## Objetivo
 El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adaptarlas a nuestros programas 
 
 ## Integrantes
-Nombre: Omar Daniel Ortega Valtierra
-Numero control: 23308060610674 
-Nombre: Miguel Angel Roman Padilla 
-Numero control: 23308060610314
-Grupo:5D
-Especialidad: Programacion 
+1. Nombre: Omar Daniel Ortega Valtierra
+2. Numero control: 23308060610674
+3. Nombre: Miguel Angel Roman Padilla 
+4. Numero control: 23308060610314
+5. Grupo:5D
+6. Especialidad: Programacion 
  
 ## Analisis de la Base de Datos 
 
