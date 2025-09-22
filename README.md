@@ -5,7 +5,7 @@
   3.  Analisis de la base de datos
    
 ## Objetivo 
-
+El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adaptarlas a nuestros programas 
 
 ## Integrantes
 Nombre: Omar Daniel Ortega Valtierra
