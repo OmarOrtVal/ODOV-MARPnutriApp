@@ -8,14 +8,23 @@
 El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adaptarlas a nuestros programas 
 
 ## Integrantes
+### Integrante 1: 
 1. Nombre: Omar Daniel Ortega Valtierra
 2. Numero control: 23308060610674
-3. ![FotoOmar](Imagen_OmarOrtega.jpg)
-4. Nombre: Miguel Angel Roman Padilla 
-5. Numero control: 23308060610314
-6. ![FotoMiguel](Imagen_MiguelPadilla.jpg)
-7. Grupo:5D
-8. Especialidad: Programacion 
+3. Correo electronico: 23308060610674@cetis61.edu.mx
+4. Grupo:5D
+5. Especialidad: Programacion
+6. ![FotoOmar](Imagen_OmarOrtega.jpg)
+### Integrante 2:
+1. Nombre: Miguel Angel Roman Padilla 
+2. Numero control: 23308060610314
+3. Correo electronico:  23308060610314@cetis61.edu.mx
+4. Grupo:5D
+5. Especialidad: Programacion
+6.![FotoMiguel](Imagen_MiguelPadilla.jpg)
+
+
+  
  
 ## Analisis de la Base de Datos 
 
