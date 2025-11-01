@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="text-success fw-bold mb-4">Tarjeta de Salud - Perfil del Usuario</h3>
+
+<form class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" placeholder="Omar Daniel Ortega">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Edad</label>
+        <input type="number" class="form-control" min="16" max="60">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Sexo</label>
+        <select class="form-select">
+            <option>Masculino</option>
+            <option>Femenino</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Peso Actual (kg)</label>
+        <input type="number" class="form-control">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Altura (cm)</label>
+        <input type="number" class="form-control">
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Objetivo</label>
+        <select class="form-select">
+            <option>Perder peso</option>
+            <option>Mantener peso</option>
+            <option>Ganar masa muscular</option>
+        </select>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="text-success fw-bold mb-3">Seguimiento Nutricional</h3>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5 class="fw-bold">Calorías Diarias</h5>
+            <p>Consumidas: <strong>1800 kcal</strong> / Meta: <strong>2200 kcal</strong></p>
+            <div class="progress">
+                <div class="progress-bar bg-success" style="width: 80%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5 class="fw-bold">Macronutrientes</h5>
+            <ul>
+                <li>Proteínas: 90 g</li>
+                <li>Carbohidratos: 250 g</li>
+                <li>Grasas: 70 g</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <h5 class="fw-bold">Hidratación</h5>
+            <p>Agua consumida: 1.8 L / Meta: 2.5 L</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

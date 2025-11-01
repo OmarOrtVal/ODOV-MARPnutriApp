@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow p-4 text-center">
+    <h2 class="text-success fw-bold">Bienvenido a Nutri-Track, Omar</h2>
+    <p>Tu panel de control está ahora en el <strong>menú de navegación superior</strong> (Home, Perfil, Seguimiento, etc.).</p>
+    <p>Usa las pestañas para acceder a las distintas secciones de tu aplicación nutricional.</p>
+    <hr>
+    <p>Comienza revisando tu <strong>Tarjeta de Salud</strong> para verificar tus objetivos y datos.</p>
+    <a href="{{ url_for('perfil') }}" class="btn btn-success">
+        Ir a mi Perfil (Tarjeta de Salud) <i class="bi bi-arrow-right-circle"></i>
+    </a>
+</div>
+{% endblock %}
