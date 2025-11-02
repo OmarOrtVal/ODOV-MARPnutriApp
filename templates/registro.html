@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Registro{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="padding-top: 30px; padding-bottom: 30px;">
+    <div class="card p-3 shadow-lg" style="width: 420px; border-radius: 8px;">
+        
+        <div class="card-header text-center border-0 bg-white">
+            <h4 class="mb-1">Crea una cuenta</h4>
+            <p class="text mb-0">Es rápido y fácil.</p>
+        </div>
+
+        <div class="card-body pt-0">
+            {% if error %}
+            <div class="alert alert-danger text-center py-1">{{ error }}</div>
+            {% endif %}
+            <form method="POST">
+                <div class="row g-2 mb-3">
+                    <div class="col">
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <input type="email" id="contacto" name="contacto" class="form-control" placeholder="Correo electrónico" required>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Contraseña nueva" required>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" id="confirmaContraseña" name="confirmaContraseña" class="form-control" placeholder="Confirmación de contraseña" required>
+                </div>
+                
+                <label class="form-label fw-bold">Fecha de Nacimiento</label>
+                <div class="row mb-3">
+                    <div class="col-4"><input type="number" class="form-control" placeholder="Día" min="1" max="31" required></div>
+                    <div class="col-4"><input type="text" class="form-control" placeholder="Mes" required></div>
+                    <div class="col-4"><input type="number" class="form-control" placeholder="Año" required></div>
+                </div>
+
+                <label class="form-label fw-bold">Género</label>
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="form-check border p-2 flex-grow-1 me-2 rounded">
+                        <input type="radio" name="genero" value="Mujer" id="mujer" class="form-check-input float-end" required>
+                        <label class="form-check-label w-100" for="mujer">Mujer</label>
+                    </div>
+                    <div class="form-check border p-2 flex-grow-1 me-2 rounded">
+                        <input type="radio" name="genero" value="Hombre" id="hombre" class="form-check-input float-end">
+                        <label class="form-check-label w-100" for="hombre">Hombre</label>
+                    </div>
+                    <div class="form-check border p-2 flex-grow-1 rounded">
+                        <input type="radio" name="genero" value="Personalizado" id="personalizado" class="form-check-input float-end">
+                        <label class="form-check-label w-100" for="personalizado">Personalizado</label>
+                    </div>
+                </div>
+
+                <p class="small text-center">
+                    Al hacer clic en "Registrarte", aceptas nuestras
+                    <a href="#">Condiciones</a>, la
+                    <a href="#">Política de privacidad</a> y la
+                    <a href="#">Política de cookies</a>.
+                </p>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-lg btn-success w-50 mt-1">Registrarte</button>
+                    <a href="{{ url_for('login') }}" class="btn btn-lg btn-light w-100 mt-3 text-primary" role="button">¿Ya tienes una cuenta?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
