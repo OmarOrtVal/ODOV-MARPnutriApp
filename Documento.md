@@ -174,7 +174,7 @@ fácil de navegar y el registro se simplifica con el escáner de código de
 barras y los accesos rápidos. Se centra en hacer que la alimentación
 saludable sea simple.
 
--   ![Lifesum](static/img/lifesum.jpg)
+-  ![Lifesum](static/img/lifesum.jpg)
     **Modelo de Negocio**
 
 1.  **Freemium**. La versión gratuita permite el registro básico.
