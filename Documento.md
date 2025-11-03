@@ -250,14 +250,10 @@ contadores de un solo toque.
 
 -   Manejar o prevenir una condición de salud específica.
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta es importante para tener mas enfoque en cuanto a el
     uso que le da el usuario a las aplicaciones nutricionales
 
-> ![](media/image5.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta2](static/img/pregunta2.png)
 
 3.  ¿Qué tan importante es para ti hacer seguimiento detallado de
     Macronutrientes (Proteínas, Carbs, Grasas)? \*
@@ -268,14 +264,11 @@ contadores de un solo toque.
 
 -   Poco importante
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para entender que tan importante es este
     aspecto para el usuario
 
-> ![](media/image6.png){width="5.905555555555556in"
-> height="2.6798611111111112in"}
+-   ![Pregunta3](static/img/pregunta3.png)
+
 
 4.  ¿Qué tan importante es para ti hacer seguimiento de Micronutrientes
     (Vitaminas y Minerales)? \*
@@ -286,14 +279,11 @@ contadores de un solo toque.
 
 -   Poco importante
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para entender que tan importante es este
     aspecto para el usuario
 
-> ![](media/image7.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta4](static/img/pregunta4.png)
+
 
 5.  ¿Preferirías una aplicación que se centre en\...? \*
 
@@ -303,14 +293,10 @@ contadores de un solo toque.
 
 -   Ambos aspectos por igual.
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para darle el tema central o mas
     importante
 
-> ![](media/image8.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta5](static/img/pregunta5.png)
 
 6.  De las siguientes funciones, ¿cuál te resulta más útil? \*
 
@@ -320,15 +306,12 @@ contadores de un solo toque.
 
 -   Gráficos de progreso y contenido educativo.
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para saber que idea le parece mas
     atractiva al usuario en cuanto a graficas para que la aplicacion no
     parezca "aburrida" o poco intereante
 
-![](media/image9.png){width="5.905555555555556in"
-height="2.486111111111111in"}
+-   ![Pregunta6](static/img/pregunta6.png)
+
 
 7.  ¿Usarías una sección de \"Comunidad\" para compartir recetas y
     recibir apoyo de otros usuarios? \*
@@ -339,14 +322,11 @@ height="2.486111111111111in"}
 
 -   No, prefiero usar la aplicación en privado.
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada basandonos en una idea personal de la
     seccion "Comunidad" y si esto es atractivo a el usuario
 
-> ![](media/image10.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+   ![Pregunta7](static/img/pregunta7.png)
+
 
 8.  ¿Cuál es el factor más frustrante que has encontrado en otras
     aplicaciones de nutrición?
@@ -357,14 +337,12 @@ height="2.486111111111111in"}
 
 -   La personalización no se ajusta a mis necesidades reales.
 
-```{=html}
-<!-- -->
-```
+
 -   Esta pregnta fue realizada para que las dificultades encontradas en
     otras aplicaciones no se repitan en la nuestra aplicacion
 
-![](media/image11.png){width="5.905555555555556in"
-height="2.486111111111111in"}
+-   ![Pregunta8](static/img/pregunta8.png)
+
 
 9.  Si la aplicación recomienda una receta, ¿qué factor consideras el
     más importante?
@@ -375,15 +353,12 @@ height="2.486111111111111in"}
 
 -   Que utilice ingredientes básicos.
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para que el usuario nos diera una guia
     de que tipo de recetas les resultan mas atractivas o motivadoras
     para realizar en casa y por su cuenta propia
 
-> ![](media/image12.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta9](static/img/pregunta9.png)
+
 
 10. ¿Qué tipo de seguimiento de progreso te motiva más? \*
 
@@ -393,15 +368,12 @@ height="2.486111111111111in"}
 
 -   Gráficos del cumplimiento de hábitos (ej. agua, ejercicio).
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para colocar el tipo de graficos que le
     parezcan mas llamativos al usuario y asi tener una motivacion
     constante
 
-> ![](media/image13.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta10](static/img/pregunta10.png)
+
 
 11. Al registrar tus alimentos, ¿qué tipo de unidad de medida prefieres
     usar?
@@ -412,15 +384,11 @@ height="2.486111111111111in"}
 
 -   Porciones
 
-```{=html}
-<!-- -->
-```
 -   Esta pregunta fue realizada para tener la idea clara o base de lo
     que el ususario comprende mas facilmente las medidas en cuanto a
     alimentos para aplicarlos en la aplicacion
 
-![](media/image14.png){width="5.905555555555556in"
-height="2.486111111111111in"}
+-   ![Pregunta11](static/img/pregunta11.png)
 
 **RESUMEN DE LO QUE LOS USUARIOS BUSCAN EN UNA APLICACIÓN:**
 
