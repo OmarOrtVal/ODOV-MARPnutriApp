@@ -15,7 +15,7 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 4. Grupo:5D
 5. Especialidad: Programacion
 6. Institucion: CETis 61
-7. ![FotoOmar](Imagen_OmarOrtega.jpg)
+7. ![FotoOmar](static/img/Imagen_OmarOrtega.jpg)
 ### Integrante 2:
 1. Nombre: Miguel Angel Roman Padilla 
 2. Numero control: 23308060610314
@@ -23,7 +23,7 @@ El objetivo de este proyecto es aprender el uso de las APIs nutricionales y adap
 4. Grupo:5D
 5. Especialidad:Programacion
 6. Institucion: CETis 61
-7. ![FotoMiguel](Imagen_MiguelPadilla.jpg)
+7. ![FotoMiguel](static/img/Imagen_MiguelPadilla.jpg)
 
 
   
