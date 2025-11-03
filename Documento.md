@@ -116,8 +116,8 @@ simplificar aún más el proceso de registro.
 
 -   **Experiencia de Usuario**:
 
-![](media/image2.jpeg){width="4.394444444444445in"
-height="2.4722222222222223in"}Enfocada en la educación y el cambio de
+![noom](static/img/noom.jpg)
+Enfocada en la educación y el cambio de
 comportamiento a largo plazo. La interfaz es intuitiva, pero la
 experiencia se basa en la interacción con el coach y el contenido
 diario, lo que la hace más intensiva que una simple aplicación de
@@ -174,8 +174,8 @@ fácil de navegar y el registro se simplifica con el escáner de código de
 barras y los accesos rápidos. Se centra en hacer que la alimentación
 saludable sea simple.
 
--   ![](media/image3.jpeg){width="2.3652777777777776in"
-    height="2.8666666666666667in"}**Modelo de Negocio**,
+-   ![Lifesum](static/img/lifesum.jpg)
+    **Modelo de Negocio**,
 
 1.  **Freemium**. La versión gratuita permite el registro básico.
 
@@ -209,88 +209,16 @@ dietéticas específicas. Simplificación del registro de hábitos con
 contadores de un solo toque.
 
 ####### Tabla comparativa de Aplicaciones
+| Característica | **Lose It!** | **Noom** | **Lifesum** |
+|:----------------|:-------------|:----------|:-------------|
+| **Enfoque Principal** | Conteo de calorías y macros | Psicología del comportamiento | Calidad de dieta y planes visuales |
+| **Funcionalidades Clave** | Registro de alimentos, escáner, seguimiento de macros | Coaching humano, clasificación por colores | Planes de comidas, Life Score |
+| **Experiencia de Usuario** | Interfaz limpia y rápida | Enfocada en la educación y hábitos | Atractiva, moderna y visual |
+| **Modelo de Negocio** | Freemium | Suscripción | Freemium |
+| **Punto Fuerte** | Base de datos precisa y velocidad | Coaching y cambio de hábitos | Variedad de planes y diseño |
+| **Punto Débil** | Funciones Premium limitadas | Alto costo | Planes avanzados de pago |
+| **Innovación Destacada** | “Snap It” y conexión fitness | Psicología aplicada y colores | “Life Score™” personalizado |
 
-+------------------+--------------+------------------+----------------+
-| **               | **1. Lose    | **2. Noom**      | **3. Lifesum** |
-| Característica** | It!**        |                  |                |
-+==================+==============+==================+================+
-| **Enfoque        | Conteo de    | Psicología del   | Planes de      |
-| Principal**      | calorías y   | comportamiento y | dietas,        |
-|                  | macros       | hábitos a largo  | calidad de la  |
-|                  | (seguimiento | plazo.           | dieta (Life    |
-|                  | rápido de    |                  | Score) y       |
-|                  | datos).      |                  | estética       |
-|                  |              |                  | visual.        |
-+------------------+--------------+------------------+----------------+
-| *                | \- Registro  | \- Entrenamiento | \- Registro de |
-| *Funcionalidades | de alimentos | y coaching       | alimentos y    |
-| Clave**          | (amplia base | (humano).        | hábitos (agua, |
-|                  | de datos).   |                  | frutas).       |
-|                  |              | \- Lecciones     |                |
-|                  | \-           | diarias de       | \- Planes de   |
-|                  | Seguimiento  | ciencia del      | comidas        |
-|                  | de macros y  | comportamiento.  | predefinidas   |
-|                  | nutrientes.  |                  | (Keto, Ayuno,  |
-|                  |              | \- Clasificación | Mediterránea). |
-|                  | \- Escáner   | de alimentos por |                |
-|                  | de código de | colores (Verde,  | \- Life Score  |
-|                  | barras.      | Amarillo, Rojo). | para evaluar   |
-|                  |              |                  | la dieta.      |
-+------------------+--------------+------------------+----------------+
-| **Experiencia de | Interfaz     | Intuitiva, pero  | Diseño muy     |
-| Usuario**        | limpia, muy  | la experiencia   | atractivo,     |
-|                  | fácil y      | es más           | moderno y      |
-|                  | rápido de    | intensiva,       | visual.        |
-|                  | usar para el | basada en la     | Navegación     |
-|                  | registro     | interacción con  | sencilla con   |
-|                  | diario.      | el *coach* y las | accesos        |
-|                  |              | lecciones        | rápidos.       |
-|                  |              | diarias.         |                |
-+------------------+--------------+------------------+----------------+
-| **Modelo de      | **Freemium** | **Pago           | **Freemium**   |
-| Negocio**        | (Gratis para | (Suscripción)**. | (Gratis para   |
-|                  | seguimiento  | Ofrece una       | registro       |
-|                  | básico de    | prueba, pero el  | básico). La    |
-|                  | calorías).   | acceso al        | versión        |
-|                  | La versión   | *coaching*       | Premium        |
-|                  | Premium      | personal y al    | desbloquea     |
-|                  | desbloquea   | programa de      | todos los      |
-|                  | macros y     | estudios es de   | planes de      |
-|                  | funciones    | pago (más        | dietas,        |
-|                  | avanzadas.   | costoso).        | recetas y      |
-|                  |              |                  | análisis       |
-|                  |              |                  | avanzados.     |
-+------------------+--------------+------------------+----------------+
-| **Punto Fuerte   | **Velocidad  | **Enfoque        | **Variedad de  |
-| Principal**      | de           | Psicológico** y  | Planes de      |
-|                  | Registro** y | el acceso a      | Dieta** y un   |
-|                  | una base de  | **Coaching       | diseño         |
-|                  | datos de     | Humano** para    | agradable y    |
-|                  | alimentos    | cambiar hábitos. | motivador.     |
-|                  | extensa y    |                  |                |
-|                  | precisa.     |                  |                |
-+------------------+--------------+------------------+----------------+
-| **Punto Débil    | El           | **Alto Coste de  | La mayoría de  |
-| Principal**      | seguimiento  | Suscripción**.   | los planes de  |
-|                  | detallado de | Puede ser lento  | comidas        |
-|                  | macros y     | para usuarios    | populares y    |
-|                  | nutrientes   | que solo buscan  | herramientas   |
-|                  | requiere     | un registro      | de análisis    |
-|                  | pago.        | rápido.          | avanzado son   |
-|                  | Enfoque      |                  | de pago.       |
-|                  | limitado al  |                  |                |
-|                  | conteo de    |                  |                |
-|                  | calorías.    |                  |                |
-+------------------+--------------+------------------+----------------+
-| **Innovación     | Conexión con | Integración de   | **Life         |
-| Destacada**      | rastreadores | la **Ciencia del | Score™**       |
-|                  | de fitness y | Comportamiento** | (métrica de    |
-|                  | \"Snap It\"  | y el sistema de  | calidad de la  |
-|                  | (registro    | **Clasificación  | dieta) y       |
-|                  | por foto).   | por Colores** de | planes de      |
-|                  |              | alimentos.       | comidas        |
-|                  |              |                  | adaptables.    |
-+------------------+--------------+------------------+----------------+
 
 # Encuesta Realizada a los Usuarios 
 
@@ -307,9 +235,8 @@ contadores de un solo toque.
 
 -   Ninguna
 
-```{=html}
-<!-- -->
-```
+-   ![Pregunta](static/img/pregunta1.jpg)
+
 -   Esta pregunta es muy importante para usar las aplicaciones que usen
     mas comunmente los usuarios darnos una idea de la funcionalidad mas
     util y en caso de que haya otras aplicaciones poder darnos una vista
