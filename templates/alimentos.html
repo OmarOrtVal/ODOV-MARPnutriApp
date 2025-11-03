@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="text-success fw-bold mb-4">
+            <i class="bi bi-egg-fried me-2"></i>Registro de Alimentos
+        </h3>
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Agregar Nuevo Alimento</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('alimentos') }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Alimento</label>
+                            <input type="text" class="form-control" name="alimento" placeholder="Ej: Manzana, Pollo a la plancha..." required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Cantidad</label>
+                            <input type="number" class="form-control" name="cantidad" step="0.1" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Unidad</label>
+                            <select class="form-select" name="unidad">
+                                <option>gramos</option>
+                                <option>taza</option>
+                                <option>unidad</option>
+                                <option>cucharada</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Calorías</label>
+                            <input type="number" class="form-control" name="calorias" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Proteínas (g)</label>
+                            <input type="number" class="form-control" name="proteinas" step="0.1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Carbohidratos (g)</label>
+                            <input type="number" class="form-control" name="carbohidratos" step="0.1">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Grasas (g)</label>
+                            <input type="number" class="form-control" name="grasas" step="0.1">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success">Registrar Alimento</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Historial de Hoy</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Alimento</th>
+                                <th>Cantidad</th>
+                                <th>Calorías</th>
+                                <th>Proteínas</th>
+                                <th>Carbos</th>
+                                <th>Grasas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Avena</td>
+                                <td>50 g</td>
+                                <td>185</td>
+                                <td>6.5</td>
+                                <td>32</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Pechuga de pollo</td>
+                                <td>150 g</td>
+                                <td>165</td>
+                                <td>31</td>
+                                <td>0</td>
+                                <td>3.6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Micronutrientes Hoy</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Vitamina C <span class="badge bg-success">85%</span></label>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Hierro <span class="badge bg-warning">65%</span></label>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Calcio <span class="badge bg-primary">90%</span></label>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" style="width: 90%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Vitamina D <span class="badge bg-danger">40%</span></label>
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Alimentos Frecuentes</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action">Manzana - 52 cal</button>
+                    <button class="list-group-item list-group-item-action">Yogur griego - 59 cal</button>
+                    <button class="list-group-item list-group-item-action">Almendras - 579 cal/100g</button>
+                    <button class="list-group-item list-group-item-action">Huevo - 155 cal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

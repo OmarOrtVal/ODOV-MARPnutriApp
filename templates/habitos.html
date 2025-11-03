@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="text-success fw-bold mb-4">
+            <i class="bi bi-graph-up me-2"></i>Aprendizaje de Hábitos Saludables
+        </h3>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Mi Progreso de Hábitos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-success">75%</h4>
+                            <small>Hidratación</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-warning">60%</h4>
+                            <small>Alimentación</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-info">80%</h4>
+                            <small>Ejercicio</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h4 class="text-primary">90%</h4>
+                            <small>Sueño</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Hábitos para Desarrollar</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Beber 2L de agua al día</h6>
+                            <span class="badge bg-success">En progreso</span>
+                        </div>
+                        <p class="mb-1">Llevas 1.5L hoy. ¡Sigue así!</p>
+                        <small>Dificultad: Fácil</small>
+                    </div>
+                    
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Comer 5 porciones de frutas/verduras</h6>
+                            <span class="badge bg-warning">Por empezar</span>
+                        </div>
+                        <p class="mb-1">Hoy llevas 2 porciones.</p>
+                        <small>Dificultad: Media</small>
+                    </div>
+                    
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">30 minutos de ejercicio diario</h6>
+                            <span class="badge bg-success">En progreso</span>
+                        </div>
+                        <p class="mb-1">Completado: 20 minutos hoy.</p>
+                        <small>Dificultad: Media</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Consejos del Día</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="bi bi-lightbulb me-2"></i>Tip de Hidratación</h6>
+                    <p class="mb-0">Toma un vaso de agua 30 minutos antes de cada comida.</p>
+                </div>
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-apple me-2"></i>Alimentación Consciente</h6>
+                    <p class="mb-0">Mastica cada bocado 20 veces para mejor digestión.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Logros</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-trophy-fill text-warning me-3 fs-4"></i>
+                    <div>
+                        <h6 class="mb-0">Hidratación consistente</h6>
+                        <small>7 días seguidos</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-star-fill text-secondary me-3 fs-4"></i>
+                    <div>
+                        <h6 class="mb-0">Ejercicio regular</h6>
+                        <small>5 días esta semana</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
