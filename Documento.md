@@ -175,7 +175,7 @@ barras y los accesos rápidos. Se centra en hacer que la alimentación
 saludable sea simple.
 
 -   ![Lifesum](static/img/lifesum.jpg)
-    **Modelo de Negocio**,
+    **Modelo de Negocio**
 
 1.  **Freemium**. La versión gratuita permite el registro básico.
 
@@ -235,15 +235,12 @@ contadores de un solo toque.
 
 -   Ninguna
 
--   ![Pregunta](static/img/pregunta1.jpg)
-
 -   Esta pregunta es muy importante para usar las aplicaciones que usen
     mas comunmente los usuarios darnos una idea de la funcionalidad mas
     util y en caso de que haya otras aplicaciones poder darnos una vista
     mas amplia de que asi fuera
 
-> ![](media/image4.png){width="5.905555555555556in"
-> height="2.486111111111111in"}
+-   ![Pregunta1](static/img/pregunta1.png)
 
 2.  ¿Cuál es tu principal objetivo de salud/nutrición? \*
 
