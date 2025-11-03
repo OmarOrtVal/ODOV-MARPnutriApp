@@ -208,7 +208,7 @@ sus planes de comidas personalizadas basadas en objetivos y preferencias
 dietéticas específicas. Simplificación del registro de hábitos con
 contadores de un solo toque.
 
-####### Tabla comparativa de Aplicaciones
+###### Tabla comparativa de Aplicaciones
 | Característica | **Lose It!** | **Noom** | **Lifesum** |
 |:----------------|:-------------|:----------|:-------------|
 | **Enfoque Principal** | Conteo de calorías y macros | Psicología del comportamiento | Calidad de dieta y planes visuales |
