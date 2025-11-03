@@ -8,7 +8,7 @@ representan una herramienta clave para mejorar los hábitos alimenticios
 y el bienestar general, sin embargo, muchas presentan limitaciones en
 personalización, simplicidad o utilidad práctica.\
 Para desarrollar una propuesta más completa, se investigaron tres
-aplicaciones reconocidas ---Lose It!, Noom y Lifesum--- evaluando sus
+aplicaciones reconocidas Lose It!, Noom y Lifesum evaluando sus
 funcionalidades, experiencia de usuario, modelo de negocio y
 características innovadoras. Además, se diseñó y aplicó una encuesta
 dirigida a usuarios potenciales para identificar sus preferencias,
@@ -325,7 +325,7 @@ contadores de un solo toque.
 -   Esta pregunta fue realizada basandonos en una idea personal de la
     seccion "Comunidad" y si esto es atractivo a el usuario
 
-   ![Pregunta7](static/img/pregunta7.png)
+- ![Pregunta7](static/img/pregunta7.png)
 
 
 8.  ¿Cuál es el factor más frustrante que has encontrado en otras
