@@ -116,7 +116,7 @@ simplificar aún más el proceso de registro.
 
 -   **Experiencia de Usuario**:
 
-![noom](static/img/noom.jpg)
+- ![noom](static/img/noom.jpg)
 Enfocada en la educación y el cambio de
 comportamiento a largo plazo. La interfaz es intuitiva, pero la
 experiencia se basa en la interacción con el coach y el contenido
