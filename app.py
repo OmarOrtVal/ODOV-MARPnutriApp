@@ -51,11 +51,18 @@ def login():
         email = request.form.get('email_login')
         password = request.form.get('password_login')
 
+        
         if email == "omar@correo.com" and password == "1234":
             session['usuario'] = 'Omar'
             return redirect(url_for('index'))
+            
+        elif email == "angel@correo.com" and password == "1234": 
+            session['usuario'] = 'Ángel'
+            return redirect(url_for('index'))
+        
         else:
             return render_template('login.html', error="Usuario o contraseña incorrectos.")
+            
     return render_template('login.html')
 
 @app.route('/registro', methods=['GET', 'POST'])
@@ -66,9 +73,11 @@ def registro():
         email = request.form.get('contacto')
         contrasena = request.form.get('contrasena')
         confirma = request.form.get('confirmaContraseña')
+        
         if contrasena != confirma:
             return render_template('registro.html', error="Las contraseñas no coinciden.")
         return redirect(url_for('login'))
+        
     return render_template('registro.html')
     
 @app.route('/logout')
