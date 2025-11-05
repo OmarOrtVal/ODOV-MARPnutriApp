@@ -2,18 +2,19 @@
 {% block title %}Registro{% endblock %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center" style="padding-top: 30px; padding-bottom: 30px;">
-    <div class="card p-3 shadow-lg" style="width: 420px; border-radius: 8px;">
+<div class="d-flex justify-content-center align-items-center py-5">
+    <div class="card p-3 shadow-lg w-100 rounded-3" style="max-width: 420px;">
         
         <div class="card-header text-center border-0 bg-white">
-            <h4 class="mb-1">Crea una cuenta</h4>
-            <p class="text mb-0">Es rápido y fácil.</p>
+            <h4 class="mb-1 fw-bold text-success">Crea una cuenta</h4>
+            <p class="text-muted mb-0">Es rápido y fácil.</p>
         </div>
 
         <div class="card-body pt-0">
             {% if error %}
-            <div class="alert alert-danger text-center py-1">{{ error }}</div>
+            <div class="alert alert-danger text-center py-1" role="alert">{{ error }}</div>
             {% endif %}
+            
             <form method="POST">
                 <div class="row g-2 mb-3">
                     <div class="col">
@@ -59,16 +60,16 @@
                     </div>
                 </div>
 
-                <p class="small text-center">
+                <p class="small text-center text-muted">
                     Al hacer clic en "Registrarte", aceptas nuestras
-                    <a href="#">Condiciones</a>, la
-                    <a href="#">Política de privacidad</a> y la
-                    <a href="#">Política de cookies</a>.
+                    <a href="#" class="text-success fw-bold">Condiciones</a>, la
+                    <a href="#" class="text-success fw-bold">Política de privacidad</a> y la
+                    <a href="#" class="text-success fw-bold">Política de cookies</a>.
                 </p>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-lg btn-success w-50 mt-1">Registrarte</button>
-                    <a href="{{ url_for('login') }}" class="btn btn-lg btn-light w-100 mt-3 text-primary" role="button">¿Ya tienes una cuenta?</a>
+                    <button type="submit" class="btn btn-lg btn-success w-75 mt-2">Registrarte</button>
+                    <a href="{{ url_for('login') }}" class="btn btn-lg btn-outline-success w-75 mt-3" role="button">¿Ya tienes una cuenta?</a>
                 </div>
             </form>
         </div>
