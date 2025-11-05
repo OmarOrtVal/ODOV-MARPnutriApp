@@ -20,21 +20,19 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    {% if session.get('usuario') %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('alimentos') }}">Registro de Alimentos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('seguimiento') }}">Seguimiento</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('recetas') }}">Recetas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('habitos') }}">Hábitos Saludables</a></li>
-                    {% endif %}
                 </ul>
 
                 {% if session.get('usuario') %}
                     <span class="navbar-text text-white me-3">
                         Hola, <strong>{{ session['usuario'] }}</strong>
                     </span>
-                    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Cerrar Sesión</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm me-2 text-white">Cerrar Sesión</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm me-2">Iniciar Sesión</a>
                     <a href="{{ url_for('registro') }}" class="btn btn-outline-light btn-sm me-2">Registro</a>

@@ -5,9 +5,7 @@ app.secret_key = 'nutri_track_secret_key'
 
 @app.route('/')
 def index():
-    if 'usuario' in session:
-        return render_template('index.html', usuario=session['usuario'])
-    return redirect(url_for('login'))
+        return render_template('index.html')
 
 @app.route('/perfil')
 def perfil():
@@ -17,21 +15,15 @@ def perfil():
 
 @app.route('/seguimiento')
 def seguimiento():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    return render_template('seguimiento.html', usuario=session['usuario'])
+    return render_template('seguimiento.html')
 
 @app.route('/recetas')
 def recetas():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    return render_template('recetas.html', usuario=session['usuario'])
+    return render_template('recetas.html')
 
 @app.route('/habitos')
 def habitos():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    return render_template('habitos.html', usuario=session['usuario'])
+    return render_template('habitos.html')
 
 @app.route('/alimentos', methods=['GET', 'POST'])
 def alimentos():

@@ -2,7 +2,7 @@
 {% block title %}Iniciar Sesión{% endblock %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center min-vh-100">
+<div class="d-flex justify-content-center align-items-center">
     
     <div class="card p-4 shadow-lg w-100" style="max-width: 400px;">
         <div class="card-header text-center border-0 bg-white">
@@ -14,7 +14,7 @@
             <div class="alert alert-danger text-center py-1" role="alert">{{ error }}</div>
             {% endif %}
             
-            <form method="POST" action="{{ url_for('login') }}">            
+            <form method="POST" action="{{ url_for('login') }}">
                 <div class="mb-3">
                     <label for="email_login" class="form-label">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email_login" name="email_login" placeholder="ejemplo@correo.com" required>
@@ -26,8 +26,7 @@
                 
                 <div class="d-grid gap-2 mt-4">
                     <button type="submit" class="btn btn-success">Entrar</button>
-                </div>               
-                
+                </div>                 
                 <p class="text-center mt-3 small">
                     ¿No tienes cuenta? <a href="{{ url_for('registro') }}" class="text-success fw-bold">Regístrate aquí</a>
                 </p>

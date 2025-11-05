@@ -1,27 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="card shadow p-4 text-center">
-    <h2 class="text-success fw-bold">Bienvenido a Nutri-Track, Omar</h2>
+    <h2 class="text-success fw-bold">Bienvenido a Nutri-Track</h2>
     <p>Tu panel de control está ahora en el <strong>menú de navegación superior</strong> (Home, Perfil, Seguimiento, etc.).</p>
     <p>Usa las pestañas para acceder a las distintas secciones de tu aplicación nutricional.</p>
+    <p><strong>Seguridad de Datos:</strong> Énfasis en cómo se manejan y protegen los datos de salud sensibles (cumplimiento de GDPR, HIPAA u otras normativas locales relevantes).</p>
+    <p><strong>Descargo de Responsabilidad:</strong> Claro y visible: La aplicación es una herramienta de apoyo digital y no sustituye la consulta, el diagnóstico o el tratamiento proporcionado por un profesional de la salud con licencia (Nutriólogo, Médico, Psicólogo).
+    Se recomienda encarecidamente la consulta profesional antes de iniciar cualquier cambio significativo en la dieta o estilo de vida.</p>
+    <p>Acerca de y Legal, Información de Misión/Visión, Equipo, Política de Privacidad, Términos de Uso inicia sesion.</p>
+
     </div>
-<div class="card shadow p-4 text-center mt-2">
-    <p>Comienza revisando tu <strong>Tarjeta de Salud</strong> para verificar tus objetivos y datos.</p>
-    <a href="{{ url_for('perfil') }}" class="btn btn-success">
-        Ir a mi Perfil (Tarjeta de Salud) 
-    </a>
-        </div>
-<div class="card shadow p-4 text-center mt-2">
-    <p>Te invitamos a ver las <strong>Recetas saludables</strong> disponibles en la aplicacion.</p>
-    <a href="{{ url_for('recetas') }}" class="btn btn-success">
-        Ir a Recetario
-    </a>
-</div>
-<div class="card shadow p-4 text-center mt-2">
-    <p>Te invitamos a ver los <strong>Habitos saludables</strong> que puedes realizar.</p>
-    <a href="{{ url_for('habitos') }}" class="btn btn-success">
-        Ir a ver Habitos Saludables
-    </a>
-</div>
 
 {% endblock %}
