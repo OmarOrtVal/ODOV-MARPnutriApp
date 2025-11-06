@@ -29,15 +29,21 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('calculadoras') }}">Calculadoras</a></li>
                 </ul>
 
-                {% if session.get('usuario') %}
-                    <span class="navbar-text text-white me-3">
-                        Hola, <strong>{{ session['usuario'] }}</strong>
-                    </span>
-                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm me-2 text-white">Cerrar Sesión</a>
-                {% else %}
-                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm me-2">Iniciar Sesión</a>
-                    <a href="{{ url_for('registro') }}" class="btn btn-outline-light btn-sm me-2">Registro</a>
-                {% endif %}
+                {% if current_user %} 
+                        <li>
+                            <span class="nav-link text-white fw-bold me-4">Hola, {{ user_nombre }}</span>
+                        </li>
+                        <li>
+                            <a  class="btn btn-outline-danger btn-sm me-4 text-white" href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a  class="btn btn-outline-light btn-sm me-4" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-outline-light btn-sm me-4" href="{{ url_for('registro') }}">Registro</a>
+                        </li>
+                    {% endif %}
             </div>
         </div>
     </nav>

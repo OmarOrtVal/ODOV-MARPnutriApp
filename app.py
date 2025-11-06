@@ -1,7 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session,flash
 
 app = Flask(__name__)
 app.secret_key = 'nutri_track_secret_key'
+
+USERS = [
+    {
+        'nombre': 'Omar', 
+        'apellido': 'Ortega',
+        'email': 'omar@correo.com',
+        'password': '1234'  
+    },
+    {
+        'nombre': 'Angel', 
+        'apellido': 'Roman',
+        'email': 'angel@correo.com',
+        'password': '1234'  
+    }
+]
+
+@app.context_processor
+def inject_user_data():
+    current_user = 'user_email' in session
+    user_nombre = session.get('user_nombre', 'Invitado')
+    return dict(current_user=current_user, user_nombre=user_nombre)
 
 @app.route('/')
 def index():
@@ -9,6 +30,10 @@ def index():
 
 @app.route('/perfil')
 def perfil():
+    if 'user_email' not in session:
+        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
+        return redirect(url_for('login'))
+        
     return render_template('perfil.html')
 
 @app.route('/seguimiento')
@@ -35,19 +60,23 @@ def alimentos():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email_login')
-        password = request.form.get('password_login')
-
-        if email == "omar@correo.com" and password == "1234":
-            session['usuario'] = 'Omar'
-            return redirect(url_for('index'))
-            
-        elif email == "angel@correo.com" and password == "1234": 
-            session['usuario'] = 'Ángel'
-            return redirect(url_for('index'))
+        email_login = request.form.get('email_login')
+        password_login = request.form.get('password_login')
         
+        user_found = None
+        for user in USERS:
+            if user['email'] == email_login and user['password'] == password_login:
+                user_found = user
+                break
+        
+        if user_found:
+            session['user_email'] = user_found['email']
+            session['user_nombre'] = user_found['nombre']
+            flash(f"¡Bienvenido de nuevo, {user_found['nombre']}!", 'success')
+            return redirect(url_for('index'))
         else:
-            return render_template('login.html', error="Usuario o contraseña incorrectos.")
+            flash('Correo electrónico o contraseña incorrectos.', 'danger')
+            return redirect(url_for('login'))
             
     return render_template('login.html')
 
@@ -68,8 +97,10 @@ def registro():
 
 @app.route('/logout')
 def logout():
-    session.pop('usuario', None)
-    return redirect(url_for('login'))
+    session.pop('user_email', None)
+    session.pop('user_nombre', None) 
+    flash('Has cerrado sesión exitosamente.', 'info')
+    return redirect(url_for('login'))  
 
 @app.route('/calculadoras')
 def calculadoras():
