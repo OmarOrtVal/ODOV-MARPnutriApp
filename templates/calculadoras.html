@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <h3 class="text-success fw-bold mb-4 text-center">Módulo de Calculadoras</h3>
+
+  <div class="dropdown mb-4 text-center">
+    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      Selecciona una calculadora
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="{{ url_for('imc') }}">Índice de Masa Corporal (IMC)</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('tmb') }}">Tasa Metabólica Basal (TMB)</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('gct') }}">Gasto Calórico Total (GCT)</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('peso_ideal') }}">Peso Corporal Ideal</a></li>
+    </ul>
+  </div>
+
+  <div class="card p-4 shadow-sm text-center">
+    <p class="text-muted mb-0">Selecciona una calculadora del menú para comenzar.</p>
+  </div>
+</div>
+
+{% endblock %}

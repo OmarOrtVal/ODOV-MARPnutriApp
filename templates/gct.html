@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-success fw-bold mb-4">Calculadora de Gasto Calórico Total (GCT)</h3>
+
+  <form class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">TMB (kcal/día)</label>
+      <input type="number" class="form-control" placeholder="Ej. 1600">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Nivel de actividad física</label>
+      <select class="form-select">
+        <option>Sedentario (x1.2)</option>
+        <option>Ligero (x1.375)</option>
+        <option>Moderado (x1.55)</option>
+        <option>Intenso (x1.725)</option>
+        <option>Muy intenso (x1.9)</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-success">Calcular GCT</button>
+    </div>
+  </form>
+
+  <div class="mt-4 card p-3 shadow-sm">
+    <h5>Resultado:</h5>
+    <p><strong>Gasto calórico total:</strong> -- kcal/día</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,17 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = 'nutri_track_secret_key' 
+app.secret_key = 'nutri_track_secret_key'
 
 @app.route('/')
 def index():
-        return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/perfil')
 def perfil():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    return render_template('perfil.html', usuario=session['usuario'])
+    return render_template('perfil.html')
 
 @app.route('/seguimiento')
 def seguimiento():
@@ -26,16 +24,13 @@ def habitos():
     return render_template('habitos.html')
 
 @app.route('/alimentos', methods=['GET', 'POST'])
-def alimentos():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    
+def alimentos():    
     if request.method == 'POST':
         alimento = request.form.get('alimento')
         calorias = request.form.get('calorias')
         return redirect(url_for('alimentos'))
     
-    return render_template('alimentos.html', usuario=session['usuario'])
+    return render_template('alimentos.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -43,7 +38,6 @@ def login():
         email = request.form.get('email_login')
         password = request.form.get('password_login')
 
-        
         if email == "omar@correo.com" and password == "1234":
             session['usuario'] = 'Omar'
             return redirect(url_for('index'))
@@ -71,11 +65,32 @@ def registro():
         return redirect(url_for('login'))
         
     return render_template('registro.html')
-    
+
 @app.route('/logout')
 def logout():
     session.pop('usuario', None)
     return redirect(url_for('login'))
+
+@app.route('/calculadoras')
+def calculadoras():
+    return render_template('calculadoras.html')
+
+@app.route('/imc')
+def imc():
+    return render_template('imc.html')
+
+@app.route('/tmb')
+def tmb():
+    return render_template('tmb.html')
+
+@app.route('/gct')
+def gct():
+    return render_template('gct.html')
+
+@app.route('/peso_ideal')
+def peso_ideal():
+    return render_template('peso_ideal.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

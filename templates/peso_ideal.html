@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-success fw-bold mb-4">Calculadora de Peso Corporal Ideal</h3>
+
+  <form class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Altura (cm)</label>
+      <input type="number" class="form-control" placeholder="Ej. 175">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Sexo</label>
+      <select class="form-select">
+        <option>Masculino</option>
+        <option>Femenino</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-success">Calcular Peso Ideal</button>
+    </div>
+  </form>
+
+  <div class="mt-4 card p-3 shadow-sm">
+    <h5>Resultado:</h5>
+    <p><strong>Peso ideal:</strong> -- kg</p>
+  </div>
+</div>
+{% endblock %}

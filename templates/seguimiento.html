@@ -1,105 +1,119 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="text-success fw-bold mb-4">Seguimiento Nutricional</h3>
 
-<div class="row">
-    <div class="col-md-4 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h5 class="fw-bold">Calorías Diarias</h5>
-            <p>Consumidas: <strong>1800 kcal</strong> / Meta: <strong>2200 kcal</strong></p>
-            <div class="progress">
-                <div class="progress-bar bg-success" style="width: 80%"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h5 class="fw-bold">Macronutrientes</h5>
-            <ul class="mb-0">
-                <li>Proteínas: 90 g</li>
-                <li>Carbohidratos: 250 g</li>
-                <li>Grasas: 70 g</li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h5 class="fw-bold">Hidratación</h5>
-            <p>Agua consumida: 1.8 L / Meta: 2.5 L</p>
-            <div class="progress">
-                <div class="progress-bar bg-info" style="width: 72%"></div>
-            </div>
-        </div>
+<div class="container mt-4">
+
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <div>
+    Necesitas iniciar sesión para acceder a esta función.
     </div>
 </div>
 
-<div class="row mt-4">
+<div class="opacity-75 text-muted">
+
+    <h3 class="text-success fw-bold mb-4">Seguimiento Nutricional</h3>
+
+    <div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h5 class="fw-bold">Calorías Diarias</h5>
+        <p>Consumidas: <strong>1800 kcal</strong> / Meta: <strong>2200 kcal</strong></p>
+        <div class="progress">
+            <div class="progress-bar bg-success" style="width: 80%"></div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h5 class="fw-bold">Macronutrientes</h5>
+        <ul class="mb-0">
+            <li>Proteínas: 90 g</li>
+            <li>Carbohidratos: 250 g</li>
+            <li>Grasas: 70 g</li>
+        </ul>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h5 class="fw-bold">Hidratación</h5>
+        <p>Agua consumida: 1.8 L / Meta: 2.5 L</p>
+        <div class="progress">
+            <div class="progress-bar bg-info" style="width: 72%"></div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="row mt-4">
     <div class="col-12">
-        <h4 class="text-success fw-bold mb-3">
-            Seguimiento de Micronutrientes
-        </h4>
+        <h4 class="text-success fw-bold mb-3">Seguimiento de Micronutrientes</h4>
     </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h6 class="fw-bold text-primary">Vitamina C</h6>
-            <p>85 mg / 90 mg recomendados</p>
-            <div class="progress">
-                <div class="progress-bar bg-primary" style="width: 94%"></div>
-            </div>
-            <small class="text-muted">Fuentes: Cítricos, pimientos</small>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h6 class="fw-bold text-warning">Hierro</h6>
-            <p>14 mg / 18 mg recomendados</p>
-            <div class="progress">
-                <div class="progress-bar bg-warning" style="width: 78%"></div>
-            </div>
-            <small class="text-muted">Fuentes: Carnes, espinacas</small>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h6 class="fw-bold text-info">Calcio</h6>
-            <p>900 mg / 1000 mg recomendados</p>
-            <div class="progress">
-                <div class="progress-bar bg-info" style="width: 90%"></div>
-            </div>
-            <small class="text-muted">Fuentes: Lácteos, almendras</small>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card p-3 shadow-sm">
-            <h6 class="fw-bold text-success">Vitamina D</h6>
-            <p>400 UI / 600 UI recomendados</p>
-            <div class="progress">
-                <div class="progress-bar bg-success" style="width: 67%"></div>
-            </div>
-            <small class="text-muted">Fuentes: Sol, pescados</small>
-        </div>
-    </div>
-</div>
 
-<div class="row mt-4">
+    <div class="col-md-3 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h6 class="fw-bold text-primary">Vitamina C</h6>
+        <p>85 mg / 90 mg recomendados</p>
+        <div class="progress">
+            <div class="progress-bar bg-primary" style="width: 94%"></div>
+        </div>
+        <small class="text-muted">Fuentes: Cítricos, pimientos</small>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h6 class="fw-bold text-warning">Hierro</h6>
+        <p>14 mg / 18 mg recomendados</p>
+        <div class="progress">
+            <div class="progress-bar bg-warning" style="width: 78%"></div>
+        </div>
+        <small class="text-muted">Fuentes: Carnes, espinacas</small>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h6 class="fw-bold text-info">Calcio</h6>
+        <p>900 mg / 1000 mg recomendados</p>
+        <div class="progress">
+            <div class="progress-bar bg-info" style="width: 90%"></div>
+        </div>
+        <small class="text-muted">Fuentes: Lácteos, almendras</small>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3 shadow-sm">
+        <h6 class="fw-bold text-success">Vitamina D</h6>
+        <p>400 UI / 600 UI recomendados</p>
+        <div class="progress">
+            <div class="progress-bar bg-success" style="width: 67%"></div>
+        </div>
+        <small class="text-muted">Fuentes: Sol, pescados</small>
+        </div>
+    </div>
+    </div>
+
+    <div class="row mt-4">
     <div class="col-12">
         <div class="card shadow-sm">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">Recomendaciones Basadas en tus Micronutrientes</h5>
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Recomendaciones Basadas en tus Micronutrientes</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+            <strong>Vitamina D baja:</strong> Considera aumentar el consumo de pescados grasos o exponerte al sol 15 minutos al día.
             </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
-                    <strong>Vitamina D baja:</strong> Considera aumentar el consumo de pescados grasos o exponerte al sol 15 minutos al día.
-                </div>
-                <div class="alert alert-info">
-                    <strong>Excelente nivel de calcio:</strong> ¡Sigue consumiendo lácteos y vegetales verdes!
-                </div>
+            <div class="alert alert-info">
+            <strong>Excelente nivel de calcio:</strong> ¡Sigue consumiendo lácteos y vegetales verdes!
             </div>
         </div>
+        </div>
     </div>
+    </div>
+
 </div>
+
+</div>
+
 {% endblock %}
