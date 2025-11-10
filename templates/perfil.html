@@ -3,48 +3,42 @@
 
 <div class="container mt-4">
 
-<div class="alert alert-danger d-flex align-items-center" role="alert">
-    <div>
-    Necesitas iniciar sesión para acceder a esta función.
-    </div>
-</div>
-
 <h3 class="text-success fw-bold mb-4">Tarjeta de Salud - Perfil del Usuario</h3>
 
-<form class="row g-3 text-muted">
+<form class="row g-3" method="POST" action="{{ url_for('perfil') }}">
     <div class="col-md-6">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" placeholder="Omar Daniel Ortega" disabled>
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ datos.nombre if datos.nombre else '' }}">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Edad</label>
-        <input type="number" class="form-control" min="16" max="60" disabled>
+        <label for="edad" class="form-label">Edad</label>
+        <input type="number" class="form-control" id="edad" name="edad" value="{{ datos.edad if datos.edad else '' }}">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Sexo</label>
-        <select class="form-select" disabled>
-            <option>Masculino</option>
-            <option>Femenino</option>
+        <label for="sexo" class="form-label">Sexo</label>
+        <select class="form-select" id="sexo" name="sexo">
+            <option value="Masculino" {% if datos.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+            <option value="Femenino" {% if datos.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
         </select>
     </div>
     <div class="col-md-3">
-        <label class="form-label">Peso Actual (kg)</label>
-        <input type="number" class="form-control" disabled>
+        <label for="peso" class="form-label">Peso Actual (kg)</label>
+        <input type="number" class="form-control" id="peso" name="peso" step="0.1" value="{{ datos.peso if datos.peso else '' }}">
     </div>
     <div class="col-md-3">
-        <label class="form-label">Altura (cm)</label>
-        <input type="number" class="form-control" disabled>
+        <label for="altura" class="form-label">Altura (cm)</label>
+        <input type="number" class="form-control" id="altura" name="altura" value="{{ datos.altura if datos.altura else '' }}">
     </div>
     <div class="col-md-6">
-        <label class="form-label">Objetivo</label>
-        <select class="form-select" disabled>
-            <option>Perder peso</option>
-            <option>Mantener peso</option>
-            <option>Ganar masa muscular</option>
+        <label for="objetivo" class="form-label">Objetivo</label>
+        <select class="form-select" id="objetivo" name="objetivo">
+            <option value="Perder peso" {% if datos.objetivo == 'Perder peso' %}selected{% endif %}>Perder peso</option>
+            <option value="Mantener peso" {% if datos.objetivo == 'Mantener peso' %}selected{% endif %}>Mantener peso</option>
+            <option value="Ganar masa muscular" {% if datos.objetivo == 'Ganar masa muscular' %}selected{% endif %}>Ganar masa muscular</option>
         </select>
     </div>
     <div class="col-12">
-        <button type="button" class="btn btn-success" disabled>Guardar Cambios</button>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
     </div>
 </form>
 
