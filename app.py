@@ -28,13 +28,46 @@ def inject_user_data():
 def index():
     return render_template('index.html')
 
-@app.route('/perfil')
+@app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
     if 'user_email' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
+    elif 'datos_usuario' not in globals():
+        global datos_usuario
+        datos_usuario = {
+            'nombre': '',
+            'edad': '',
+            'sexo': 'Masculino', 
+            'peso': '',
+            'altura': '',
+            'objetivo': 'Mantener peso'  
+        }
+    
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        edad = request.form.get('edad')
+        sexo = request.form.get('sexo')
+        peso = request.form.get('peso')
+        altura = request.form.get('altura')
+        objetivo = request.form.get('objetivo')
         
-    return render_template('perfil.html')
+        if not nombre or not edad or not peso or not altura:
+            flash('Error: Todos los campos son obligatorios.', 'danger')
+        else:
+            datos_usuario = {
+                'nombre': nombre,
+                'edad': int(edad),
+                'sexo': sexo,
+                'peso': float(peso),
+                'altura': float(altura),
+                'objetivo': objetivo
+            }
+            
+            flash('¡Cambios guardados con éxito!', 'success')
+            print("Datos Recibidos:", datos_usuario)
+
+    return render_template('perfil.html', datos=datos_usuario)
 
 @app.route('/seguimiento')
 def seguimiento():
