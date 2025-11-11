@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3 class="text-success fw-bold mb-4">Módulo de Educación e Información</h3>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Artículos Educativos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for article in articles %}
+                        <a href="{{ url_for('articulo', article_id=article.id) }}" class="list-group-item list-group-item-action">
+                            <h6 class="mb-1 text-success">{{ article.titulo }}</h6>
+                            <p class="mb-1 text-muted">{{ article.categoria }}</p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Recursos Descargables</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>
+                            Planilla de ejercicios básicos para complementar la nutrición
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>
+                            Guía de porciones alimentarias
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-calendar-week me-2"></i>
+                            Planificador semanal de comidas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

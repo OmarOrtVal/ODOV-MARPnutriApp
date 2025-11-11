@@ -3,70 +3,93 @@
 
 <div class="container mt-4">
 
-<div class="alert alert-danger d-flex align-items-center" role="alert">
-    <div>
-    Necesitas iniciar sesión para acceder a esta función.
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Registro de Alimentos</h5>
+        </div>
+        <div class="card-body text-muted">
+            <form method="POST">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Alimento</label>
+                        <input type="text" name="alimento" class="form-control" placeholder="Ej: Manzana, Pollo a la plancha..." required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" name="cantidad" class="form-control" placeholder="0" step="0.1" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Unidad</label>
+                        <select name="unidad" class="form-select">
+                            <option>gramos</option>
+                            <option>taza</option>
+                            <option>unidad</option>
+                            <option>cucharada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Calorías</label>
+                        <input type="number" name="calorias" class="form-control" placeholder="Ej: 95" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Proteínas (g)</label>
+                        <input type="number" name="proteinas" class="form-control" step="0.1">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Carbohidratos (g)</label>
+                        <input type="number" name="carbohidratos" class="form-control" step="0.1">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Grasas (g)</label>
+                        <input type="number" name="grasas" class="form-control" step="0.1">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success w-100">Registrar Alimento</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div class="card shadow-sm mb-5">
-    <div class="card-header bg-success text-white">
-    <h5 class="mb-0">Registro de Alimentos</h5>
+    <div class="card shadow-sm opacity-75">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Historial de Hoy</h5>
+        </div>
+        <div class="card-body">
+            {% if alimentos %}
+                <table class="table table-striped text-center align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Alimento</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                            <th>Calorías</th>
+                            <th>Proteínas</th>
+                            <th>Carbohidratos</th>
+                            <th>Grasas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in alimentos %}
+                        <tr>
+                            <td>{{ a.alimento }}</td>
+                            <td>{{ a.cantidad }}</td>
+                            <td>{{ a.unidad }}</td>
+                            <td>{{ a.calorias }}</td>
+                            <td>{{ a.proteinas }}</td>
+                            <td>{{ a.carbohidratos }}</td>
+                            <td>{{ a.grasas }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center text-secondary">
+                    <em>No hay alimentos registrados todavía.</em>
+                </div>
+            {% endif %}
+        </div>
     </div>
-    <div class="card-body text-muted">
-    <form>
-        <div class="row g-3">
-        <div class="col-md-6">
-        <label class="form-label">Alimento</label>
-            <input type="text" class="form-control" placeholder="Ej: Manzana, Pollo a la plancha..." disabled>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Cantidad</label>
-            <input type="number" class="form-control" placeholder="0" step="0.1" disabled>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Unidad</label>
-            <select class="form-select" disabled>
-            <option>gramos</option>
-            <option>taza</option>
-            <option>unidad</option>
-            <option>cucharada</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Calorías</label>
-            <input type="number" class="form-control" placeholder="Ej: 95" disabled>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Proteínas (g)</label>
-            <input type="number" class="form-control" step="0.1" disabled>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Carbohidratos (g)</label>
-            <input type="number" class="form-control" step="0.1" disabled>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Grasas (g)</label>
-            <input type="number" class="form-control" step="0.1" disabled>
-        </div>
-        <div class="col-12">
-            <button type="button" class="btn btn-success w-100" disabled>Registrar Alimento</button>
-        </div>
-        </div>
-    </form>
-    </div>
-</div>
-
-<div class="card shadow-sm opacity-75">
-    <div class="card-header bg-light">
-    <h5 class="mb-0">Historial de Hoy</h5>
-    </div>
-    <div class="card-body">
-    <div class="text-center text-secondary">
-        <em>Inicia sesión para ver tus alimentos registrados.</em>
-    </div>
-    </div>
-</div>
 
 </div>
 

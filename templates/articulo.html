@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">{{ article.titulo }}</h4>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Categoría: {{ article.categoria }}</p>
+            <div class="article-content">
+                <p>{{ article.contenido }}</p>
+
+                {% if article.id == 1 %}
+                <h5>¿Qué debes buscar en una etiqueta?</h5>
+                <ul>
+                    <li><strong>Tamaño de porción:</strong> La base de todos los cálculos</li>
+                    <li><strong>Calorías:</strong> Energía que proporciona</li>
+                    <li><strong>Nutrientes clave:</strong> Proteínas, carbohidratos, grasas</li>
+                    <li><strong>% Valor Diario:</strong> Porcentaje basado en una dieta de 2000 calorías</li>
+                </ul>
+                {% elif article.id == 2 %}
+                <h5>Ejemplos de mitos comunes</h5>
+                <ul>
+                    <li>“Dejar de comer carbohidratos hace bajar de peso rápido”</li>
+                    <li>“Todas las grasas son malas”</li>
+                    <li>“Comer de noche engorda”</li>
+                </ul>
+                <p>La clave es mantener equilibrio y basarse en evidencia científica, no en tendencias virales.</p>
+                {% elif article.id == 3 %}
+                <h5>Funciones principales:</h5>
+                <ul>
+                    <li><strong>Proteínas:</strong> Construcción y reparación de tejidos.</li>
+                    <li><strong>Carbohidratos:</strong> Fuente primaria de energía.</li>
+                    <li><strong>Grasas:</strong> Regulación hormonal y transporte de vitaminas.</li>
+                </ul>
+                {% elif article.id == 4 %}
+                <h5>Beneficios de la hidratación y la fibra:</h5>
+                <ul>
+                    <li>Previenen el estreñimiento y mejoran la digestión.</li>
+                    <li>Favorecen la saciedad y el control del apetito.</li>
+                    <li>Ayudan a regular el colesterol y la glucosa.</li>
+                </ul>
+                <p>Se recomienda consumir al menos 2 litros de agua y 25-30g de fibra al día.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{{ url_for('educacion') }}" class="btn btn-success">Volver a Artículos</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
