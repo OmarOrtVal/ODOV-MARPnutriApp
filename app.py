@@ -197,12 +197,137 @@ def logout():
 def calculadoras():
     return render_template('calculadoras.html')
 
-@app.route('/imc')
+@app.route('/imc', methods=['GET', 'POST'])
 def imc():
+    if request.method == 'POST':
+        try:
+            peso = float(request.form.get('peso'))
+            altura_cm = float(request.form.get('altura'))
+            edad = int(request.form.get('edad'))
+            sexo = request.form.get('sexo')
+            
+            altura_m = altura_cm / 100
+            
+            imc = peso / (altura_m ** 2)
+            
+            if imc < 18.5:
+                clasificacion = "Bajo peso"
+                categoria = "text-warning"
+                recomendacion = "Consulta a un nutricionista para ganar peso de forma saludable."
+            elif 18.5 <= imc < 25:
+                clasificacion = "Peso normal"
+                categoria = "text-success"
+                recomendacion = "¡Excelente! Mantén tus hábitos saludables."
+            elif 25 <= imc < 30:
+                clasificacion = "Sobrepeso"
+                categoria = "text-warning"
+                recomendacion = "Considera realizar más actividad física y ajustar tu alimentación."
+            elif 30 <= imc < 35:
+                clasificacion = "Obesidad grado I"
+                categoria = "text-danger"
+                recomendacion = "Recomendable consultar con un profesional de la salud."
+            elif 35 <= imc < 40:
+                clasificacion = "Obesidad grado II"
+                categoria = "text-danger"
+                recomendacion = "Es importante buscar atención médica especializada."
+            else:
+                clasificacion = "Obesidad grado III"
+                categoria = "text-danger"
+                recomendacion = "Consulta urgente con un médico especialista."
+            
+            
+            return render_template('imc.html', 
+                                imc_resultado=f"{imc:.2f}", 
+                                clasificacion=clasificacion,
+                                categoria=categoria,
+                                recomendacion=recomendacion,
+                                datos_formulario={
+                                    'peso': peso,
+                                    'altura': altura_cm,
+                                    'edad': edad,
+                                    'sexo': sexo
+                                })
+            
+        except (ValueError, TypeError, ZeroDivisionError):
+            flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
+            return render_template('imc.html')
+    
     return render_template('imc.html')
 
-@app.route('/tmb')
+@app.route('/tmb', methods=['GET', 'POST'])
 def tmb():
+    if request.method == 'POST':
+        try:
+            edad = int(request.form.get('edad'))
+            peso = float(request.form.get('peso'))
+            altura_cm = float(request.form.get('altura'))
+            sexo = request.form.get('sexo')
+            actividad = request.form.get('actividad')
+            
+            if sexo == 'Masculino':
+                tmb = (10 * peso) + (6.25 * altura_cm) - (5 * edad) + 5
+            else:
+                tmb = (10 * peso) + (6.25 * altura_cm) - (5 * edad) - 161
+            
+            factores_actividad = {
+                'sedentario': {'factor': 1.2, 'descripcion': 'Poco o ningún ejercicio'},
+                'ligero': {'factor': 1.375, 'descripcion': 'Ejercicio ligero 1-3 días/semana'},
+                'moderado': {'factor': 1.55, 'descripcion': 'Ejercicio moderado 3-5 días/semana'},
+                'intenso': {'factor': 1.725, 'descripcion': 'Ejercicio intenso 6-7 días/semana'},
+                'muy_intenso': {'factor': 1.9, 'descripcion': 'Atletas profesionales, entrenamiento muy intenso'}
+            }
+            
+            if actividad in factores_actividad:
+                factor = factores_actividad[actividad]['factor']
+                calorias_actividad = tmb * factor
+                descripcion_actividad = factores_actividad[actividad]['descripcion']
+            else:
+                factor = 1.2
+                calorias_actividad = tmb * factor
+                descripcion_actividad = factores_actividad['sedentario']['descripcion']
+                actividad = 'sedentario'
+            
+            niveles_actividad = {}
+            for key, value in factores_actividad.items():
+                niveles_actividad[key] = {
+                    'calorias': tmb * value['factor'],
+                    'descripcion': value['descripcion'],
+                    'factor': value['factor']
+                }
+            
+            if tmb < 1200:
+                recomendacion = "Tu metabolismo basal es bajo. Consulta con un nutricionista para un plan personalizado."
+            elif 1200 <= tmb < 1800:
+                recomendacion = "Metabolismo normal. Mantén una dieta equilibrada y actividad física regular."
+            else:
+                recomendacion = "Metabolismo alto. Asegúrate de consumir suficientes nutrientes para mantener tu energía."
+            
+            objetivo_mantener = calorias_actividad
+            objetivo_bajar = calorias_actividad * 0.85  
+            objetivo_subir = calorias_actividad * 1.15  
+            
+            return render_template('tmb.html', 
+                                tmb_resultado=f"{tmb:.0f}",
+                                calorias_actividad=f"{calorias_actividad:.0f}",
+                                descripcion_actividad=descripcion_actividad,
+                                factor_actividad=factor,
+                                niveles_actividad=niveles_actividad,
+                                recomendacion=recomendacion,
+                                objetivo_mantener=f"{objetivo_mantener:.0f}",
+                                objetivo_bajar=f"{objetivo_bajar:.0f}",
+                                objetivo_subir=f"{objetivo_subir:.0f}",
+                                datos_formulario={
+                                    'edad': edad,
+                                    'peso': peso,
+                                    'altura': altura_cm,
+                                    'sexo': sexo,
+                                    'actividad': actividad
+                                })
+            
+        except (ValueError, TypeError):
+            flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
+            return render_template('tmb.html')
+    
     return render_template('tmb.html')
 
 @app.route('/gct')

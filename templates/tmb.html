@@ -3,34 +3,152 @@
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-4">Calculadora de Tasa Metabólica Basal (TMB)</h3>
 
-  <form class="row g-3">
-    <div class="col-md-4">
+  <form class="row g-3" method="POST" action="{{ url_for('tmb') }}">
+    <div class="col-md-3">
       <label class="form-label">Edad (años)</label>
-      <input type="number" class="form-control">
+      <input type="number" class="form-control" name="edad" placeholder="Ej. 30" min="15" max="120" required
+            value="{{ datos_formulario.edad if datos_formulario }}">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label class="form-label">Peso (kg)</label>
-      <input type="number" class="form-control">
+      <input type="number" class="form-control" name="peso" placeholder="Ej. 70" step="0.1" min="1" required
+            value="{{ datos_formulario.peso if datos_formulario }}">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label class="form-label">Altura (cm)</label>
-      <input type="number" class="form-control">
+      <input type="number" class="form-control" name="altura" placeholder="Ej. 170" step="0.1" min="1" required
+            value="{{ datos_formulario.altura if datos_formulario }}">
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <label class="form-label">Sexo</label>
-      <select class="form-select">
-        <option>Masculino</option>
-        <option>Femenino</option>
+      <select class="form-select" name="sexo" required>
+        <option value="">Seleccionar...</option>
+        <option value="Masculino" {% if datos_formulario and datos_formulario.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+        <option value="Femenino" {% if datos_formulario and datos_formulario.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
       </select>
     </div>
+    
+    <div class="col-md-12">
+      <label class="form-label">Nivel de Actividad Física</label>
+      <select class="form-select" name="actividad" required>
+        <option value="">Seleccionar tu nivel de actividad...</option>
+        <option value="sedentario" {% if datos_formulario and datos_formulario.actividad == 'sedentario' %}selected{% endif %}>
+          Sedentario (poco o ningún ejercicio)
+        </option>
+        <option value="ligero" {% if datos_formulario and datos_formulario.actividad == 'ligero' %}selected{% endif %}>
+          Ligero (ejercicio 1-3 días/semana)
+        </option>
+        <option value="moderado" {% if datos_formulario and datos_formulario.actividad == 'moderado' %}selected{% endif %}>
+          Moderado (ejercicio 3-5 días/semana)
+        </option>
+        <option value="intenso" {% if datos_formulario and datos_formulario.actividad == 'intenso' %}selected{% endif %}>
+          Intenso (ejercicio 6-7 días/semana)
+        </option>
+        <option value="muy_intenso" {% if datos_formulario and datos_formulario.actividad == 'muy_intenso' %}selected{% endif %}>
+          Muy Intenso (atleta profesional)
+        </option>
+      </select>
+    </div>
+    
     <div class="col-12">
-      <button class="btn btn-success">Calcular TMB</button>
+      <button type="submit" class="btn btn-success">Calcular TMB y Necesidades Calóricas</button>
     </div>
   </form>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-3" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if tmb_resultado %}
+  <div class="mt-4">
+    <div class="card p-3 shadow-sm mb-4">
+      <h5 class="mb-3">Tus Resultados Personalizados:</h5>
+      
+      <div class="row mb-4">
+        <div class="col-md-2">
+          <strong>Edad:</strong><br>{{ datos_formulario.edad }} años
+        </div>
+        <div class="col-md-2">
+          <strong>Peso:</strong><br>{{ datos_formulario.peso }} kg
+        </div>
+        <div class="col-md-2">
+          <strong>Altura:</strong><br>{{ datos_formulario.altura }} cm
+        </div>
+        <div class="col-md-2">
+          <strong>Sexo:</strong><br>{{ datos_formulario.sexo }}
+        </div>
+        <div class="col-md-4">
+          <strong>Actividad:</strong><br>{{ descripcion_actividad }}
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="alert alert-info">
+            <h6 class="alert-heading">Tasa Metabólica Basal (TMB)</h6>
+            <p class="mb-0 fs-4 fw-bold">{{ tmb_resultado }} kcal/día</p>
+            <small class="text-muted">Calorías que quemas en reposo completo</small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="alert alert-success">
+            <h6 class="alert-heading">Calorías para Mantener Peso</h6>
+            <p class="mb-0 fs-4 fw-bold">{{ calorias_actividad }} kcal/día</p>
+            <small class="text-muted">TMB × {{ factor_actividad }} (factor de actividad)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <strong>💡 Recomendación:</strong> {{ recomendacion }}
+    </div>
+
+    <div class="card p-3 shadow-sm">
+      <h6 class="mb-3">Todos los Niveles de Actividad:</h6>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Nivel de Actividad</th>
+              <th>Descripción</th>
+              <th>Factor</th>
+              <th>Calorías/día</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, nivel in niveles_actividad.items() %}
+            <tr {% if datos_formulario.actividad == key %}class="table-success"{% endif %}>
+              <td><strong>{{ key|title }}</strong></td>
+              <td>{{ nivel.descripcion }}</td>
+              <td>{{ nivel.factor }}</td>
+              <td>{{ "{:.0f}".format(nivel.calorias) }} kcal</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% else %}
   <div class="mt-4 card p-3 shadow-sm">
     <h5>Resultado:</h5>
     <p><strong>TMB:</strong> -- kcal/día</p>
+    <p><strong>Calorías de mantenimiento:</strong> -- kcal/día</p>
+  </div>
+  {% endif %}
+
+  <div class="mt-4 card p-3 bg-light">
+    <h6 class="text-success">¿Qué es la Tasa Metabólica Basal (TMB)?</h6>
+    <p class="mb-2">La TMB es la cantidad mínima de energía que tu cuerpo necesita para mantener sus funciones vitales en reposo (respiración, circulación, temperatura corporal, etc.).</p>
+    
+    <p class="mb-0"><small class="text-muted">💡 Para perder peso: consume 15% menos calorías. Para ganar peso: consume 15% más calorías.</small></p>
   </div>
 </div>
 {% endblock %}

@@ -3,24 +3,124 @@
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-4">Calculadora de Índice de Masa Corporal (IMC)</h3>
 
-  <form class="row g-3">
+  <form class="row g-3" method="POST" action="{{ url_for('imc') }}">
     <div class="col-md-6">
       <label class="form-label">Peso (kg)</label>
-      <input type="number" class="form-control" placeholder="Ej. 70">
+      <input type="number" class="form-control" name="peso" placeholder="Ej. 70" step="0.1" min="1" required 
+            value="{{ datos_formulario.peso if datos_formulario }}">
     </div>
     <div class="col-md-6">
       <label class="form-label">Altura (cm)</label>
-      <input type="number" class="form-control" placeholder="Ej. 170">
+      <input type="number" class="form-control" name="altura" placeholder="Ej. 170" step="0.1" min="1" required
+            value="{{ datos_formulario.altura if datos_formulario }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Edad</label>
+      <input type="number" class="form-control" name="edad" placeholder="Ej. 30" min="1" max="120" required
+            value="{{ datos_formulario.edad if datos_formulario }}">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Sexo</label>
+      <select class="form-select" name="sexo" required>
+        <option value="">Seleccionar...</option>
+        <option value="Masculino" {% if datos_formulario and datos_formulario.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+        <option value="Femenino" {% if datos_formulario and datos_formulario.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
+      </select>
     </div>
     <div class="col-12">
-      <button class="btn btn-success">Calcular IMC</button>
+      <button type="submit" class="btn btn-success">Calcular IMC</button>
     </div>
   </form>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-3" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if imc_resultado %}
+  <div class="mt-4 card p-3 shadow-sm">
+    <h5 class="mb-3">Resultado:</h5>
+    
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <strong>Peso:</strong> {{ datos_formulario.peso }} kg
+      </div>
+      <div class="col-md-3">
+        <strong>Altura:</strong> {{ datos_formulario.altura }} cm
+      </div>
+      <div class="col-md-3">
+        <strong>Edad:</strong> {{ datos_formulario.edad }} años
+      </div>
+      <div class="col-md-3">
+        <strong>Sexo:</strong> {{ datos_formulario.sexo }}
+      </div>
+    </div>
+    
+    <p><strong>Tu IMC:</strong> <span class="{{ categoria }} fw-bold fs-5">{{ imc_resultado }}</span></p>
+    <p><strong>Clasificación:</strong> <span class="{{ categoria }} fw-bold">{{ clasificacion }}</span></p>
+    
+    <div class="alert {{ 'alert-success' if categoria == 'text-success' else 'alert-warning' if categoria == 'text-warning' else 'alert-danger' }} mt-3">
+      <strong>Recomendación:</strong> {{ recomendacion }}
+    </div>
+    
+    <div class="mt-4">
+      <h6 class="mb-2">Referencia de IMC para adultos:</h6>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>IMC</th>
+              <th>Clasificación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr {% if clasificacion == "Bajo peso" %}class="table-warning"{% endif %}>
+              <td>Menos de 18.5</td>
+              <td>Bajo peso</td>
+            </tr>
+            <tr {% if clasificacion == "Peso normal" %}class="table-success"{% endif %}>
+              <td>18.5 - 24.9</td>
+              <td>Peso normal</td>
+            </tr>
+            <tr {% if clasificacion == "Sobrepeso" %}class="table-warning"{% endif %}>
+              <td>25 - 29.9</td>
+              <td>Sobrepeso</td>
+            </tr>
+            <tr {% if clasificacion == "Obesidad grado I" %}class="table-danger"{% endif %}>
+              <td>30 - 34.9</td>
+              <td>Obesidad grado I</td>
+            </tr>
+            <tr {% if clasificacion == "Obesidad grado II" %}class="table-danger"{% endif %}>
+              <td>35 - 39.9</td>
+              <td>Obesidad grado II</td>
+            </tr>
+            <tr {% if clasificacion == "Obesidad grado III" %}class="table-danger"{% endif %}>
+              <td>40 o más</td>
+              <td>Obesidad grado III</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% else %}
   <div class="mt-4 card p-3 shadow-sm">
     <h5>Resultado:</h5>
     <p><strong>Tu IMC:</strong> --</p>
     <p><strong>Clasificación:</strong> --</p>
+  </div>
+  {% endif %}
+
+  <div class="mt-4 card p-3 bg-light">
+    <h6 class="text-success">¿Qué es el IMC?</h6>
+    <p class="mb-2">El Índice de Masa Corporal (IMC) es una medida que relaciona tu peso con tu altura.</p>
+    <p class="mb-1">Fórmula: IMC = peso (kg) / altura² (m)</p>
+    <p class="mb-1">Nota: El IMC es una referencia general. Factores como masa muscular, edad y sexo pueden influir en la interpretación.</p>
   </div>
 </div>
 {% endblock %}
