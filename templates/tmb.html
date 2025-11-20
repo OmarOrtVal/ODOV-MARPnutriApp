@@ -3,6 +3,14 @@
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-4">Calculadora de Tasa Metabólica Basal (TMB)</h3>
 
+  <div class="mt-4 card p-3 bg-light">
+    <h6 class="text-success">¿Qué es la Tasa Metabólica Basal (TMB)?</h6>
+    <p class="mb-2">La TMB es la cantidad mínima de energía (calorías) que tu cuerpo necesita en reposo absoluto (después de un ayuno y descanso) para mantener las funciones vitales esenciales, como la respiración, la circulación sanguínea, el mantenimiento de la temperatura corporal, y el funcionamiento de órganos como el corazón, los pulmones y el cerebro.</p>
+    <p class="mb-0">    Se ve influenciada por factores como la edad, el sexo, la altura y la composición corporal (la masa muscular gasta más energía que la grasa).</p>
+    <p class="mb-0">Para perder peso: consume 15% menos calorías.</p>
+      <p class="mb-0">Para ganar peso: consume 15% más calorías.</p>
+  </div>
+
   <form class="row g-3" method="POST" action="{{ url_for('tmb') }}">
     <div class="col-md-3">
       <label class="form-label">Edad (años)</label>
@@ -107,7 +115,7 @@
     </div>
 
     <div class="alert alert-warning">
-      <strong>💡 Recomendación:</strong> {{ recomendacion }}
+      <strong>Recomendación:</strong> {{ recomendacion }}
     </div>
 
     <div class="card p-3 shadow-sm">
@@ -144,11 +152,5 @@
   </div>
   {% endif %}
 
-  <div class="mt-4 card p-3 bg-light">
-    <h6 class="text-success">¿Qué es la Tasa Metabólica Basal (TMB)?</h6>
-    <p class="mb-2">La TMB es la cantidad mínima de energía que tu cuerpo necesita para mantener sus funciones vitales en reposo (respiración, circulación, temperatura corporal, etc.).</p>
-    
-    <p class="mb-0"><small class="text-muted">💡 Para perder peso: consume 15% menos calorías. Para ganar peso: consume 15% más calorías.</small></p>
-  </div>
 </div>
 {% endblock %}

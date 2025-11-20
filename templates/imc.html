@@ -3,6 +3,13 @@
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-4">Calculadora de Índice de Masa Corporal (IMC)</h3>
 
+  <div class="mt-4 card p-3 bg-light">
+    <h6 class="text-success">¿Qué es el IMC?</h6>
+    <p class="mb-2">El IMC es una fórmula matemática que relaciona la masa (peso) y la estatura (talla) de un individuo. Se utiliza como un método de evaluación sencillo y económico para estimar la categoría de peso de una persona, ya sea bajo peso, peso saludable, sobrepeso u obesidad.</p>
+    <p class="mb-1">Fórmula: IMC = peso (kg) / altura² (m)</p>
+    <p class="mb-1">El IMC no mide directamente la grasa corporal ni distingue entre masa muscular y masa grasa, por lo que puede tener limitaciones en personas muy musculosas o en adultos mayores.</p>
+  </div>
+
   <form class="row g-3" method="POST" action="{{ url_for('imc') }}">
     <div class="col-md-6">
       <label class="form-label">Peso (kg)</label>
@@ -116,11 +123,5 @@
   </div>
   {% endif %}
 
-  <div class="mt-4 card p-3 bg-light">
-    <h6 class="text-success">¿Qué es el IMC?</h6>
-    <p class="mb-2">El Índice de Masa Corporal (IMC) es una medida que relaciona tu peso con tu altura.</p>
-    <p class="mb-1">Fórmula: IMC = peso (kg) / altura² (m)</p>
-    <p class="mb-1">Nota: El IMC es una referencia general. Factores como masa muscular, edad y sexo pueden influir en la interpretación.</p>
-  </div>
 </div>
 {% endblock %}
