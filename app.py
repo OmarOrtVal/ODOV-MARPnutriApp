@@ -262,66 +262,27 @@ def tmb():
             peso = float(request.form.get('peso'))
             altura_cm = float(request.form.get('altura'))
             sexo = request.form.get('sexo')
-            actividad = request.form.get('actividad')
             
             if sexo == 'Masculino':
                 tmb = (10 * peso) + (6.25 * altura_cm) - (5 * edad) + 5
             else:
                 tmb = (10 * peso) + (6.25 * altura_cm) - (5 * edad) - 161
             
-            factores_actividad = {
-                'sedentario': {'factor': 1.2, 'descripcion': 'Poco o ningún ejercicio'},
-                'ligero': {'factor': 1.375, 'descripcion': 'Ejercicio ligero 1-3 días/semana'},
-                'moderado': {'factor': 1.55, 'descripcion': 'Ejercicio moderado 3-5 días/semana'},
-                'intenso': {'factor': 1.725, 'descripcion': 'Ejercicio intenso 6-7 días/semana'},
-                'muy_intenso': {'factor': 1.9, 'descripcion': 'Atletas profesionales, entrenamiento muy intenso'}
-            }
-            
-            if actividad in factores_actividad:
-                factor = factores_actividad[actividad]['factor']
-                calorias_actividad = tmb * factor
-                descripcion_actividad = factores_actividad[actividad]['descripcion']
-            else:
-                factor = 1.2
-                calorias_actividad = tmb * factor
-                descripcion_actividad = factores_actividad['sedentario']['descripcion']
-                actividad = 'sedentario'
-            
-            niveles_actividad = {}
-            for key, value in factores_actividad.items():
-                niveles_actividad[key] = {
-                    'calorias': tmb * value['factor'],
-                    'descripcion': value['descripcion'],
-                    'factor': value['factor']
-                }
-            
             if tmb < 1200:
                 recomendacion = "Tu metabolismo basal es bajo. Consulta con un nutricionista para un plan personalizado."
             elif 1200 <= tmb < 1800:
-                recomendacion = "Metabolismo normal. Mantén una dieta equilibrada y actividad física regular."
+                recomendacion = "Metabolismo normal. Esta es la energía que tu cuerpo necesita para funciones básicas en reposo."
             else:
-                recomendacion = "Metabolismo alto. Asegúrate de consumir suficientes nutrientes para mantener tu energía."
-            
-            objetivo_mantener = calorias_actividad
-            objetivo_bajar = calorias_actividad * 0.85  
-            objetivo_subir = calorias_actividad * 1.15  
+                recomendacion = "Metabolismo alto. Tu cuerpo quema más calorías en reposo para mantener sus funciones vitales."
             
             return render_template('tmb.html', 
                                 tmb_resultado=f"{tmb:.0f}",
-                                calorias_actividad=f"{calorias_actividad:.0f}",
-                                descripcion_actividad=descripcion_actividad,
-                                factor_actividad=factor,
-                                niveles_actividad=niveles_actividad,
                                 recomendacion=recomendacion,
-                                objetivo_mantener=f"{objetivo_mantener:.0f}",
-                                objetivo_bajar=f"{objetivo_bajar:.0f}",
-                                objetivo_subir=f"{objetivo_subir:.0f}",
                                 datos_formulario={
                                     'edad': edad,
                                     'peso': peso,
                                     'altura': altura_cm,
-                                    'sexo': sexo,
-                                    'actividad': actividad
+                                    'sexo': sexo
                                 })
             
         except (ValueError, TypeError):
@@ -330,12 +291,105 @@ def tmb():
     
     return render_template('tmb.html')
 
-@app.route('/gct')
+@app.route('/gct', methods=['GET', 'POST'])
 def gct():
+    if request.method == 'POST':
+        try:
+            tmb = float(request.form.get('tmb'))
+            actividad = request.form.get('actividad')
+            
+            factores_actividad = {
+                'sedentario': {'factor': 1.2, 'descripcion': 'Sedentario (x1.2)'},
+                'ligero': {'factor': 1.375, 'descripcion': 'Ligero (x1.375)'},
+                'moderado': {'factor': 1.55, 'descripcion': 'Moderado (x1.55)'},
+                'intenso': {'factor': 1.725, 'descripcion': 'Intenso (x1.725)'},
+                'muy_intenso': {'factor': 1.9, 'descripcion': 'Muy intenso (x1.9)'}
+            }
+            
+            if actividad in factores_actividad:
+                factor = factores_actividad[actividad]['factor']
+                gct = tmb * factor
+                descripcion_actividad = factores_actividad[actividad]['descripcion']
+            else:
+                factor = 1.2
+                gct = tmb * factor
+                descripcion_actividad = factores_actividad['sedentario']['descripcion']
+                actividad = 'sedentario'
+            
+            niveles_comparacion = {}
+            for key, value in factores_actividad.items():
+                niveles_comparacion[key] = {
+                    'gct': tmb * value['factor'],
+                    'descripcion': value['descripcion'],
+                    'factor': value['factor']
+                }
+            
+            if gct < 1500:
+                recomendacion = "Tu gasto calórico es bajo. Considera aumentar tu actividad física gradualmente."
+            elif 1500 <= gct < 2500:
+                recomendacion = "Gasto calórico moderado. Ideal para mantener un estilo de vida equilibrado."
+            else:
+                recomendacion = "Gasto calórico alto. Asegúrate de consumir suficientes nutrientes para tu nivel de actividad."
+            
+            return render_template('gct.html', 
+                                gct_resultado=f"{gct:.0f}",
+                                factor_actividad=factor,
+                                descripcion_actividad=descripcion_actividad,
+                                niveles_comparacion=niveles_comparacion,
+                                recomendacion=recomendacion,
+                                datos_formulario={
+                                    'tmb': tmb,
+                                    'actividad': actividad
+                                })
+            
+        except (ValueError, TypeError):
+            flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
+            return render_template('gct.html')
+    
     return render_template('gct.html')
 
-@app.route('/peso_ideal')
+@app.route('/peso_ideal', methods=['GET', 'POST'])
 def peso_ideal():
+    if request.method == 'POST':
+        try:
+            altura_cm = float(request.form.get('altura'))
+            sexo = request.form.get('sexo')
+            imc_objetivo = float(request.form.get('imc'))
+            
+            altura_m = altura_cm / 100
+            
+            peso_ideal_formula = (2.2 * imc_objetivo) + (3.5 * imc_objetivo * (altura_m - 1.5))
+            
+            peso_minimo_imc = 18.5 * (altura_m ** 2)
+            peso_maximo_imc = 24.9 * (altura_m ** 2)
+            peso_medio_imc = (peso_minimo_imc + peso_maximo_imc) / 2
+            
+            if imc_objetivo < 18.5:
+                recomendacion = "IMC objetivo en rango bajo. Consulta con un profesional de la salud."
+            elif 18.5 <= imc_objetivo <= 24.9:
+                recomendacion = "IMC objetivo en rango saludable. Excelente elección."
+            else:
+                recomendacion = "IMC objetivo en rango de sobrepeso. Considera un objetivo más bajo para mejor salud."
+            
+            return render_template('peso_ideal.html', 
+                                peso_ideal_formula=f"{peso_ideal_formula:.2f}",
+                                peso_medio_imc=f"{peso_medio_imc:.2f}",
+                                imc_objetivo=imc_objetivo,
+                                rango_saludable={
+                                    'minimo': peso_minimo_imc,
+                                    'maximo': peso_maximo_imc
+                                },
+                                recomendacion=recomendacion,
+                                datos_formulario={
+                                    'altura': altura_cm,
+                                    'sexo': sexo,
+                                    'imc': imc_objetivo
+                                })
+            
+        except (ValueError, TypeError):
+            flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
+            return render_template('peso_ideal.html')
+    
     return render_template('peso_ideal.html')
 
 if __name__ == '__main__':
