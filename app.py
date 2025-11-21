@@ -354,27 +354,31 @@ def peso_ideal():
         try:
             altura_cm = float(request.form.get('altura'))
             sexo = request.form.get('sexo')
-            imc_objetivo = float(request.form.get('imc'))
+            
+            # Fórmula de Lorentz para peso ideal
+            if sexo == 'Masculino':
+                peso_ideal_formula = (altura_cm - 100) - ((altura_cm - 150) / 4)
+            else:  # Femenino
+                peso_ideal_formula = (altura_cm - 100) - ((altura_cm - 150) / 2.5)
             
             altura_m = altura_cm / 100
             
-            peso_ideal_formula = (2.2 * imc_objetivo) + (3.5 * imc_objetivo * (altura_m - 1.5))
-            
+            # Cálculo del rango saludable basado en IMC
             peso_minimo_imc = 18.5 * (altura_m ** 2)
             peso_maximo_imc = 24.9 * (altura_m ** 2)
             peso_medio_imc = (peso_minimo_imc + peso_maximo_imc) / 2
             
-            if imc_objetivo < 18.5:
-                recomendacion = "IMC objetivo en rango bajo. Consulta con un profesional de la salud."
-            elif 18.5 <= imc_objetivo <= 24.9:
-                recomendacion = "IMC objetivo en rango saludable. Excelente elección."
+            # Recomendación personalizada
+            if peso_ideal_formula < peso_minimo_imc:
+                recomendacion = f"Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está por debajo del rango saludable mínimo ({peso_minimo_imc:.1f} kg). Considera consultar con un nutricionista."
+            elif peso_ideal_formula > peso_maximo_imc:
+                recomendacion = f"Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está por encima del rango saludable máximo ({peso_maximo_imc:.1f} kg). Un profesional puede ayudarte a establecer metas realistas."
             else:
-                recomendacion = "IMC objetivo en rango de sobrepeso. Considera un objetivo más bajo para mejor salud."
+                recomendacion = f"¡Excelente! Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está dentro del rango saludable recomendado ({peso_minimo_imc:.1f} - {peso_maximo_imc:.1f} kg)."
             
             return render_template('peso_ideal.html', 
                                 peso_ideal_formula=f"{peso_ideal_formula:.2f}",
                                 peso_medio_imc=f"{peso_medio_imc:.2f}",
-                                imc_objetivo=imc_objetivo,
                                 rango_saludable={
                                     'minimo': peso_minimo_imc,
                                     'maximo': peso_maximo_imc
@@ -382,8 +386,7 @@ def peso_ideal():
                                 recomendacion=recomendacion,
                                 datos_formulario={
                                     'altura': altura_cm,
-                                    'sexo': sexo,
-                                    'imc': imc_objetivo
+                                    'sexo': sexo
                                 })
             
         except (ValueError, TypeError):
@@ -391,6 +394,101 @@ def peso_ideal():
             return render_template('peso_ideal.html')
     
     return render_template('peso_ideal.html')
+
+@app.route('/macronutrientes', methods=['GET', 'POST'])
+def macronutrientes():
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            objetivo = request.form.get('objetivo')
+            peso = float(request.form.get('peso'))
+            altura = float(request.form.get('altura'))
+            edad = int(request.form.get('edad'))
+            sexo = request.form.get('sexo')
+            nivel_actividad = request.form.get('nivel_actividad')
+            
+            # Calcular TMB (Tasa Metabólica Basal)
+            if sexo == 'Masculino':
+                tmb = (10 * peso) + (6.25 * altura) - (5 * edad) + 5
+            else:
+                tmb = (10 * peso) + (6.25 * altura) - (5 * edad) - 161
+            
+            # Factores de actividad
+            factores_actividad = {
+                'sedentario': 1.2,
+                'ligero': 1.375,
+                'moderado': 1.55,
+                'intenso': 1.725,
+                'atleta': 1.9
+            }
+            
+            # Calcular calorías diarias (GET)
+            get = tmb * factores_actividad.get(nivel_actividad, 1.2)
+            
+            # Ajustar calorías según objetivo
+            if objetivo == 'perder':
+                calorias_objetivo = get - 500
+            elif objetivo == 'ganar':
+                calorias_objetivo = get + 500
+            else:  # mantener
+                calorias_objetivo = get
+            
+            # Calcular macronutrientes
+            # Proteínas: 1.8-2.2g por kg de peso
+            proteinas_gramos = peso * 2.0
+            proteinas_calorias = proteinas_gramos * 4
+            
+            # Grasas: 25-30% del total calórico
+            grasas_calorias = calorias_objetivo * 0.25
+            grasas_gramos = grasas_calorias / 9
+            
+            # Carbohidratos: resto de calorías
+            carbohidratos_calorias = calorias_objetivo - proteinas_calorias - grasas_calorias
+            carbohidratos_gramos = carbohidratos_calorias / 4
+            
+            # Distribución porcentual
+            porc_proteinas = (proteinas_calorias / calorias_objetivo) * 100
+            porc_grasas = (grasas_calorias / calorias_objetivo) * 100
+            porc_carbohidratos = (carbohidratos_calorias / calorias_objetivo) * 100
+            
+            # Recomendación personalizada
+            if objetivo == 'perder':
+                recomendacion = f"Para perder peso, se recomienda un déficit de 500 calorías. Tu distribución ideal es: {porc_proteinas:.0f}% proteínas, {porc_carbohidratos:.0f}% carbohidratos, {porc_grasas:.0f}% grasas."
+            elif objetivo == 'ganar':
+                recomendacion = f"Para ganar masa muscular, se recomienda un superávit de 500 calorías. Asegúrate de consumir suficientes proteínas ({proteinas_gramos:.0f}g) para apoyar el crecimiento muscular."
+            else:
+                recomendacion = f"Para mantener tu peso, sigue consumiendo {calorias_objetivo:.0f} calorías diarias con esta distribución balanceada de macronutrientes."
+            
+            return render_template('macronutrientes.html', 
+                                tmb=f"{tmb:.0f}",
+                                get=f"{get:.0f}",
+                                calorias_objetivo=f"{calorias_objetivo:.0f}",
+                                macronutrientes={
+                                    'proteinas_gramos': f"{proteinas_gramos:.1f}",
+                                    'proteinas_calorias': f"{proteinas_calorias:.0f}",
+                                    'proteinas_porcentaje': f"{porc_proteinas:.1f}",
+                                    'grasas_gramos': f"{grasas_gramos:.1f}",
+                                    'grasas_calorias': f"{grasas_calorias:.0f}",
+                                    'grasas_porcentaje': f"{porc_grasas:.1f}",
+                                    'carbohidratos_gramos': f"{carbohidratos_gramos:.1f}",
+                                    'carbohidratos_calorias': f"{carbohidratos_calorias:.0f}",
+                                    'carbohidratos_porcentaje': f"{porc_carbohidratos:.1f}"
+                                },
+                                recomendacion=recomendacion,
+                                datos_formulario={
+                                    'objetivo': objetivo,
+                                    'peso': peso,
+                                    'altura': altura,
+                                    'edad': edad,
+                                    'sexo': sexo,
+                                    'nivel_actividad': nivel_actividad
+                                })
+            
+        except (ValueError, TypeError):
+            flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
+            return render_template('macronutrientes.html')
+    
+    return render_template('macronutrientes.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
