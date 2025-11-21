@@ -355,20 +355,17 @@ def peso_ideal():
             altura_cm = float(request.form.get('altura'))
             sexo = request.form.get('sexo')
             
-            # Fórmula de Lorentz para peso ideal
             if sexo == 'Masculino':
                 peso_ideal_formula = (altura_cm - 100) - ((altura_cm - 150) / 4)
-            else:  # Femenino
+            else: 
                 peso_ideal_formula = (altura_cm - 100) - ((altura_cm - 150) / 2.5)
             
             altura_m = altura_cm / 100
             
-            # Cálculo del rango saludable basado en IMC
             peso_minimo_imc = 18.5 * (altura_m ** 2)
             peso_maximo_imc = 24.9 * (altura_m ** 2)
             peso_medio_imc = (peso_minimo_imc + peso_maximo_imc) / 2
             
-            # Recomendación personalizada
             if peso_ideal_formula < peso_minimo_imc:
                 recomendacion = f"Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está por debajo del rango saludable mínimo ({peso_minimo_imc:.1f} kg). Considera consultar con un nutricionista."
             elif peso_ideal_formula > peso_maximo_imc:
@@ -397,6 +394,9 @@ def peso_ideal():
 
 @app.route('/macronutrientes', methods=['GET', 'POST'])
 def macronutrientes():
+    if 'user_email' not in session:
+        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
+        return redirect(url_for('login'))
     if request.method == 'POST':
         try:
             objetivo = request.form.get('objetivo')

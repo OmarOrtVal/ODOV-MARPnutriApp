@@ -1,43 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-  <h3 class="text-success fw-bold mb-4">Calculadora de Macronutrientes</h3>
+<h3 class="text-success fw-bold mb-4">Calculadora de Macronutrientes</h3>
     <div class="mt-4 card p-3 bg-light">
     <h6 class="text-success">Información sobre Macronutrientes</h6>
     
     <div class="row">
-      <div class="col-md-4">
+    <div class="col-md-4">
         <div class="card bg-warning bg-opacity-10 mb-3">
-          <div class="card-body">
+        <div class="card-body">
             <h6 class="text-warning">Proteínas</h6>
             <p class="mb-2"><strong>Función:</strong> Reparación y crecimiento muscular</p>
             <p class="mb-2"><strong>Fuentes:</strong> Carnes, huevos, lácteos, legumbres</p>
             <p class="mb-0"><strong>Calorías:</strong> 4 kcal por gramo</p>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4">
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="card bg-success bg-opacity-10 mb-3">
-          <div class="card-body">
+        <div class="card-body">
             <h6 class="text-success">Carbohidratos</h6>
             <p class="mb-2"><strong>Función:</strong> Energía principal del cuerpo</p>
             <p class="mb-2"><strong>Fuentes:</strong> Granos, frutas, verduras, pan</p>
             <p class="mb-0"><strong>Calorías:</strong> 4 kcal por gramo</p>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4">
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="card bg-info bg-opacity-10 mb-3">
-          <div class="card-body">
+        <div class="card-body">
             <h6 class="text-info">Grasas</h6>
             <p class="mb-2"><strong>Función:</strong> Energía, absorción de vitaminas</p>
             <p class="mb-2"><strong>Fuentes:</strong> Aceites, nueces, aguacate, pescado</p>
             <p class="mb-0"><strong>Calorías:</strong> 9 kcal por gramo</p>
-          </div>
         </div>
-      </div>
+        </div>
     </div>
-     <p class="mb-2">Los macronutrientes son los nutrientes que el cuerpo necesita en grandes cantidades para obtener energía y realizar funciones vitales.</p>
+    </div>
+    <p class="mb-2">Los macronutrientes son los nutrientes que el cuerpo necesita en grandes cantidades para obtener energía y realizar funciones vitales.</p>
         <p class="mb-2"> Los tres macronutrientes principales son las proteínas, los carbohidratos y las grasas. Cada uno tiene funciones específicas: </p>
         <ul class="mb-2">
         <li><strong>Proteinas: </strong>las proteínas son esenciales para construir y reparar tejidos</li>
@@ -46,153 +46,152 @@
     </ul>
     <h6 class="text-success mt-3">Distribuciones Recomendadas por Objetivo:</h6>
     <ul class="mb-2">
-      <li><strong>Pérdida de peso:</strong> Mayor proteína (30-35%), moderados carbohidratos (40-45%), grasas (25-30%)</li>
-      <li><strong>Mantenimiento:</strong> Balance estándar: Proteínas (25-30%), Carbohidratos (45-50%), Grasas (25-30%)</li>
-      <li><strong>Ganar masa muscular:</strong> Alta proteína (30-35%), altos carbohidratos (45-50%), grasas (20-25%)</li>
+    <li><strong>Pérdida de peso:</strong> Mayor proteína (30-35%), moderados carbohidratos (40-45%), grasas (25-30%)</li>
+    <li><strong>Mantenimiento:</strong> Balance estándar: Proteínas (25-30%), Carbohidratos (45-50%), Grasas (25-30%)</li>
+    <li><strong>Ganar masa muscular:</strong> Alta proteína (30-35%), altos carbohidratos (45-50%), grasas (20-25%)</li>
     </ul>
     
     <p class="mb-0"><small class="text-muted">Estas son recomendaciones generales. Consulta con un nutricionista para un plan personalizado según tus necesidades específicas y condiciones de salud.</small></p>
-  </div>
+</div>
 
-  <form class="row g-3" method="POST" action="{{ url_for('macronutrientes') }}">
+<form class="row g-3" method="POST" action="{{ url_for('macronutrientes') }}">
     <div class="col-md-6">
-      <label class="form-label">Objetivo</label>
-      <select class="form-select" name="objetivo" required>
+    <label class="form-label">Objetivo</label>
+    <select class="form-select" name="objetivo" required>
         <option value="">Seleccionar...</option>
         <option value="perder" {% if datos_formulario and datos_formulario.objetivo == 'perder' %}selected{% endif %}>Perder peso</option>
         <option value="mantener" {% if datos_formulario and datos_formulario.objetivo == 'mantener' %}selected{% endif %}>Mantener peso</option>
         <option value="ganar" {% if datos_formulario and datos_formulario.objetivo == 'ganar' %}selected{% endif %}>Ganar masa muscular</option>
-      </select>
+    </select>
     </div>
     <div class="col-md-6">
-      <label class="form-label">Peso (kg)</label>
-      <input type="number" class="form-control" name="peso" placeholder="Ej. 70" step="0.1" min="30" max="200" required
+    <label class="form-label">Peso (kg)</label>
+    <input type="number" class="form-control" name="peso" placeholder="Ej. 70" step="0.1" min="30" max="200" required
             value="{{ datos_formulario.peso if datos_formulario }}">
     </div>
     
     <div class="col-md-4">
-      <label class="form-label">Altura (cm)</label>
-      <input type="number" class="form-control" name="altura" placeholder="Ej. 175" min="100" max="250" required
+    <label class="form-label">Altura (cm)</label>
+    <input type="number" class="form-control" name="altura" placeholder="Ej. 175" min="100" max="250" required
             value="{{ datos_formulario.altura if datos_formulario }}">
     </div>
     <div class="col-md-4">
-      <label class="form-label">Edad</label>
-      <input type="number" class="form-control" name="edad" placeholder="Ej. 25" min="15" max="100" required
+    <label class="form-label">Edad</label>
+    <input type="number" class="form-control" name="edad" placeholder="Ej. 25" min="15" max="100" required
             value="{{ datos_formulario.edad if datos_formulario }}">
     </div>
     <div class="col-md-4">
-      <label class="form-label">Sexo</label>
-      <select class="form-select" name="sexo" required>
+    <label class="form-label">Sexo</label>
+    <select class="form-select" name="sexo" required>
         <option value="">Seleccionar...</option>
         <option value="Masculino" {% if datos_formulario and datos_formulario.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
         <option value="Femenino" {% if datos_formulario and datos_formulario.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
-      </select>
+    </select>
     </div>
     
     <div class="col-12">
-      <label class="form-label">Nivel de Actividad Física</label>
-      <select class="form-select" name="nivel_actividad" required>
+    <label class="form-label">Nivel de Actividad Física</label>
+    <select class="form-select" name="nivel_actividad" required>
         <option value="">Seleccionar...</option>
         <option value="sedentario" {% if datos_formulario and datos_formulario.nivel_actividad == 'sedentario' %}selected{% endif %}>
-          Sedentario (poco o ningún ejercicio)
+        Sedentario (poco o ningún ejercicio)
         </option>
         <option value="ligero" {% if datos_formulario and datos_formulario.nivel_actividad == 'ligero' %}selected{% endif %}>
-          Ligero (ejercicio 1-3 días/semana)
+        Ligero (ejercicio 1-3 días/semana)
         </option>
         <option value="moderado" {% if datos_formulario and datos_formulario.nivel_actividad == 'moderado' %}selected{% endif %}>
-          Moderado (ejercicio 3-5 días/semana)
+        Moderado (ejercicio 3-5 días/semana)
         </option>
         <option value="intenso" {% if datos_formulario and datos_formulario.nivel_actividad == 'intenso' %}selected{% endif %}>
-          Intenso (ejercicio 6-7 días/semana)
+        Intenso (ejercicio 6-7 días/semana)
         </option>
         <option value="atleta" {% if datos_formulario and datos_formulario.nivel_actividad == 'atleta' %}selected{% endif %}>
-          Atleta (ejercicio intenso diario)
+        Atleta (ejercicio intenso diario)
         </option>
-      </select>
+    </select>
     </div>
     
     <div class="col-12">
-      <button type="submit" class="btn btn-success">Calcular Macronutrientes</button>
+    <button type="submit" class="btn btn-success">Calcular Macronutrientes</button>
     </div>
-  </form>
+</form>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
+{% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-      {% for category, message in messages %}
+    {% for category, message in messages %}
         <div class="alert alert-{{ category }} mt-3" role="alert">
-          {{ message }}
+        {{ message }}
         </div>
-      {% endfor %}
+    {% endfor %}
     {% endif %}
-  {% endwith %}
+{% endwith %}
 
-  {% if calorias_objetivo %}
-  <div class="alert alert-info mt-4">
-      <strong>Recomendación:</strong> {{ recomendacion }}
+{% if calorias_objetivo %}
+<div class="alert alert-info mt-4">
+    <strong>Recomendación:</strong> {{ recomendacion }}
     </div>
     <div class="card p-3 shadow-sm mb-4">
-      <h5 class="mb-3">Distribución de Macronutrientes:</h5>
-      
-      <div class="row text-center mb-4">
+    <h5 class="mb-3">Distribución de Macronutrientes:</h5>
+
+    <div class="row text-center mb-4">
         <div class="col-md-4">
-          <div class="card border-warning">
+        <div class="card border-warning">
             <div class="card-body">
-              <h6 class="text-warning">Proteínas</h6>
-              <p class="fs-3 fw-bold text-warning mb-1">{{ macronutrientes.proteinas_gramos }}g</p>
-              <p class="mb-1">{{ macronutrientes.proteinas_calorias }} kcal</p>
-              <small class="text-muted">{{ macronutrientes.proteinas_porcentaje }}% del total</small>
+            <h6 class="text-warning">Proteínas</h6>
+            <p class="fs-3 fw-bold text-warning mb-1">{{ macronutrientes.proteinas_gramos }}g</p>
+            <p class="mb-1">{{ macronutrientes.proteinas_calorias }} kcal</p>
+            <small class="text-muted">{{ macronutrientes.proteinas_porcentaje }}% del total</small>
             </div>
-          </div>
         </div>
-        <div class="col-md-4">
-          <div class="card border-success">
-            <div class="card-body">
-              <h6 class="text-success">Carbohidratos</h6>
-              <p class="fs-3 fw-bold text-success mb-1">{{ macronutrientes.carbohidratos_gramos }}g</p>
-              <p class="mb-1">{{ macronutrientes.carbohidratos_calorias }} kcal</p>
-              <small class="text-muted">{{ macronutrientes.carbohidratos_porcentaje }}% del total</small>
-            </div>
-          </div>
         </div>
         <div class="col-md-4">
-          <div class="card border-info">
+        <div class="card border-success">
             <div class="card-body">
-              <h6 class="text-info">Grasas</h6>
-              <p class="fs-3 fw-bold text-info mb-1">{{ macronutrientes.grasas_gramos }}g</p>
-              <p class="mb-1">{{ macronutrientes.grasas_calorias }} kcal</p>
-              <small class="text-muted">{{ macronutrientes.grasas_porcentaje }}% del total</small>
+            <h6 class="text-success">Carbohidratos</h6>
+            <p class="fs-3 fw-bold text-success mb-1">{{ macronutrientes.carbohidratos_gramos }}g</p>
+            <p class="mb-1">{{ macronutrientes.carbohidratos_calorias }} kcal</p>
+            <small class="text-muted">{{ macronutrientes.carbohidratos_porcentaje }}% del total</small>
             </div>
-          </div>
         </div>
-      </div>
-      
-      <div class="row mt-3">
-        <div class="col-md-8 mx-auto">
-          <div class="progress" style="height: 30px;">
-            <div class="progress-bar bg-warning" style="width: {{ macronutrientes.proteinas_porcentaje }}%" 
-                 title="Proteínas: {{ macronutrientes.proteinas_porcentaje }}%">
-              Proteínas {{ macronutrientes.proteinas_porcentaje }}%
-            </div>
-            <div class="progress-bar bg-success" style="width: {{ macronutrientes.carbohidratos_porcentaje }}%" 
-                 title="Carbohidratos: {{ macronutrientes.carbohidratos_porcentaje }}%">
-              Carbos {{ macronutrientes.carbohidratos_porcentaje }}%
-            </div>
-            <div class="progress-bar bg-info" style="width: {{ macronutrientes.grasas_porcentaje }}%" 
-                 title="Grasas: {{ macronutrientes.grasas_porcentaje }}%">
-              Grasas {{ macronutrientes.grasas_porcentaje }}%
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="col-md-4">
+        <div class="card border-info">
+            <div class="card-body">
+            <h6 class="text-info">Grasas</h6>
+            <p class="fs-3 fw-bold text-info mb-1">{{ macronutrientes.grasas_gramos }}g</p>
+            <p class="mb-1">{{ macronutrientes.grasas_calorias }} kcal</p>
+            <small class="text-muted">{{ macronutrientes.grasas_porcentaje }}% del total</small>
+            </div>
+        </div>
+        </div>
     </div>
 
-  </div>
-  {% else %}
-  <div class="mt-4 card p-3 shadow-sm">
+    <div class="row mt-3">
+        <div class="col-md-8 mx-auto">
+        <div class="progress" style="height: 30px;">
+            <div class="progress-bar bg-warning" style="width: {{ macronutrientes.proteinas_porcentaje }}%" 
+                title="Proteínas: {{ macronutrientes.proteinas_porcentaje }}%">
+            Proteínas {{ macronutrientes.proteinas_porcentaje }}%
+            </div>
+            <div class="progress-bar bg-success" style="width: {{ macronutrientes.carbohidratos_porcentaje }}%" 
+                title="Carbohidratos: {{ macronutrientes.carbohidratos_porcentaje }}%">
+            Carbos {{ macronutrientes.carbohidratos_porcentaje }}%
+            </div>
+            <div class="progress-bar bg-info" style="width: {{ macronutrientes.grasas_porcentaje }}%" 
+                title="Grasas: {{ macronutrientes.grasas_porcentaje }}%">
+            Grasas {{ macronutrientes.grasas_porcentaje }}%
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% else %}
+    <div class="mt-4 card p-3 shadow-sm">
     <h5>Resultado:</h5>
     <p><strong>Distribución de macronutrientes:</strong> --</p>
-  </div>
-  {% endif %}
+    </div>
+{% endif %}
 
 </div>
 {% endblock %}
