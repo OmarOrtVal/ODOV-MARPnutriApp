@@ -399,7 +399,6 @@ def peso_ideal():
 def macronutrientes():
     if request.method == 'POST':
         try:
-            # Obtener datos del formulario
             objetivo = request.form.get('objetivo')
             peso = float(request.form.get('peso'))
             altura = float(request.form.get('altura'))
@@ -407,13 +406,11 @@ def macronutrientes():
             sexo = request.form.get('sexo')
             nivel_actividad = request.form.get('nivel_actividad')
             
-            # Calcular TMB (Tasa Metabólica Basal)
             if sexo == 'Masculino':
                 tmb = (10 * peso) + (6.25 * altura) - (5 * edad) + 5
             else:
                 tmb = (10 * peso) + (6.25 * altura) - (5 * edad) - 161
             
-            # Factores de actividad
             factores_actividad = {
                 'sedentario': 1.2,
                 'ligero': 1.375,
@@ -422,36 +419,28 @@ def macronutrientes():
                 'atleta': 1.9
             }
             
-            # Calcular calorías diarias (GET)
             get = tmb * factores_actividad.get(nivel_actividad, 1.2)
             
-            # Ajustar calorías según objetivo
             if objetivo == 'perder':
                 calorias_objetivo = get - 500
             elif objetivo == 'ganar':
                 calorias_objetivo = get + 500
-            else:  # mantener
+            else: 
                 calorias_objetivo = get
             
-            # Calcular macronutrientes
-            # Proteínas: 1.8-2.2g por kg de peso
             proteinas_gramos = peso * 2.0
             proteinas_calorias = proteinas_gramos * 4
             
-            # Grasas: 25-30% del total calórico
             grasas_calorias = calorias_objetivo * 0.25
             grasas_gramos = grasas_calorias / 9
             
-            # Carbohidratos: resto de calorías
             carbohidratos_calorias = calorias_objetivo - proteinas_calorias - grasas_calorias
             carbohidratos_gramos = carbohidratos_calorias / 4
             
-            # Distribución porcentual
             porc_proteinas = (proteinas_calorias / calorias_objetivo) * 100
             porc_grasas = (grasas_calorias / calorias_objetivo) * 100
             porc_carbohidratos = (carbohidratos_calorias / calorias_objetivo) * 100
             
-            # Recomendación personalizada
             if objetivo == 'perder':
                 recomendacion = f"Para perder peso, se recomienda un déficit de 500 calorías. Tu distribución ideal es: {porc_proteinas:.0f}% proteínas, {porc_carbohidratos:.0f}% carbohidratos, {porc_grasas:.0f}% grasas."
             elif objetivo == 'ganar':
