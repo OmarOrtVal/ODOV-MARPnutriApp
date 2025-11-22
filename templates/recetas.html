@@ -1,67 +1,223 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="text-success fw-bold mb-3 text-center">Recetas y Menús</h3>
-<p class="text-center">Encuentra recetas fáciles y nutritivas según tus objetivos.</p>
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Omelette Proteico</h5>
-                <p class="card-text">Alta en proteínas, baja en carbohidratos. Ideal para desayuno.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
+<div class="container mt-4">
+    <h3 class="text-success fw-bold mb-4 text-center">Banco de Recetas Saludables</h3>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Tiempo de preparación</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                        <option>Rápido (&lt; 15 min)</option>
+                        <option>Medio (15-30 min)</option>
+                        <option>Largo (&gt; 30 min)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Dificultad</label>
+                    <select class="form-select">
+                        <option>Todas</option>
+                        <option>Principiante</option>
+                        <option>Intermedio</option>
+                        <option>Avanzado</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Tipo de dieta</label>
+                    <select class="form-select">
+                        <option>Todas</option>
+                        <option>Vegano</option>
+                        <option>Vegetariano</option>
+                        <option>Sin gluten</option>
+                        <option>Keto</option>
+                        <option>Mediterránea</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Calorías máx. por porción</label>
+                    <select class="form-select">
+                        <option>Todas</option>
+                        <option>&lt; 200 kcal</option>
+                        <option>&lt; 400 kcal</option>
+                        <option>&lt; 600 kcal</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Ensalada Mediterránea</h5>
-                <p class="card-text">Rica en fibra y grasas saludables. Perfecta para almuerzo ligero.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
+    <div class="mb-5">
+        <h4 class="text-success mb-3">Recetas para Principiantes</h4>
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">15 min</span>
+                        <span class="badge bg-warning mb-2">Principiante</span>
+                        <h5 class="card-title">Omelette Proteico</h5>
+                        <p class="card-text">Alta en proteínas, baja en carbohidratos. Ideal para desayuno.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">2 ingredientes principales</small>
+                            <span class="badge bg-info">250 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">10 min</span>
+                        <span class="badge bg-warning mb-2">Principiante</span>
+                        <span class="badge bg-primary mb-2">Vegano</span>
+                        <h5 class="card-title">Smoothie Verde Energético</h5>
+                        <p class="card-text">Hecho con espinaca, plátano y leche de almendras.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">3 ingredientes principales</small>
+                            <span class="badge bg-info">180 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">20 min</span>
+                        <span class="badge bg-warning mb-2">Principiante</span>
+                        <h5 class="card-title">Ensalada Mediterránea Rápida</h5>
+                        <p class="card-text">Rica en fibra y grasas saludables. Perfecta para almuerzo ligero.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">4 ingredientes principales</small>
+                            <span class="badge bg-info">320 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Smoothie Verde Detox</h5>
-                <p class="card-text">Hecho con espinaca, manzana y jengibre. Aporta vitaminas y energía.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
+    <div class="mb-5">
+        <h4 class="text-success mb-3">Preparación de Comidas (Meal Prep)</h4>
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">45 min</span>
+                        <span class="badge bg-success mb-2">Meal Prep</span>
+                        <h5 class="card-title">Pollo al Horno con Verduras</h5>
+                        <p class="card-text">Prepara 4 comidas en 45 minutos. Fuente de proteínas magras.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">5 ingredientes principales</small>
+                            <span class="badge bg-info">380 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">30 min</span>
+                        <span class="badge bg-success mb-2">Meal Prep</span>
+                        <span class="badge bg-primary mb-2">Vegetariano</span>
+                        <h5 class="card-title">Quinoa con Verduras Asadas</h5>
+                        <p class="card-text">Completa proteína vegetal. Dura 4 días en refrigerador.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">6 ingredientes principales</small>
+                            <span class="badge bg-info">290 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">60 min</span>
+                        <span class="badge bg-success mb-2">Meal Prep</span>
+                        <span class="badge bg-danger mb-2">Sin gluten</span>
+                        <h5 class="card-title">Lasaña de Calabacín</h5>
+                        <p class="card-text">Versión saludable sin pasta tradicional. Rica en vegetales.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">7 ingredientes principales</small>
+                            <span class="badge bg-info">420 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Pollo al Horno con Verduras</h5>
-                <p class="card-text">Fuente de proteínas magras y vitaminas. Bajo en grasa.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
+    <div class="mb-5">
+        <h4 class="text-success mb-3">Recetas por Objetivo</h4>
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-warning mb-2">Pérdida de peso</span>
+                        <h5 class="card-title">Wrap de Atún y Espinaca</h5>
+                        <p class="card-text">Rápido y nutritivo. Buena opción para una comida ligera.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">4 ingredientes principales</small>
+                            <span class="badge bg-info">280 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-info mb-2">Ganar masa muscular</span>
+                        <h5 class="card-title">Batido Hiperproteico</h5>
+                        <p class="card-text">35g de proteína por porción. Ideal post-entrenamiento.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">5 ingredientes principales</small>
+                            <span class="badge bg-info">450 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">Mantenimiento</span>
+                        <span class="badge bg-primary mb-2">Vegano</span>
+                        <h5 class="card-title">Buddha Bowl Mediterráneo</h5>
+                        <p class="card-text">Balance perfecto de macronutrientes. Lleno de sabor.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">8 ingredientes principales</small>
+                            <span class="badge bg-info">520 kcal</span>
+                        </div>
+                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Tostadas de Aguacate y Huevo</h5>
-                <p class="card-text">Combinación perfecta de grasas buenas y proteínas. Ideal para brunch.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Wrap de Atún y Espinaca</h5>
-                <p class="card-text">Rápido y nutritivo. Buena opción para una comida ligera.</p>
-                <button class="btn btn-success btn-sm">Ver receta</button>
-            </div>
-        </div>
-    </div>
 </div>
+
 {% endblock %}

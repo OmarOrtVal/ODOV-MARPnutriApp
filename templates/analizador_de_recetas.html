@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3 class="text-success fw-bold mb-4">Analizador de Recetas o Platos</h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Analizar Receta</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de la Receta</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Ej: Ensalada César"
+                            >
+                        </div>
+                        
+                <div class="mb-3">
+                    <label class="form-label">Ingredientes (uno por línea)</label>
+                        <textarea class="form-control" rows="6" placeholder="Ej:
+                        2 tazas de lechuga romana
+                        100g de pechuga de pollo
+                        2 cucharadas de aderezo César
+                        30g de queso parmesano
+                        1 taza de crutones"></textarea>
+                    <small class="text-muted">
+                        Ingresa cada ingrediente en una línea separada con cantidad y unidad
+                    </small>
+                </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Número de porciones</label>
+                            <input type="number" class="form-control" value="1" min="1">
+                        </div>
+                        
+                        <button type="button" class="btn btn-success w-100">Analizar Receta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">¿Cómo funciona?</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        El analizador calcula automáticamente el valor nutricional de tus recetas
+                        basándose en los ingredientes que ingreses.
+                    </p>
+                    
+                    <h6 class="text-success">Formato recomendado:</h6>
+                    <ul class="small mb-3">
+                        <li><strong>Cantidad + Unidad + Ingrediente</strong></li>
+                        <li>Ej: "2 tazas de arroz integral"</li>
+                        <li>Ej: "150g de pechuga de pollo"</li>
+                        <li>Ej: "1 cucharada de aceite de oliva"</li>
+                    </ul>
+                    
+                    <div class="alert alert-warning mb-0">
+                        <h6>Recetas de ejemplo:</h6>
+                        <ul class="mb-0 small">
+                            <li>
+                                <strong>Ensalada Proteica:</strong> 200g pollo, 2 tazas lechuga,
+                                1 tomate, 30g nueces
+                            </li>
+                            <li>
+                                <strong>Smoothie Energético:</strong> 1 plátano, 1 taza espinacas,
+                                200ml leche de almendra
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Resultado del Análisis: Ensalada César</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row text-center mb-3">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h4 class="text-success mb-0">520</h4>
+                            <small>Calorías totales</small>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h4 class="text-warning mb-0">40g</h4>
+                            <small>Proteínas</small>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h4 class="text-success mb-0">35g</h4>
+                            <small>Carbohidratos</small>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h4 class="text-info mb-0">22g</h4>
+                            <small>Grasas</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6>Por porción (2 porciones):</h6>
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-2">
+                                <strong>260</strong> kcal
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <strong>20g</strong> proteínas
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <strong>17.5g</strong> carbohidratos
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <strong>11g</strong> grasas
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h6>Desglose por ingrediente:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ingrediente</th>
+                                        <th>Calorías</th>
+                                        <th>Proteínas</th>
+                                        <th>Carbos</th>
+                                        <th>Grasas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Lechuga romana (2 tazas)</td>
+                                        <td>20</td>
+                                        <td>2g</td>
+                                        <td>4g</td>
+                                        <td>0g</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pechuga de pollo (100g)</td>
+                                        <td>165</td>
+                                        <td>31g</td>
+                                        <td>0g</td>
+                                        <td>3.6g</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aderezo César (2 cdas)</td>
+                                        <td>150</td>
+                                        <td>1g</td>
+                                        <td>2g</td>
+                                        <td>15g</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Queso parmesano (30g)</td>
+                                        <td>120</td>
+                                        <td>11g</td>
+                                        <td>1g</td>
+                                        <td>8g</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Crutones (1 taza)</td>
+                                        <td>65</td>
+                                        <td>1g</td>
+                                        <td>28g</td>
+                                        <td>2g</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

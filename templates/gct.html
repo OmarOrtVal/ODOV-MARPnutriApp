@@ -56,6 +56,9 @@
   {% endwith %}
 
   {% if gct_resultado %}
+  <div class="alert alert-info mt-4">
+      <strong>Recomendación:</strong> {{ recomendacion }}
+    </div>
   <div class="mt-4">
     <div class="card p-3 shadow-sm mb-4">
       <h5 class="mb-3">Resultado:</h5>
@@ -76,10 +79,6 @@
           Cálculo: {{ datos_formulario.tmb }} TMB × {{ factor_actividad }} (factor de actividad) = {{ gct_resultado }} kcal/día
         </small>
       </div>
-    </div>
-
-    <div class="alert alert-info">
-      <strong>Recomendación:</strong> {{ recomendacion }}
     </div>
 
     <div class="card p-3 shadow-sm">

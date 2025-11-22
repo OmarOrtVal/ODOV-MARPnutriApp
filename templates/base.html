@@ -24,13 +24,14 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('alimentos') }}">Registro de Alimentos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('seguimiento') }}">Seguimiento</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('educacion') }}">Educacion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('recetas') }}">Recetas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('habitos') }}">Hábitos Saludables</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('alimentos') }}">Registro de Alimentos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('herramientas_de_recetas') }}">Herramientas de recetas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('calculadoras') }}">Calculadoras</a></li>
                 </ul>
+            </div>
 
                 {% if current_user %} 
                     <li class="nav-item">

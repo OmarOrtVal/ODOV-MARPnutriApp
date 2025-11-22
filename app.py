@@ -45,7 +45,6 @@ ARTICLES = [
     }
 ]
 
-
 @app.context_processor
 def inject_user_data():
     current_user = 'user_email' in session
@@ -107,7 +106,6 @@ def seguimiento():
 def educacion():
     return render_template('educacion.html', articles=ARTICLES)
 
-
 @app.route('/articulo/<int:article_id>')
 def articulo(article_id):
     article = next((a for a in ARTICLES if a['id'] == article_id), None)
@@ -116,10 +114,24 @@ def articulo(article_id):
     else:
         flash('Artículo no encontrado', 'danger')
         return redirect(url_for('educacion'))
+    
+@app.route('/herramientas_de_recetas')
+def herramientas_de_recetas():
+    return render_template('herramientas_de_recetas.html')
 
 @app.route('/recetas')
 def recetas():
+    if 'user_email' not in session:
+        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
+        return redirect(url_for('login'))
     return render_template('recetas.html')
+
+@app.route('/analizador_de_recetas', methods=['GET', 'POST'])
+def analizador_de_recetas():
+    if 'user_email' not in session:
+        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
+        return redirect(url_for('login'))
+    return render_template('analizador_de_recetas.html')
 
 @app.route('/habitos')
 def habitos():
