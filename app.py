@@ -1,7 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_mysqlbd import MySQL
+from werkzeug.security import generate_password_hash
+import re
 
 app = Flask(__name__)
 app.secret_key = 'nutri_track_secret_key'
+
+app.config['MYSQL_HOST'] ='localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'nutritrackop'
+
+mysql = MySQL(app)
 
 USERS = [
     {
