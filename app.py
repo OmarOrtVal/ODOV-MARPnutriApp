@@ -1,32 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask_mysqlbd import MySQL
-from werkzeug.security import generate_password_hash
+from flask_mysqldb import MySQL
+from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
 app = Flask(__name__)
 app.secret_key = 'nutri_track_secret_key'
 
-app.config['MYSQL_HOST'] ='localhost'
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'nutritrackop'
 
 mysql = MySQL(app)
-
-USERS = [
-    {
-        'nombre': 'Omar', 
-        'apellido': 'Ortega',
-        'email': 'omar@correo.com',
-        'password': '1234'  
-    },
-    {
-        'nombre': 'Angel', 
-        'apellido': 'Roman',
-        'email': 'angel@correo.com',
-        'password': '1234'  
-    }
-]
 
 ARTICLES = [
     {
@@ -55,9 +40,136 @@ ARTICLES = [
     }
 ]
 
+
+def crear_tablas():
+    try:
+        cursor = mysql.connection.cursor()
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nombre VARCHAR(100) NOT NULL,
+                apellido VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                fecha_nacimiento DATE,
+                genero ENUM('Mujer', 'Hombre', 'Personalizado'),
+                peso DECIMAL(5,2),
+                altura DECIMAL(5,2),
+                actividad_fisica VARCHAR(50),
+                dieta_especifica VARCHAR(50),
+                experiencia_cocina VARCHAR(50),
+                fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuario_objetivos (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id INT,
+                objetivo VARCHAR(100),
+                FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuario_alergias (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id INT,
+                alergia VARCHAR(100),
+                FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS usuario_intolerancias (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id INT,
+                intolerancia VARCHAR(100),
+                FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+            )
+        ''')
+        
+        mysql.connection.commit()
+        print("Tablas creadas exitosamente")
+    except Exception as e:
+        print(f"Error creando tablas: {e}")
+
+def email_existe(email):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT id FROM usuarios WHERE email = %s', (email,))
+        return cursor.fetchone() is not None
+    except Exception as e:
+        print(f"Error verificando email: {e}")
+        return False
+
+def registrar_usuario_db(nombre, apellido, email, password, fecha_nacimiento=None, 
+                        genero=None, peso=None, altura=None, actividad_fisica=None, 
+                        dieta_especifica=None, experiencia_cocina=None, objetivos=None, 
+                        alergias=None, intolerancias=None):
+    try:
+        cursor = mysql.connection.cursor()
+        
+        hashed_password = generate_password_hash(password)
+        
+        cursor.execute('''
+            INSERT INTO usuarios (nombre, apellido, email, password, fecha_nacimiento, 
+                                genero, peso, altura, actividad_fisica, dieta_especifica, experiencia_cocina) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (nombre, apellido, email, hashed_password, fecha_nacimiento, genero, 
+            peso, altura, actividad_fisica, dieta_especifica, experiencia_cocina))
+        
+        usuario_id = cursor.lastrowid
+        
+        if objetivos:
+            for objetivo in objetivos:
+                cursor.execute('''
+                    INSERT INTO usuario_objetivos (usuario_id, objetivo) 
+                    VALUES (%s, %s)
+                ''', (usuario_id, objetivo))
+        
+        if alergias:
+            for alergia in alergias:
+                cursor.execute('''
+                    INSERT INTO usuario_alergias (usuario_id, alergia) 
+                    VALUES (%s, %s)
+                ''', (usuario_id, alergia))
+        
+        if intolerancias:
+            for intolerancia in intolerancias:
+                cursor.execute('''
+                    INSERT INTO usuario_intolerancias (usuario_id, intolerancia) 
+                    VALUES (%s, %s)
+                ''', (usuario_id, intolerancia))
+        
+        mysql.connection.commit()
+        return True, "Usuario registrado exitosamente"
+    except Exception as e:
+        mysql.connection.rollback()
+        return False, f"Error registrando usuario: {e}"
+
+def verificar_usuario(email, password):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT id, nombre, email, password FROM usuarios WHERE email = %s', (email,))
+        usuario = cursor.fetchone()
+        
+        if usuario and check_password_hash(usuario[3], password):
+            return {
+                'id': usuario[0],
+                'nombre': usuario[1],
+                'email': usuario[2]
+            }
+        return None
+    except Exception as e:
+        print(f"Error verificando usuario: {e}")
+        return None
+
+
 @app.context_processor
 def inject_user_data():
-    current_user = 'user_email' in session
+    current_user = 'user_id' in session
     user_nombre = session.get('user_nombre', 'Invitado')
     return dict(current_user=current_user, user_nombre=user_nombre)
 
@@ -65,49 +177,16 @@ def inject_user_data():
 def index():
     return render_template('index.html')
 
-@app.route('/perfil', methods=['GET', 'POST'])
+@app.route('/perfil')
 def perfil():
-    if 'user_email' not in session:
+    if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
-    elif 'datos_usuario' not in globals():
-        global datos_usuario
-        datos_usuario = {
-            'nombre': '',
-            'edad': '',
-            'sexo': 'Masculino', 
-            'peso': '',
-            'altura': '',
-            'objetivo': 'Mantener peso'  
-        }
-    
-    if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        edad = request.form.get('edad')
-        sexo = request.form.get('sexo')
-        peso = request.form.get('peso')
-        altura = request.form.get('altura')
-        objetivo = request.form.get('objetivo')
-        
-        if not nombre or not edad or not peso or not altura:
-            flash('Error: Todos los campos son obligatorios.', 'danger')
-        else:
-            datos_usuario = {
-                'nombre': nombre,
-                'edad': int(edad),
-                'sexo': sexo,
-                'peso': float(peso),
-                'altura': float(altura),
-                'objetivo': objetivo
-            }
-            flash('¡Cambios guardados con éxito!', 'success')
-            print("Datos Recibidos:", datos_usuario)
+    return render_template('perfil.html')
 
-    return render_template('perfil.html', datos=datos_usuario)
-
-@app.route('/seguimiento', methods=['GET', 'POST'])
+@app.route('/seguimiento')
 def seguimiento():
-    if 'user_email' not in session:
+    if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
     return render_template('seguimiento.html')
@@ -124,21 +203,17 @@ def articulo(article_id):
     else:
         flash('Artículo no encontrado', 'danger')
         return redirect(url_for('educacion'))
-    
-@app.route('/herramientas_de_recetas')
-def herramientas_de_recetas():
-    return render_template('herramientas_de_recetas.html')
 
 @app.route('/recetas')
 def recetas():
-    if 'user_email' not in session:
+    if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
     return render_template('recetas.html')
 
-@app.route('/analizador_de_recetas', methods=['GET', 'POST'])
+@app.route('/analizador_de_recetas')
 def analizador_de_recetas():
-    if 'user_email' not in session:
+    if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
     return render_template('analizador_de_recetas.html')
@@ -147,9 +222,9 @@ def analizador_de_recetas():
 def habitos():
     return render_template('habitos.html')
 
-@app.route('/alimentos', methods=['GET', 'POST'])
+@app.route('/alimentos')
 def alimentos():    
-    if 'user_email' not in session:
+    if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
     return render_template('alimentos.html')
@@ -160,16 +235,13 @@ def login():
         email_login = request.form.get('email_login')
         password_login = request.form.get('password_login')
         
-        user_found = None
-        for user in USERS:
-            if user['email'] == email_login and user['password'] == password_login:
-                user_found = user
-                break
+        usuario = verificar_usuario(email_login, password_login)
         
-        if user_found:
-            session['user_email'] = user_found['email']
-            session['user_nombre'] = user_found['nombre']
-            flash(f"¡Bienvenido de nuevo, {user_found['nombre']}!", 'success')
+        if usuario:
+            session['user_id'] = usuario['id']
+            session['user_email'] = usuario['email']
+            session['user_nombre'] = usuario['nombre']
+            flash(f"¡Bienvenido de nuevo, {usuario['nombre']}!", 'success')
             return redirect(url_for('index'))
         else:
             flash('Correo electrónico o contraseña incorrectos.', 'danger')
@@ -179,7 +251,6 @@ def login():
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
-    
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         apellido = request.form.get('apellido')
@@ -187,29 +258,84 @@ def registro():
         contrasena = request.form.get('contrasena')
         confirma = request.form.get('confirmaContraseña')
         
+        dia_nacimiento = request.form.get('dia')
+        mes_nacimiento = request.form.get('mes')
+        anio_nacimiento = request.form.get('anio')
+        genero = request.form.get('genero')
+        peso = request.form.get('peso')
+        altura = request.form.get('altura')
+        actividad_fisica = request.form.get('actividad_fisica')
+        objetivos = request.form.getlist('objetivos')
+        alergias = request.form.getlist('alergias')
+        intolerancias = request.form.getlist('intolerancias')
+        dieta_especifica = request.form.get('dieta_especifica')
+        experiencia_cocina = request.form.get('experiencia_cocina')
+        
+        if not nombre or not apellido or not email or not contrasena:
+            flash('Por favor complete todos los campos obligatorios.', 'danger')
+            return render_template('registro.html')
+        
         if contrasena != confirma:
             flash("Las contraseñas no coinciden.", 'danger')
             return render_template('registro.html')
         
-        for user in USERS:
-            if user['email'] == email:
-                flash("Este correo ya está registrado.", 'warning')
-                return render_template('registro.html')
+        if len(contrasena) < 6:
+            flash('La contraseña debe tener al menos 6 caracteres.', 'danger')
+            return render_template('registro.html')
         
-        nuevo_usuario = {
-            'nombre': nombre,
-            'apellido': apellido,
-            'email': email,
-            'password': contrasena
-        }
-        USERS.append(nuevo_usuario)
-        flash('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success')
-        return redirect(url_for('login'))
+        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+            flash('Por favor ingrese un email válido.', 'danger')
+            return render_template('registro.html')
+        
+        if email_existe(email):
+            flash("Este correo ya está registrado.", 'warning')
+            return render_template('registro.html')
+        
+        fecha_nacimiento = None
+        if dia_nacimiento and mes_nacimiento and anio_nacimiento:
+            try:
+                fecha_nacimiento = f"{anio_nacimiento}-{mes_nacimiento}-{dia_nacimiento}"
+            except:
+                pass
+        
+        try:
+            peso = float(peso) if peso else None
+        except:
+            peso = None
+            
+        try:
+            altura = float(altura) if altura else None
+        except:
+            altura = None
+        
+        success, message = registrar_usuario_db(
+            nombre=nombre,
+            apellido=apellido,
+            email=email,
+            password=contrasena,
+            fecha_nacimiento=fecha_nacimiento,
+            genero=genero,
+            peso=peso,
+            altura=altura,
+            actividad_fisica=actividad_fisica,
+            dieta_especifica=dieta_especifica,
+            experiencia_cocina=experiencia_cocina,
+            objetivos=objetivos,
+            alergias=alergias,
+            intolerancias=intolerancias
+        )
+        
+        if success:
+            flash('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash(f'Error en el registro: {message}', 'danger')
         
     return render_template('registro.html')
 
 @app.route('/logout')
 def logout():
+    session.pop('user_id', None)
     session.pop('user_email', None)
     session.pop('user_nombre', None)
     flash('Has cerrado sesión exitosamente.', 'info')
@@ -225,11 +351,8 @@ def imc():
         try:
             peso = float(request.form.get('peso'))
             altura_cm = float(request.form.get('altura'))
-            edad = int(request.form.get('edad'))
-            sexo = request.form.get('sexo')
             
             altura_m = altura_cm / 100
-            
             imc = peso / (altura_m ** 2)
             
             if imc < 18.5:
@@ -257,18 +380,11 @@ def imc():
                 categoria = "text-danger"
                 recomendacion = "Consulta urgente con un médico especialista."
             
-            
             return render_template('imc.html', 
                                 imc_resultado=f"{imc:.2f}", 
                                 clasificacion=clasificacion,
                                 categoria=categoria,
-                                recomendacion=recomendacion,
-                                datos_formulario={
-                                    'peso': peso,
-                                    'altura': altura_cm,
-                                    'edad': edad,
-                                    'sexo': sexo
-                                })
+                                recomendacion=recomendacion)
             
         except (ValueError, TypeError, ZeroDivisionError):
             flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
@@ -299,13 +415,7 @@ def tmb():
             
             return render_template('tmb.html', 
                                 tmb_resultado=f"{tmb:.0f}",
-                                recomendacion=recomendacion,
-                                datos_formulario={
-                                    'edad': edad,
-                                    'peso': peso,
-                                    'altura': altura_cm,
-                                    'sexo': sexo
-                                })
+                                recomendacion=recomendacion)
             
         except (ValueError, TypeError):
             flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
@@ -321,30 +431,20 @@ def gct():
             actividad = request.form.get('actividad')
             
             factores_actividad = {
-                'sedentario': {'factor': 1.2, 'descripcion': 'Sedentario (x1.2)'},
-                'ligero': {'factor': 1.375, 'descripcion': 'Ligero (x1.375)'},
-                'moderado': {'factor': 1.55, 'descripcion': 'Moderado (x1.55)'},
-                'intenso': {'factor': 1.725, 'descripcion': 'Intenso (x1.725)'},
-                'muy_intenso': {'factor': 1.9, 'descripcion': 'Muy intenso (x1.9)'}
+                'sedentario': 1.2,
+                'ligero': 1.375,
+                'moderado': 1.55,
+                'intenso': 1.725,
+                'muy_intenso': 1.9
             }
             
             if actividad in factores_actividad:
-                factor = factores_actividad[actividad]['factor']
+                factor = factores_actividad[actividad]
                 gct = tmb * factor
-                descripcion_actividad = factores_actividad[actividad]['descripcion']
             else:
                 factor = 1.2
                 gct = tmb * factor
-                descripcion_actividad = factores_actividad['sedentario']['descripcion']
                 actividad = 'sedentario'
-            
-            niveles_comparacion = {}
-            for key, value in factores_actividad.items():
-                niveles_comparacion[key] = {
-                    'gct': tmb * value['factor'],
-                    'descripcion': value['descripcion'],
-                    'factor': value['factor']
-                }
             
             if gct < 1500:
                 recomendacion = "Tu gasto calórico es bajo. Considera aumentar tu actividad física gradualmente."
@@ -355,14 +455,7 @@ def gct():
             
             return render_template('gct.html', 
                                 gct_resultado=f"{gct:.0f}",
-                                factor_actividad=factor,
-                                descripcion_actividad=descripcion_actividad,
-                                niveles_comparacion=niveles_comparacion,
-                                recomendacion=recomendacion,
-                                datos_formulario={
-                                    'tmb': tmb,
-                                    'actividad': actividad
-                                })
+                                recomendacion=recomendacion)
             
         except (ValueError, TypeError):
             flash('Por favor ingresa valores válidos para todos los campos.', 'danger')
@@ -502,4 +595,6 @@ def macronutrientes():
     return render_template('macronutrientes.html')
 
 if __name__ == '__main__':
+    with app.app_context():
+        crear_tablas()
     app.run(debug=True)
