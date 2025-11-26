@@ -37,6 +37,23 @@
             <option value="Ganar masa muscular" {% if datos.objetivo == 'Ganar masa muscular' %}selected{% endif %}>Ganar masa muscular</option>
         </select>
     </div>
+    
+    <div class="col-12 mt-4">
+        <h5 class="text-success">Información Adicional</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Email:</strong> {{ datos.email if datos.email else 'No especificado' }}</p>
+                <p><strong>Actividad Física:</strong> {{ datos.actividad_fisica if datos.actividad_fisica else 'No especificado' }}</p>
+                <p><strong>Dieta Específica:</strong> {{ datos.dieta_especifica if datos.dieta_especifica else 'No especificado' }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Experiencia en Cocina:</strong> {{ datos.experiencia_cocina if datos.experiencia_cocina else 'No especificado' }}</p>
+                <p><strong>Alergias:</strong> {{ datos.alergias|join(', ') if datos.alergias else 'Ninguna' }}</p>
+                <p><strong>Intolerancias:</strong> {{ datos.intolerancias|join(', ') if datos.intolerancias else 'Ninguna' }}</p>
+            </div>
+        </div>
+    </div>
+    
     <div class="col-12">
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
     </div>

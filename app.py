@@ -177,12 +177,70 @@ def inject_user_data():
 def index():
     return render_template('index.html')
 
-@app.route('/perfil')
+@app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
     if 'user_id' not in session:
         flash('Debes iniciar sesión para acceder a esta función.', 'warning')
         return redirect(url_for('login'))
-    return render_template('perfil.html')
+    
+    cursor = mysql.connection.cursor()
+    
+    cursor.execute('''
+        SELECT nombre, apellido, email, fecha_nacimiento, genero, peso, altura, 
+            actividad_fisica, dieta_especifica, experiencia_cocina 
+        FROM usuarios 
+        WHERE id = %s
+    ''', (session['user_id'],))
+    
+    usuario = cursor.fetchone()
+    
+    cursor.execute('SELECT objetivo FROM usuario_objetivos WHERE usuario_id = %s', (session['user_id'],))
+    objetivos = cursor.fetchall()
+    
+    cursor.execute('SELECT alergia FROM usuario_alergias WHERE usuario_id = %s', (session['user_id'],))
+    alergias = cursor.fetchall()
+    
+    cursor.execute('SELECT intolerancia FROM usuario_intolerancias WHERE usuario_id = %s', (session['user_id'],))
+    intolerancias = cursor.fetchall()
+    
+    datos_usuario = {}
+    if usuario:
+        datos_usuario = {
+            'nombre': f"{usuario[0]} {usuario[1]}" if usuario[0] and usuario[1] else '',
+            'email': usuario[2] if usuario[2] else '',
+            'fecha_nacimiento': usuario[3] if usuario[3] else '',
+            'sexo': usuario[4] if usuario[4] else '',
+            'peso': usuario[5] if usuario[5] else '',
+            'altura': usuario[6] if usuario[6] else '',
+            'actividad_fisica': usuario[7] if usuario[7] else '',
+            'dieta_especifica': usuario[8] if usuario[8] else '',
+            'experiencia_cocina': usuario[9] if usuario[9] else '',
+            'objetivos': [objetivo[0] for objetivo in objetivos] if objetivos else [],
+            'alergias': [alergia[0] for alergia in alergias] if alergias else [],
+            'intolerancias': [intolerancia[0] for intolerancia in intolerancias] if intolerancias else []
+        }
+    
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        edad = request.form.get('edad')
+        sexo = request.form.get('sexo')
+        peso = request.form.get('peso')
+        altura = request.form.get('altura')
+        objetivo = request.form.get('objetivo')
+        
+        datos_usuario.update({
+            'nombre': nombre,
+            'edad': edad,
+            'sexo': sexo,
+            'peso': peso,
+            'altura': altura,
+            'objetivo': objetivo
+        })
+        
+        flash('Perfil actualizado correctamente', 'success')
+        return render_template('perfil.html', datos=datos_usuario)
+    
+    return render_template('perfil.html', datos=datos_usuario)
 
 @app.route('/seguimiento')
 def seguimiento():
@@ -344,6 +402,10 @@ def logout():
 @app.route('/calculadoras')
 def calculadoras():
     return render_template('calculadoras.html')
+
+@app.route('/herramientas_de_recetas')
+def herramientas_de_recetas():
+    return render_template('herramientas_de_recetas.html')
 
 @app.route('/imc', methods=['GET', 'POST'])
 def imc():
