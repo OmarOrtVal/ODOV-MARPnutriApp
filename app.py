@@ -704,8 +704,8 @@ def perfil():
     
     return render_template('perfil.html', datos=datos_usuario)
 
-@app.route('/seguimiento')
-def seguimiento():    
+@app.route('/recomendaciones')
+def recomendaciones():    
     metas_diarias = {
         'calorias': 2200,
         'proteinas': 75,
@@ -718,7 +718,7 @@ def seguimiento():
         'vitamina_d': 600
     }
     
-    return render_template('seguimiento.html',metas_diarias=metas_diarias,)
+    return render_template('recomendaciones.html',metas_diarias=metas_diarias,)
 
 @app.route('/educacion')
 def educacion():
@@ -1483,7 +1483,7 @@ def logout():
     session.pop('user_email', None)
     session.pop('user_nombre', None)
     flash('Has cerrado sesión exitosamente.', 'info')
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/calculadoras')
 def calculadoras():
@@ -1573,24 +1573,26 @@ def tmb():
 
 @app.route('/gct', methods=['GET', 'POST'])
 def gct():
+    factores_actividad = {
+        'sedentario': {'factor': 1.2, 'descripcion': 'Sedentario'},
+        'ligero': {'factor': 1.375, 'descripcion': 'Ligero'},
+        'moderado': {'factor': 1.55, 'descripcion': 'Moderado'},
+        'intenso': {'factor': 1.725, 'descripcion': 'Intenso'},
+        'muy_intenso': {'factor': 1.9, 'descripcion': 'Muy intenso'}
+    }
+    
     if request.method == 'POST':
         try:
             tmb = float(request.form.get('tmb'))
             actividad = request.form.get('actividad')
             
-            factores_actividad = {
-                'sedentario': 1.2,
-                'ligero': 1.375,
-                'moderado': 1.55,
-                'intenso': 1.725,
-                'muy_intenso': 1.9
-            }
-            
             if actividad in factores_actividad:
-                factor = factores_actividad[actividad]
+                factor = factores_actividad[actividad]['factor']
+                descripcion = factores_actividad[actividad]['descripcion']
                 gct = tmb * factor
             else:
                 factor = 1.2
+                descripcion = 'Sedentario'
                 gct = tmb * factor
                 actividad = 'sedentario'
             
@@ -1601,9 +1603,22 @@ def gct():
             else:
                 recomendacion = "Gasto calórico alto. Asegúrate de consumir suficientes nutrientes para tu nivel de actividad."
             
+            niveles_comparacion = {}
+            for key, valores in factores_actividad.items():
+                niveles_comparacion[key] = {
+                    'descripcion': valores['descripcion'],
+                    'factor': valores['factor'],
+                    'gct': tmb * valores['factor']
+                }
+            
             return render_template('gct.html', 
                                 gct_resultado=f"{gct:.0f}",
-                                recomendacion=recomendacion)
+                                tmb=tmb,
+                                factor_actividad=factor,
+                                descripcion_actividad=descripcion,
+                                actividad_seleccionada=actividad,
+                                recomendacion=recomendacion,
+                                niveles_comparacion=niveles_comparacion)
             
         except (ValueError, TypeError):
             flash('Por favor ingresa valores válidos para todos los campos.', 'danger')

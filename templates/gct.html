@@ -8,8 +8,9 @@
     <p class="mb-2">El GCT, también conocido como Gasto Energético Total (GET), es la cantidad total de energía (calorías) que tu cuerpo gasta en un día para realizar todas sus funciones.</p>
     <p class="mb-1">El GCT se compone de tres elementos principales:</p>
     <p class="mb-1"><strong>Tasa Metabólica Basal (TMB):</strong> El mayor componente, necesario para las funciones vitales.</p>
-    <p class="mb-1"><strong>Efecto Termogénico de los Alimentos (ETA):</strong>Energía que se gasta para digerir, absorber y metabolizar los alimentos.</p>
-    <p class="mb-1"><strong>Efecto Termogénico de los Alimentos (ETA):</strong> Energía que se gasta para digerir, absorber y metabolizar los alimentos.</p>
+    <p class="mb-1"><strong>Efecto Termogénico de la Actividad (ETA):</strong> Energía gastada en actividad física y ejercicio.</p>
+    <p class="mb-1"><strong>Efecto Termogénico de los Alimentos (TEF):</strong> Energía que se gasta para digerir, absorber y metabolizar los alimentos.</p>
+    
     <h6 class="text-success mt-3">Factores de Actividad:</h6>
     <ul class="mb-2">
       <li><strong>Sedentario (1.2):</strong> Trabajo de oficina, poco o ningún ejercicio</li>
@@ -21,23 +22,22 @@
     
     <p class="mb-0">Si no conoces tu TMB, puedes calcularla usando nuestra calculadora de Tasa Metabólica Basal.</p>
   </div>
-  </div>
 
-  <form class="row g-3" method="POST" action="{{ url_for('gct') }}">
+  <form class="row g-3 mt-3" method="POST" action="{{ url_for('gct') }}">
     <div class="col-md-6">
       <label class="form-label">TMB (kcal/día)</label>
       <input type="number" class="form-control" name="tmb" placeholder="Ej. 1600" step="0.1" min="1" required
-            value="{{ datos_formulario.tmb if datos_formulario }}">
+            value="{{ request.form.tmb if request.form }}">
     </div>
     <div class="col-md-6">
       <label class="form-label">Nivel de actividad física</label>
       <select class="form-select" name="actividad" required>
         <option value="">Seleccionar nivel...</option>
-        <option value="sedentario" {% if datos_formulario and datos_formulario.actividad == 'sedentario' %}selected{% endif %}>Sedentario (x1.2)</option>
-        <option value="ligero" {% if datos_formulario and datos_formulario.actividad == 'ligero' %}selected{% endif %}>Ligero (x1.375)</option>
-        <option value="moderado" {% if datos_formulario and datos_formulario.actividad == 'moderado' %}selected{% endif %}>Moderado (x1.55)</option>
-        <option value="intenso" {% if datos_formulario and datos_formulario.actividad == 'intenso' %}selected{% endif %}>Intenso (x1.725)</option>
-        <option value="muy_intenso" {% if datos_formulario and datos_formulario.actividad == 'muy_intenso' %}selected{% endif %}>Muy intenso (x1.9)</option>
+        <option value="sedentario" {% if request.form and request.form.actividad == 'sedentario' %}selected{% endif %}>Sedentario (x1.2)</option>
+        <option value="ligero" {% if request.form and request.form.actividad == 'ligero' %}selected{% endif %}>Ligero (x1.375)</option>
+        <option value="moderado" {% if request.form and request.form.actividad == 'moderado' %}selected{% endif %}>Moderado (x1.55)</option>
+        <option value="intenso" {% if request.form and request.form.actividad == 'intenso' %}selected{% endif %}>Intenso (x1.725)</option>
+        <option value="muy_intenso" {% if request.form and request.form.actividad == 'muy_intenso' %}selected{% endif %}>Muy intenso (x1.9)</option>
       </select>
     </div>
     <div class="col-12">
@@ -65,7 +65,7 @@
       
       <div class="row mb-4">
         <div class="col-md-6">
-          <strong>TMB:</strong> {{ datos_formulario.tmb }} kcal/día
+          <strong>TMB:</strong> {{ tmb }} kcal/día
         </div>
         <div class="col-md-6">
           <strong>Nivel de actividad:</strong> {{ descripcion_actividad }}
@@ -76,7 +76,7 @@
         <h6 class="alert-heading">Tu Gasto Calórico Total (GCT):</h6>
         <p class="mb-0 fs-4 fw-bold">{{ gct_resultado }} kcal/día</p>
         <small class="text-muted">
-          Cálculo: {{ datos_formulario.tmb }} TMB × {{ factor_actividad }} (factor de actividad) = {{ gct_resultado }} kcal/día
+          Cálculo: {{ tmb }} TMB × {{ factor_actividad }} (factor de actividad) = {{ gct_resultado }} kcal/día
         </small>
       </div>
     </div>
@@ -94,10 +94,10 @@
           </thead>
           <tbody>
             {% for key, nivel in niveles_comparacion.items() %}
-            <tr {% if datos_formulario.actividad == key %}class="table-success"{% endif %}>
+            <tr {% if actividad_seleccionada == key %}class="table-success"{% endif %}>
               <td>
                 <strong>{{ nivel.descripcion }}</strong>
-                {% if datos_formulario.actividad == key %}
+                {% if actividad_seleccionada == key %}
                 <span class="badge bg-success ms-2">Seleccionado</span>
                 {% endif %}
               </td>
@@ -116,6 +116,5 @@
     <p><strong>Gasto calórico total:</strong> -- kcal/día</p>
   </div>
   {% endif %}
-
 </div>
 {% endblock %}

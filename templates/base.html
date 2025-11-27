@@ -24,13 +24,30 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('seguimiento') }}">Seguimiento</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('recomendaciones') }}">Recomendaciones</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('educacion') }}">Educacion</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('habitos') }}">Hábitos Saludables</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('alimentos') }}">Registro de Alimentos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('herramientas_de_recetas') }}">Herramientas de recetas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('calculadoras') }}">Calculadoras</a></li>
-                </ul>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Recetas y Herramientas
+                        </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('recetas') }}">Banco de Recetas</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('analizador_de_recetas') }}">Analizador de Recetas</a></li>
+                    </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Calculadoras
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('imc') }}">Índice de Masa Corporal (IMC)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('tmb') }}">Tasa Metabólica Basal (TMB)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('gct') }}">Gasto Calórico Total (GCT)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('peso_ideal') }}">Peso Corporal Ideal</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('macronutrientes') }}">Macronutrientes</a></li>
+                        </ul>
             </div>
 
                 {% if current_user %} 
@@ -41,9 +58,7 @@
                         <a  class="btn btn-outline-danger btn-sm me-4 text-white" href="{{ url_for('logout') }}">Cerrar Sesión</a>
                     </li>
                 {% else %}
-                    <li class="nav-item">
-                        <a  class="btn btn-outline-light btn-sm me-4" href="{{ url_for('login') }}">Iniciar Sesión</a>
-                    </li>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light">Iniciar Sesión</a>
                     <li class="nav-item">
                         <a class="btn btn-outline-light btn-sm me-4" href="{{ url_for('registro') }}">Registro</a>
                     </li>
