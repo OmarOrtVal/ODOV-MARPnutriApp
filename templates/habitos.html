@@ -1,118 +1,220 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
-        <h3 class="text-success fw-bold mb-4">
-            Aprendizaje de Hábitos Saludables
-        </h3>
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Mi Progreso de Hábitos</h5>
+<div class="container mt-4">
+    <h3 class="text-success fw-bold mb-4">Aprendizaje de Hábitos Saludables</h3>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Metas de Hábitos Saludables</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h4 class="text-success">2.5L</h4>
+                                    <small>Agua Diaria</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h4 class="text-warning">5</h4>
+                                    <small>Frutas/Verduras</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h4 class="text-info">30min</h4>
+                                    <small>Ejercicio Diario</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <h4 class="text-primary">8h</h4>
+                                    <small>Sueño Nocturno</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h4 class="text-success">75%</h4>
-                            <small>Hidratación</small>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Hábitos para Desarrollar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Beber 2.5L de agua al día</h6>
+                                <span class="badge bg-success">Meta</span>
+                            </div>
+                            <p class="mb-1">Mantén una botella de agua cerca y toma sorbos regularmente durante el día.</p>
+                            <small>Beneficios: Mejora la digestión, piel saludable, más energía</small>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h4 class="text-warning">60%</h4>
-                            <small>Alimentación</small>
+                        
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Comer 5 porciones de frutas/verduras</h6>
+                                <span class="badge bg-success">Meta</span>
+                            </div>
+                            <p class="mb-1">Incluye al menos una porción en cada comida principal.</p>
+                            <small>Beneficios: Más vitaminas, fibra, antioxidantes</small>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h4 class="text-info">80%</h4>
-                            <small>Ejercicio</small>
+                        
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">30 minutos de ejercicio diario</h6>
+                                <span class="badge bg-success">Meta</span>
+                            </div>
+                            <p class="mb-1">Puede ser caminata rápida, yoga, bicicleta o cualquier actividad que disfrutes.</p>
+                            <small>Beneficios: Salud cardiovascular, fuerza muscular, mejor ánimo</small>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h4 class="text-primary">90%</h4>
-                            <small>Sueño</small>
+
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">8 horas de sueño de calidad</h6>
+                                <span class="badge bg-success">Meta</span>
+                            </div>
+                            <p class="mb-1">Establece una rutina regular para dormir y despertar.</p>
+                            <small>Beneficios: Mejor concentración, reparación celular, control del apetito</small>
+                        </div>
+
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">10 minutos de mindfulness al día</h6>
+                                <span class="badge bg-success">Meta</span>
+                            </div>
+                            <p class="mb-1">Practica respiración consciente o meditación guiada.</p>
+                            <small>Beneficios: Reduce estrés, mejora enfoque, equilibrio emocional</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Hábitos para Desarrollar</h5>
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Consejos Prácticos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6>💧 Tip de Hidratación</h6>
+                        <p class="mb-0">Toma un vaso de agua 30 minutos antes de cada comida. Esto ayuda con la digestión y control del apetito.</p>
+                    </div>
+                    <div class="alert alert-success">
+                        <h6>Alimentación Consciente</h6>
+                        <p class="mb-0">Mastica cada bocado 20 veces para mejor digestión y para reconocer mejor las señales de saciedad.</p>
+                    </div>
+                    <div class="alert alert-warning">
+                        <h6>Movimiento Diario</h6>
+                        <p class="mb-0">Usa las escaleras en lugar del ascensor. Cada pequeño movimiento cuenta para tu salud.</p>
+                    </div>
+                    <div class="alert alert-primary">
+                        <h6>Sueño de Calidad</h6>
+                        <p class="mb-0">Evita pantallas 1 hora antes de dormir. La luz azul interfiere con la producción de melatonina.</p>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="list-group">
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">Beber 2L de agua al día</h6>
-                            <span class="badge bg-success">En progreso</span>
-                        </div>
-                        <p class="mb-1">Llevas 1.5L hoy. ¡Sigue así!</p>
-                        <small>Dificultad: Fácil</small>
-                    </div>
-                    
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">Comer 5 porciones de frutas/verduras</h6>
-                            <span class="badge bg-warning">Por empezar</span>
-                        </div>
-                        <p class="mb-1">Hoy llevas 2 porciones.</p>
-                        <small>Dificultad: Media</small>
-                    </div>
-                    
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">30 minutos de ejercicio diario</h6>
-                            <span class="badge bg-success">En progreso</span>
-                        </div>
-                        <p class="mb-1">Completado: 20 minutos hoy.</p>
-                        <small>Dificultad: Media</small>
-                    </div>
+
+
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Inicio Rápido</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">Empieza con un hábito a la vez</li>
+                        <li class="mb-2">Establece recordatorios en tu teléfono</li>
+                        <li class="mb-2">Celebra pequeños progresos</li>
+                        <li class="mb-2">Sé constante, no perfecto</li>
+                        <li class="mb-0">Revisa tu progreso semanalmente</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Consejos del Día</h5>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-info">
-                    <h6>Tip de Hidratación</h6>
-                    <p class="mb-0">Toma un vaso de agua 30 minutos antes de cada comida.</p>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Estrategias para Implementar Hábitos</h5>
                 </div>
-                <div class="alert alert-success">
-                    <h6>Alimentación Consciente</h6>
-                    <p class="mb-0">Mastica cada bocado 20 veces para mejor digestión.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card shadow-sm">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">Logros</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    <div>
-                        <h6 class="mb-0">Hidratación consistente</h6>
-                        <small>7 días seguidos</small>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">1</h4>
+                                    <h6>Empezar Pequeño</h6>
+                                    <p class="small">Comienza con cambios pequeños y sostenibles. 5 minutos de ejercicio es mejor que nada.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">2</h4>
+                                    <h6>Establecer Recordatorios</h6>
+                                    <p class="small">Usa alarmas o aplicaciones para recordar tus nuevos hábitos durante el día.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">3</h4>
+                                    <h6>Crear Ambiente</h6>
+                                    <p class="small">Prepara tu entorno para el éxito: ten agua disponible, frutas a la vista, ropa de ejercicio lista.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div>
-                        <h6 class="mb-0">Ejercicio regular</h6>
-                        <small>5 días esta semana</small>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">4</h4>
+                                    <h6>Ser Consistente</h6>
+                                    <p class="small">La consistencia es más importante que la intensidad. Mejor 15 minutos diarios que 2 horas una vez.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">5</h4>
+                                    <h6>Monitorear Progreso</h6>
+                                    <p class="small">Lleva un registro simple de tus hábitos para mantener la motivación.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success">6</h4>
+                                    <h6>Recompensarse</h6>
+                                    <p class="small">Celebra tus logros, por pequeños que sean. Reconoce tu esfuerzo.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

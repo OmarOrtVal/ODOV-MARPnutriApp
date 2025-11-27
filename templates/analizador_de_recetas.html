@@ -11,35 +11,31 @@
                     <h5 class="mb-0">Analizar Receta</h5>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ url_for('analizador_de_recetas') }}">
                         <div class="mb-3">
                             <label class="form-label">Nombre de la Receta</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Ej: Ensalada César"
-                            >
+                            <input type="text" class="form-control" name="nombre_receta" placeholder="Ej: Ensalada César" required>
                         </div>
                         
-                <div class="mb-3">
-                    <label class="form-label">Ingredientes (uno por línea)</label>
-                        <textarea class="form-control" rows="6" placeholder="Ej:
-                        2 tazas de lechuga romana
-                        100g de pechuga de pollo
-                        2 cucharadas de aderezo César
-                        30g de queso parmesano
-                        1 taza de crutones"></textarea>
-                    <small class="text-muted">
-                        Ingresa cada ingrediente en una línea separada con cantidad y unidad
-                    </small>
-                </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ingredientes (uno por línea)</label>
+                            <textarea class="form-control" name="ingredientes" rows="6" placeholder="Ej:
+                                    2 tazas de lechuga romana
+                                    100g de pechuga de pollo
+                                    2 cucharadas de aderezo César
+                                    30g de queso parmesano
+                                    1 taza de crutones" required></textarea>
+                            <small class="text-muted">
+                                Ingresa cada ingrediente en una línea separada con cantidad y unidad
+                            </small>
+                        </div>
                         
                         <div class="mb-3">
                             <label class="form-label">Número de porciones</label>
-                            <input type="number" class="form-control" value="1" min="1">
+                            <input type="number" class="form-control" name="porciones" value="1" min="1" required>
                         </div>
                         
-                        <button type="button" class="btn btn-success w-100">Analizar Receta</button>
+                        <button type="submit" class="btn btn-success w-100">Analizar Receta con API USDA</button>
                     </form>
                 </div>
             </div>
@@ -53,7 +49,7 @@
                 <div class="card-body">
                     <p>
                         El analizador calcula automáticamente el valor nutricional de tus recetas
-                        basándose en los ingredientes que ingreses.
+                        basándose en los ingredientes que ingreses usando la base de datos oficial del USDA.
                     </p>
                     
                     <h6 class="text-success">Formato recomendado:</h6>
@@ -62,10 +58,11 @@
                         <li>Ej: "2 tazas de arroz integral"</li>
                         <li>Ej: "150g de pechuga de pollo"</li>
                         <li>Ej: "1 cucharada de aceite de oliva"</li>
+                        <li>Ej: "3 unidades de huevo"</li>
                     </ul>
                     
                     <div class="alert alert-warning mb-0">
-                        <h6>Recetas de ejemplo:</h6>
+                        <h6>Recetas de ejemplo para probar:</h6>
                         <ul class="mb-0 small">
                             <li>
                                 <strong>Ensalada Proteica:</strong> 200g pollo, 2 tazas lechuga,
@@ -79,50 +76,76 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Unidades Soportadas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row small">
+                        <div class="col-md-6">
+                            <ul class="mb-0">
+                                <li>taza / tazas</li>
+                                <li>cucharada / cdas</li>
+                                <li>cucharadita</li>
+                                <li>gramo / gramos / g</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="mb-0">
+                                <li>unidad / unidades</li>
+                                <li>pizca / pizcas</li>
+                                <li>kg / libra / lb</li>
+                                <li>onza / oz</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    {% if resultado_analisis %}
     <div class="row mt-4">
         <div class="col-12">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Resultado del Análisis: Ensalada César</h5>
+                    <h5 class="mb-0">Resultado del Análisis: {{ resultado_analisis.nombre_receta }}</h5>
                 </div>
                 <div class="card-body">
-
-                    <div class="row text-center mb-3">
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <h4 class="text-success mb-0">520</h4>
+                    <div class="row text-center mb-4">
+                        <div class="col-md-3 mb-3">
+                            <h4 class="text-success mb-0">{{ resultado_analisis.nutrientes_totales.calorias | round | int }}</h4>
                             <small>Calorías totales</small>
                         </div>
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <h4 class="text-warning mb-0">40g</h4>
+                        <div class="col-md-3 mb-3">
+                            <h4 class="text-warning mb-0">{{ resultado_analisis.nutrientes_totales.proteinas | round(1) }}g</h4>
                             <small>Proteínas</small>
                         </div>
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <h4 class="text-success mb-0">35g</h4>
+                        <div class="col-md-3 mb-3">
+                            <h4 class="text-info mb-0">{{ resultado_analisis.nutrientes_totales.carbohidratos | round(1) }}g</h4>
                             <small>Carbohidratos</small>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <h4 class="text-info mb-0">22g</h4>
+                            <h4 class="text-danger mb-0">{{ resultado_analisis.nutrientes_totales.grasas | round(1) }}g</h4>
                             <small>Grasas</small>
                         </div>
                     </div>
                     
                     <div class="mb-4">
-                        <h6>Por porción (2 porciones):</h6>
+                        <h6>Por porción ({{ resultado_analisis.porciones }} porciones):</h6>
                         <div class="row text-center">
                             <div class="col-md-3 mb-2">
-                                <strong>260</strong> kcal
+                                <strong>{{ resultado_analisis.nutrientes_porcion.calorias | round | int }}</strong> kcal
                             </div>
                             <div class="col-md-3 mb-2">
-                                <strong>20g</strong> proteínas
+                                <strong>{{ resultado_analisis.nutrientes_porcion.proteinas | round(1) }}g</strong> proteínas
                             </div>
                             <div class="col-md-3 mb-2">
-                                <strong>17.5g</strong> carbohidratos
+                                <strong>{{ resultado_analisis.nutrientes_porcion.carbohidratos | round(1) }}g</strong> carbohidratos
                             </div>
                             <div class="col-md-3 mb-2">
-                                <strong>11g</strong> grasas
+                                <strong>{{ resultado_analisis.nutrientes_porcion.grasas | round(1) }}g</strong> grasas
                             </div>
                         </div>
                     </div>
@@ -134,6 +157,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Ingrediente</th>
+                                        <th>Cantidad</th>
                                         <th>Calorías</th>
                                         <th>Proteínas</th>
                                         <th>Carbos</th>
@@ -141,43 +165,40 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for ingrediente in resultado_analisis.ingredientes_analizados %}
                                     <tr>
-                                        <td>Lechuga romana (2 tazas)</td>
-                                        <td>20</td>
-                                        <td>2g</td>
-                                        <td>4g</td>
-                                        <td>0g</td>
+                                        <td>{{ ingrediente.nombre }}</td>
+                                        <td>{{ ingrediente.cantidad }} {{ ingrediente.unidad }}</td>
+                                        <td>{{ ingrediente.calorias | round | int }}</td>
+                                        <td>{{ ingrediente.proteinas | round(1) }}g</td>
+                                        <td>{{ ingrediente.carbohidratos | round(1) }}g</td>
+                                        <td>{{ ingrediente.grasas | round(1) }}g</td>
                                     </tr>
-                                    <tr>
-                                        <td>Pechuga de pollo (100g)</td>
-                                        <td>165</td>
-                                        <td>31g</td>
-                                        <td>0g</td>
-                                        <td>3.6g</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Aderezo César (2 cdas)</td>
-                                        <td>150</td>
-                                        <td>1g</td>
-                                        <td>2g</td>
-                                        <td>15g</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Queso parmesano (30g)</td>
-                                        <td>120</td>
-                                        <td>11g</td>
-                                        <td>1g</td>
-                                        <td>8g</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Crutones (1 taza)</td>
-                                        <td>65</td>
-                                        <td>1g</td>
-                                        <td>28g</td>
-                                        <td>2g</td>
-                                    </tr>
+                                    {% endfor %}
                                 </tbody>
+                                <tfoot class="table-success">
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td></td>
+                                        <td><strong>{{ resultado_analisis.nutrientes_totales.calorias | round | int }}</strong></td>
+                                        <td><strong>{{ resultado_analisis.nutrientes_totales.proteinas | round(1) }}g</strong></td>
+                                        <td><strong>{{ resultado_analisis.nutrientes_totales.carbohidratos | round(1) }}g</strong></td>
+                                        <td><strong>{{ resultado_analisis.nutrientes_totales.grasas | round(1) }}g</strong></td>
+                                    </tr>
+                                </tfoot>
                             </table>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h6>Información del análisis:</h6>
+                            <ul class="mb-0 small">
+                                <li>Los datos nutricionales provienen de la base de datos oficial del USDA</li>
+                                <li>Los valores son aproximados y pueden variar según marcas específicas</li>
+                                <li>El análisis considera 100g como cantidad base para los cálculos</li>
+                                <li>Algunos ingredientes pueden no estar disponibles en la base de datos</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -185,6 +206,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
 </div>
 

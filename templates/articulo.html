@@ -2,51 +2,120 @@
 {% block content %}
 
 <div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-success text-white">
-            <h4 class="mb-0">{{ article.titulo }}</h4>
-        </div>
-        <div class="card-body">
-            <p class="text-muted">Categoría: {{ article.categoria }}</p>
-            <div class="article-content">
-                <p>{{ article.contenido }}</p>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('educacion') }}">Educación Nutricional</a></li>
+            <li class="breadcrumb-item active">{{ article.titulo }}</li>
+        </ol>
+    </nav>
 
-                {% if article.id == 1 %}
-                <h5>¿Qué debes buscar en una etiqueta?</h5>
-                <ul>
-                    <li><strong>Tamaño de porción:</strong> La base de todos los cálculos</li>
-                    <li><strong>Calorías:</strong> Energía que proporciona</li>
-                    <li><strong>Nutrientes clave:</strong> Proteínas, carbohidratos, grasas</li>
-                    <li><strong>% Valor Diario:</strong> Porcentaje basado en una dieta de 2000 calorías</li>
-                </ul>
-                {% elif article.id == 2 %}
-                <h5>Ejemplos de mitos comunes</h5>
-                <ul>
-                    <li>“Dejar de comer carbohidratos hace bajar de peso rápido”</li>
-                    <li>“Todas las grasas son malas”</li>
-                    <li>“Comer de noche engorda”</li>
-                </ul>
-                <p>La clave es mantener equilibrio y basarse en evidencia científica, no en tendencias virales.</p>
-                {% elif article.id == 3 %}
-                <h5>Funciones principales:</h5>
-                <ul>
-                    <li><strong>Proteínas:</strong> Construcción y reparación de tejidos.</li>
-                    <li><strong>Carbohidratos:</strong> Fuente primaria de energía.</li>
-                    <li><strong>Grasas:</strong> Regulación hormonal y transporte de vitaminas.</li>
-                </ul>
-                {% elif article.id == 4 %}
-                <h5>Beneficios de la hidratación y la fibra:</h5>
-                <ul>
-                    <li>Previenen el estreñimiento y mejoran la digestión.</li>
-                    <li>Favorecen la saciedad y el control del apetito.</li>
-                    <li>Ayudan a regular el colesterol y la glucosa.</li>
-                </ul>
-                <p>Se recomienda consumir al menos 2 litros de agua y 25-30g de fibra al día.</p>
-                {% endif %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">{{ article.titulo }}</h4>
+                        <span class="badge bg-light text-dark">{{ article.tiempo_lectura }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge bg-info">{{ article.categoria }}</span>
+                    </div>
+
+                    <div class="article-content">
+                        <p class="lead">{{ article.contenido }}</p>
+
+                        {% if article.id == 1 %}
+                        <h5 class="text-success mt-4">¿Qué debes buscar en una etiqueta?</h5>
+                        <ul>
+                            <li><strong>Tamaño de porción:</strong> La base de todos los cálculos</li>
+                            <li><strong>Calorías:</strong> Energía que proporciona</li>
+                            <li><strong>Nutrientes clave:</strong> Proteínas, carbohidratos, grasas</li>
+                            <li><strong>% Valor Diario:</strong> Porcentaje basado en una dieta de 2000 calorías</li>
+                        </ul>
+                        {% elif article.id == 2 %}
+                        <h5 class="text-success mt-4">Ejemplos de mitos comunes</h5>
+                        <ul>
+                            <li>"Dejar de comer carbohidratos hace bajar de peso rápido"</li>
+                            <li>"Todas las grasas son malas"</li>
+                            <li>"Comer de noche engorda"</li>
+                        </ul>
+                        <p>La clave es mantener equilibrio y basarse en evidencia científica, no en tendencias virales.</p>
+                        {% elif article.id == 3 %}
+                        <h5 class="text-success mt-4">Funciones principales:</h5>
+                        <ul>
+                            <li><strong>Proteínas:</strong> Construcción y reparación de tejidos.</li>
+                            <li><strong>Carbohidratos:</strong> Fuente primaria de energía.</li>
+                            <li><strong>Grasas:</strong> Regulación hormonal y transporte de vitaminas.</li>
+                        </ul>
+                        {% elif article.id == 4 %}
+                        <h5 class="text-success mt-4">Beneficios de la hidratación y la fibra:</h5>
+                        <ul>
+                            <li>Previenen el estreñimiento y mejoran la digestión.</li>
+                            <li>Favorecen la saciedad y el control del apetito.</li>
+                            <li>Ayudan a regular el colesterol y la glucosa.</li>
+                        </ul>
+                        <p>Se recomienda consumir al menos 2 litros de agua y 25-30g de fibra al día.</p>
+                        {% elif article.id == 5 %}
+                        <h5 class="text-success mt-4">Beneficios de la planificación de comidas:</h5>
+                        <ul>
+                            <li><strong>Ahorro de tiempo:</strong> Dedica 2 horas el domingo y ahorra tiempo diario</li>
+                            <li><strong>Control de porciones:</strong> Planifica cantidades adecuadas</li>
+                            <li><strong>Variedad nutricional:</strong> Asegura todos los grupos alimenticios</li>
+                            <li><strong>Reducción de estrés:</strong> Elimina la pregunta "¿qué cocino hoy?"</li>
+                        </ul>
+                        {% elif article.id == 6 %}
+                        <h5 class="text-success mt-4">Principales antioxidantes y sus fuentes:</h5>
+                        <ul>
+                            <li><strong>Vitamina C:</strong> Cítricos, pimientos, brócoli</li>
+                            <li><strong>Vitamina E:</strong> Nueces, semillas, aceites vegetales</li>
+                            <li><strong>Betacaroteno:</strong> Zanahorias, batatas, espinacas</li>
+                            <li><strong>Selenio:</strong> Nueces de Brasil, atún, huevos</li>
+                        </ul>
+                        {% elif article.id == 7 %}
+                        <h5 class="text-success mt-4">Recomendaciones para diabetes:</h5>
+                        <ul>
+                            <li>Distribuir carbohidratos en todas las comidas</li>
+                            <li>Preferir carbohidratos complejos sobre simples</li>
+                            <li>Incluir fibra en cada comida</li>
+                            <li>Monitorear niveles de glucosa regularmente</li>
+                        </ul>
+                        {% elif article.id == 8 %}
+                        <h5 class="text-success mt-4">Suplementos más comunes:</h5>
+                        <ul>
+                            <li><strong>Multivitamínicos:</strong> Para cubrir deficiencias generales</li>
+                            <li><strong>Vitamina D:</strong> Para personas con poca exposición solar</li>
+                            <li><strong>Omega-3:</strong> Para salud cardiovascular</li>
+                            <li><strong>Proteína en polvo:</strong> Para deportistas y personas mayores</li>
+                        </ul>
+                        {% elif article.id == 9 %}
+                        <h5 class="text-success mt-4">Técnicas de alimentación consciente:</h5>
+                        <ul>
+                            <li>Comer sin distracciones (TV, celular)</li>
+                            <li>Masticar lentamente y saborear cada bocado</li>
+                            <li>Reconocer señales de hambre y saciedad</li>
+                            <li>Identificar emociones relacionadas con la comida</li>
+                        </ul>
+                        {% elif article.id == 10 %}
+                        <h5 class="text-success mt-4">Timing nutricional para deportistas:</h5>
+                        <ul>
+                            <li><strong>Pre-entreno (2-3 horas antes):</strong> Carbohidratos complejos + proteína</li>
+                            <li><strong>Durante el ejercicio:</strong> Hidratación + carbohidratos simples</li>
+                            <li><strong>Post-entreno (30-60 min después):</strong> Proteína + carbohidratos</li>
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-success">Puntos clave:</h6>
+                        <p class="mb-0">Recuerda que esta información es educativa. Siempre consulta con un profesional de la salud para recomendaciones personalizadas.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('educacion') }}" class="btn btn-success">Volver a Artículos</a>
+                </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <a href="{{ url_for('educacion') }}" class="btn btn-success">Volver a Artículos</a>
         </div>
     </div>
 </div>

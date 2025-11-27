@@ -7,83 +7,173 @@
 
     <h3 class="text-success fw-bold mb-4">Seguimiento Nutricional</h3>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Metas Nutricionales Diarias</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3 mb-3">
+                    <h4 class="text-success">{{ metas_diarias.calorias }}</h4>
+                    <small>Calorías</small>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h4 class="text-warning">{{ metas_diarias.proteinas }}g</h4>
+                    <small>Proteínas</small>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h4 class="text-primary">{{ metas_diarias.carbohidratos }}g</h4>
+                    <small>Carbohidratos</small>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h4 class="text-danger">{{ metas_diarias.grasas }}g</h4>
+                    <small>Grasas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
     <div class="col-md-4 mb-3">
         <div class="card p-3 shadow-sm">
         <h5 class="fw-bold">Calorías Diarias</h5>
-        <p>Consumidas: <strong>1800 kcal</strong> / Meta: <strong>2200 kcal</strong></p>
-        <div class="progress">
-            <div class="progress-bar bg-success" style="width: 80%"></div>
-        </div>
+        <p>Meta: <strong>{{ metas_diarias.calorias }} kcal</strong></p>
+        <small class="text-muted mt-2">
+            Objetivo diario de energía para mantener tus funciones corporales
+        </small>
         </div>
     </div>
     <div class="col-md-4 mb-3">
         <div class="card p-3 shadow-sm">
         <h5 class="fw-bold">Macronutrientes</h5>
         <ul class="mb-0">
-            <li>Proteínas: 90 g</li>
-            <li>Carbohidratos: 250 g</li>
-            <li>Grasas: 70 g</li>
+            <li>Proteínas: {{ metas_diarias.proteinas }}g</li>
+            <li>Carbohidratos: {{ metas_diarias.carbohidratos }}g</li>
+            <li>Grasas: {{ metas_diarias.grasas }}g</li>
         </ul>
+        <small class="text-muted">
+            Distribución ideal: {{ (metas_diarias.proteinas * 4 / metas_diarias.calorias * 100) | round | int }}% Prot, 
+            {{ (metas_diarias.carbohidratos * 4 / metas_diarias.calorias * 100) | round | int }}% Carb, 
+            {{ (metas_diarias.grasas * 9 / metas_diarias.calorias * 100) | round | int }}% Grasas
+        </small>
         </div>
     </div>
     <div class="col-md-4 mb-3">
         <div class="card p-3 shadow-sm">
         <h5 class="fw-bold">Hidratación</h5>
-        <p>Agua consumida: 1.8 L / Meta: 2.5 L</p>
-        <div class="progress">
-            <div class="progress-bar bg-info" style="width: 72%"></div>
-        </div>
+        <p>Meta: <strong>{{ metas_diarias.agua }}L</strong> de agua diarios</p>
+        <small class="text-muted mt-2">
+            Cantidad recomendada para mantener una hidratación óptima
+        </small>
         </div>
     </div>
     </div>
 
     <div class="row mt-4">
     <div class="col-12">
-        <h4 class="text-success fw-bold mb-3">Seguimiento de Micronutrientes</h4>
+        <h4 class="text-success fw-bold mb-3">Metas de Micronutrientes</h4>
     </div>
 
     <div class="col-md-3 mb-3">
         <div class="card p-3 shadow-sm">
         <h6 class="fw-bold text-primary">Vitamina C</h6>
-        <p>85 mg / 90 mg recomendados</p>
-        <div class="progress">
-            <div class="progress-bar bg-primary" style="width: 94%"></div>
-        </div>
-        <small class="text-muted">Fuentes: Cítricos, pimientos</small>
+        <p>{{ metas_diarias.vitamina_c }}mg recomendados</p>
+        <small class="text-muted">Fuentes: Cítricos, pimientos, brócoli</small>
         </div>
     </div>
 
     <div class="col-md-3 mb-3">
         <div class="card p-3 shadow-sm">
         <h6 class="fw-bold text-warning">Hierro</h6>
-        <p>14 mg / 18 mg recomendados</p>
-        <div class="progress">
-            <div class="progress-bar bg-warning" style="width: 78%"></div>
-        </div>
-        <small class="text-muted">Fuentes: Carnes, espinacas</small>
+        <p>{{ metas_diarias.hierro }}mg recomendados</p>
+        <small class="text-muted">Fuentes: Carnes, espinacas, legumbres</small>
         </div>
     </div>
 
     <div class="col-md-3 mb-3">
         <div class="card p-3 shadow-sm">
         <h6 class="fw-bold text-info">Calcio</h6>
-        <p>900 mg / 1000 mg recomendados</p>
-        <div class="progress">
-            <div class="progress-bar bg-info" style="width: 90%"></div>
-        </div>
-        <small class="text-muted">Fuentes: Lácteos, almendras</small>
+        <p>{{ metas_diarias.calcio }}mg recomendados</p>
+        <small class="text-muted">Fuentes: Lácteos, almendras, sardinas</small>
         </div>
     </div>
 
     <div class="col-md-3 mb-3">
         <div class="card p-3 shadow-sm">
         <h6 class="fw-bold text-success">Vitamina D</h6>
-        <p>400 UI / 600 UI recomendados</p>
-        <div class="progress">
-            <div class="progress-bar bg-success" style="width: 67%"></div>
+        <p>{{ metas_diarias.vitamina_d }}UI recomendados</p>
+        <small class="text-muted">Fuentes: Sol, pescados, huevos</small>
         </div>
-        <small class="text-muted">Fuentes: Sol, pescados</small>
+    </div>
+    </div>
+
+    <div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">Recomendaciones para Leer Etiquetas Nutricionales</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <h6>Comienza por el tamaño de porción</h6>
+                        <p class="mb-0">Todos los valores nutricionales se basan en una porción. Verifica cuántas porciones contiene el paquete.</p>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <h6>Revisa las calorías</h6>
+                        <p class="mb-0">Identifica cuántas calorías aporta una porción y compáralo con tu meta diaria de {{ metas_diarias.calorias }} kcal.</p>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h6>Limita estos nutrientes</h6>
+                        <ul class="mb-0">
+                            <li>Grasas saturadas: Menos de 20g diarios</li>
+                            <li>Grasas trans: Evítalas completamente</li>
+                            <li>Sodio: Menos de 2300mg diarios</li>
+                            <li>Azúcares añadidos: Menos de 50g diarios</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="alert alert-primary">
+                        <h6>Consume más de estos nutrientes</h6>
+                        <ul class="mb-0">
+                            <li>Fibra: 25-30g diarios</li>
+                            <li>Proteína: {{ metas_diarias.proteinas }}g diarios</li>
+                            <li>Vitaminas y minerales esenciales</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-secondary">
+                        <h6>Revisa la lista de ingredientes</h6>
+                        <p class="mb-0">Los ingredientes se listan en orden descendente por peso. Evita productos con ingredientes artificiales en los primeros lugares.</p>
+                    </div>
+                    
+                    <div class="alert alert-danger">
+                        <h6>% Valor Diario (%VD)</h6>
+                        <p class="mb-0">5% o menos es bajo, 20% o más es alto. Úsalo para comparar productos rápidamente.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                <h6>Consejos prácticos:</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Compara productos:</strong> Usa la misma porción para comparar opciones similares.
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Verifica azúcares:</strong> Busca "azúcares añadidos" en la etiqueta.
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Considera el paquete completo:</strong> Un paquete pequeño puede contener múltiples porciones.
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
     </div>
@@ -92,14 +182,23 @@
     <div class="col-12">
         <div class="card shadow-sm">
         <div class="card-header bg-light">
-            <h5 class="mb-0">Recomendaciones Basadas en tus Micronutrientes</h5>
+            <h5 class="mb-0">Recomendaciones Generales</h5>
         </div>
         <div class="card-body">
-            <div class="alert alert-warning">
-            <strong>Vitamina D baja:</strong> Considera aumentar el consumo de pescados grasos o exponerte al sol 15 minutos al día.
+            <div class="alert alert-success">
+                <strong>Hidratación:</strong> Recuerda consumir al menos {{ metas_diarias.agua }}L de agua al día para mantener una hidratación óptima.
             </div>
+            
             <div class="alert alert-info">
-            <strong>Excelente nivel de calcio:</strong> ¡Sigue consumiendo lácteos y vegetales verdes!
+                <strong>Variedad alimentaria:</strong> Incluye alimentos de todos los grupos para asegurar un consumo balanceado de nutrientes.
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>Distribución de comidas:</strong> Divide tus calorías en 3-5 comidas al día para mantener niveles de energía estables.
+            </div>
+            
+            <div class="alert alert-primary">
+                <strong>Planificación:</strong> Planifica tus comidas con anticipación para alcanzar tus metas nutricionales más fácilmente.
             </div>
         </div>
         </div>

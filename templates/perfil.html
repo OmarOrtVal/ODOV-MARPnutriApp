@@ -7,7 +7,7 @@
 
 <form class="row g-3" method="POST" action="{{ url_for('perfil') }}">
     <div class="col-md-6">
-        <label for="nombre" class="form-label">Nombre</label>
+        <label for="nombre" class="form-label">Nombre Completo</label>
         <input type="text" class="form-control" id="nombre" name="nombre" value="{{ datos.nombre if datos.nombre else '' }}">
     </div>
     <div class="col-md-3">
@@ -19,6 +19,7 @@
         <select class="form-select" id="sexo" name="sexo">
             <option value="Masculino" {% if datos.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
             <option value="Femenino" {% if datos.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
+            <option value="Personalizado" {% if datos.sexo == 'Personalizado' %}selected{% endif %}>Personalizado</option>
         </select>
     </div>
     <div class="col-md-3">
@@ -30,11 +31,13 @@
         <input type="number" class="form-control" id="altura" name="altura" value="{{ datos.altura if datos.altura else '' }}">
     </div>
     <div class="col-md-6">
-        <label for="objetivo" class="form-label">Objetivo</label>
+        <label for="objetivo" class="form-label">Objetivo Principal</label>
         <select class="form-select" id="objetivo" name="objetivo">
             <option value="Perder peso" {% if datos.objetivo == 'Perder peso' %}selected{% endif %}>Perder peso</option>
             <option value="Mantener peso" {% if datos.objetivo == 'Mantener peso' %}selected{% endif %}>Mantener peso</option>
             <option value="Ganar masa muscular" {% if datos.objetivo == 'Ganar masa muscular' %}selected{% endif %}>Ganar masa muscular</option>
+            <option value="Mejorar digestión" {% if datos.objetivo == 'Mejorar digestión' %}selected{% endif %}>Mejorar digestión</option>
+            <option value="Controlar condición" {% if datos.objetivo == 'Controlar condición' %}selected{% endif %}>Controlar condición</option>
         </select>
     </div>
     
@@ -43,11 +46,13 @@
         <div class="row">
             <div class="col-md-6">
                 <p><strong>Email:</strong> {{ datos.email if datos.email else 'No especificado' }}</p>
+                <p><strong>Fecha de Nacimiento:</strong> {{ datos.fecha_nacimiento if datos.fecha_nacimiento else 'No especificado' }}</p>
                 <p><strong>Actividad Física:</strong> {{ datos.actividad_fisica if datos.actividad_fisica else 'No especificado' }}</p>
                 <p><strong>Dieta Específica:</strong> {{ datos.dieta_especifica if datos.dieta_especifica else 'No especificado' }}</p>
             </div>
             <div class="col-md-6">
                 <p><strong>Experiencia en Cocina:</strong> {{ datos.experiencia_cocina if datos.experiencia_cocina else 'No especificado' }}</p>
+                <p><strong>Todos los Objetivos:</strong> {{ datos.objetivos|join(', ') if datos.objetivos else 'Ninguno' }}</p>
                 <p><strong>Alergias:</strong> {{ datos.alergias|join(', ') if datos.alergias else 'Ninguna' }}</p>
                 <p><strong>Intolerancias:</strong> {{ datos.intolerancias|join(', ') if datos.intolerancias else 'Ninguna' }}</p>
             </div>

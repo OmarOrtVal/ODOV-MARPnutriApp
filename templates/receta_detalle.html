@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('recetas') }}">Banco de Recetas</a></li>
+            <li class="breadcrumb-item active">{{ receta.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">{{ receta.nombre }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <span class="badge bg-primary">{{ receta.tiempo }} min</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-warning">{{ receta.dificultad }}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-info">{{ receta.categoria }}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-secondary">{{ receta.tipo_dieta }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row text-center mb-4">
+                        <div class="col-md-3">
+                            <h5 class="text-success">{{ receta.calorias }}</h5>
+                            <small>Calorías</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-warning">{{ receta.ingredientes_principales }}</h5>
+                            <small>Ingredientes</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-info">{{ receta.tiempo }}</h5>
+                            <small>Minutos</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-primary">{{ receta.dificultad }}</h5>
+                            <small>Dificultad</small>
+                        </div>
+                    </div>
+
+                    <h5 class="text-success">Ingredientes:</h5>
+                    <ul class="list-group mb-4">
+                        {% for ingrediente in receta.ingredientes %}
+                        <li class="list-group-item">{{ ingrediente }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h5 class="text-success">Instrucciones:</h5>
+                    <p>{{ receta.instrucciones }}</p>
+
+                    <div class="mt-4">
+                        <a href="{{ url_for('recetas') }}" class="btn btn-outline-success">
+                            ← Volver al Banco de Recetas
+                        </a>                      
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Información Nutricional</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Calorías:</strong> {{ receta.calorias }} kcal
+                    </div>
+                    <div class="mb-3">
+                        <strong>Categoría:</strong> {{ receta.categoria }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Tipo de dieta:</strong> {{ receta.tipo_dieta }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Tiempo de preparación:</strong> {{ receta.tiempo }} minutos
+                    </div>
+                    <div class="mb-3">
+                        <strong>Dificultad:</strong> {{ receta.dificultad }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Consejos</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="small">
+                        <li>Prepara todos los ingredientes antes de comenzar</li>
+                        <li>Usa utensilios de medición para porciones exactas</li>
+                        <li>Puedes ajustar especias según tu preferencia</li>
+                        <li>Conserva en refrigerador hasta por 3 días</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

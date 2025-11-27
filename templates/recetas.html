@@ -5,219 +5,152 @@
     <h3 class="text-success fw-bold mb-4 text-center">Banco de Recetas Saludables</h3>
 
     <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filtros de Búsqueda</h5>
+        </div>
         <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Tiempo de preparación</label>
-                    <select class="form-select">
-                        <option>Todos</option>
-                        <option>Rápido (&lt; 15 min)</option>
-                        <option>Medio (15-30 min)</option>
-                        <option>Largo (&gt; 30 min)</option>
-                    </select>
-                </div>
+            <form method="GET" action="{{ url_for('recetas') }}" id="filtrosForm">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Categoría</label>
+                        <select class="form-select" name="categoria" onchange="this.form.submit()">
+                            <option value="todas" {% if filtros_actuales.categoria == 'todas' %}selected{% endif %}>Todas</option>
+                            <option value="Desayuno" {% if filtros_actuales.categoria == 'Desayuno' %}selected{% endif %}>Desayuno</option>
+                            <option value="Almuerzo" {% if filtros_actuales.categoria == 'Almuerzo' %}selected{% endif %}>Almuerzo</option>
+                            <option value="Cena" {% if filtros_actuales.categoria == 'Cena' %}selected{% endif %}>Cena</option>
+                        </select>
+                    </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Dificultad</label>
-                    <select class="form-select">
-                        <option>Todas</option>
-                        <option>Principiante</option>
-                        <option>Intermedio</option>
-                        <option>Avanzado</option>
-                    </select>
-                </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tiempo</label>
+                        <select class="form-select" name="tiempo" onchange="this.form.submit()">
+                            <option value="todos" {% if filtros_actuales.tiempo == 'todos' %}selected{% endif %}>Todos</option>
+                            <option value="rapido" {% if filtros_actuales.tiempo == 'rapido' %}selected{% endif %}>Rápido (&lt;15 min)</option>
+                            <option value="medio" {% if filtros_actuales.tiempo == 'medio' %}selected{% endif %}>Medio (15-30 min)</option>
+                            <option value="largo" {% if filtros_actuales.tiempo == 'largo' %}selected{% endif %}>Largo (&gt;30 min)</option>
+                        </select>
+                    </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Tipo de dieta</label>
-                    <select class="form-select">
-                        <option>Todas</option>
-                        <option>Vegano</option>
-                        <option>Vegetariano</option>
-                        <option>Sin gluten</option>
-                        <option>Keto</option>
-                        <option>Mediterránea</option>
-                    </select>
-                </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Dificultad</label>
+                        <select class="form-select" name="dificultad" onchange="this.form.submit()">
+                            <option value="todas" {% if filtros_actuales.dificultad == 'todas' %}selected{% endif %}>Todas</option>
+                            <option value="Principiante" {% if filtros_actuales.dificultad == 'Principiante' %}selected{% endif %}>Principiante</option>
+                            <option value="Intermedio" {% if filtros_actuales.dificultad == 'Intermedio' %}selected{% endif %}>Intermedio</option>
+                            <option value="Avanzado" {% if filtros_actuales.dificultad == 'Avanzado' %}selected{% endif %}>Avanzado</option>
+                        </select>
+                    </div>
 
+                    <div class="col-md-2">
+                        <label class="form-label">Tipo de dieta</label>
+                        <select class="form-select" name="tipo_dieta" onchange="this.form.submit()">
+                            <option value="todas" {% if filtros_actuales.tipo_dieta == 'todas' %}selected{% endif %}>Todas</option>
+                            <option value="Standard" {% if filtros_actuales.tipo_dieta == 'Standard' %}selected{% endif %}>Standard</option>
+                            <option value="Vegetariano" {% if filtros_actuales.tipo_dieta == 'Vegetariano' %}selected{% endif %}>Vegetariano</option>
+                            <option value="Vegano" {% if filtros_actuales.tipo_dieta == 'Vegano' %}selected{% endif %}>Vegano</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Calorías</label>
+                        <select class="form-select" name="calorias" onchange="this.form.submit()">
+                            <option value="todas" {% if filtros_actuales.calorias == 'todas' %}selected{% endif %}>Todas</option>
+                            <option value="bajas" {% if filtros_actuales.calorias == 'bajas' %}selected{% endif %}>&lt; 200 kcal</option>
+                            <option value="medias" {% if filtros_actuales.calorias == 'medias' %}selected{% endif %}>200-400 kcal</option>
+                            <option value="altas" {% if filtros_actuales.calorias == 'altas' %}selected{% endif %}>&gt; 400 kcal</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <a href="{{ url_for('recetas') }}" class="btn btn-outline-secondary w-100">Limpiar Filtros</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-success mb-0">
+                {% if filtros_actuales.categoria != 'todas' %}
+                    {{ filtros_actuales.categoria }}s
+                {% else %}
+                    Todas las Recetas
+                {% endif %}
+            </h4>
+            <span class="badge bg-success fs-6">{{ recetas|length }} recetas encontradas</span>
+        </div>
+
+        {% if recetas %}
+            <div class="row g-4">
+                {% for receta in recetas %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="badge bg-success mb-1">{{ receta.tiempo }} min</span>
+                                <span class="badge bg-warning mb-1">{{ receta.dificultad }}</span>
+                                {% if receta.tipo_dieta == 'Vegano' %}
+                                <span class="badge bg-primary mb-1">{{ receta.tipo_dieta }}</span>
+                                {% elif receta.tipo_dieta == 'Vegetariano' %}
+                                <span class="badge bg-info mb-1">{{ receta.tipo_dieta }}</span>
+                                {% endif %}
+                            </div>
+
+                            <h5 class="card-title">{{ receta.nombre }}</h5>
+                            <p class="card-text text-muted small">{{ receta.instrucciones[:100] }}...</p>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">{{ receta.ingredientes_principales }} ingredientes principales</small>
+                                    <span class="badge bg-secondary">{{ receta.calorias }} kcal</span>
+                                </div>
+                                <a href="{{ url_for('receta_detalle', receta_id=receta.id) }}" class="btn btn-success btn-sm w-100">
+                                    Ver Receta Completa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="alert alert-info">
+                    <h5>No se encontraron recetas</h5>
+                    <p class="mb-0">Intenta con otros filtros de búsqueda.</p>
+                </div>
+                <a href="{{ url_for('recetas') }}" class="btn btn-success mt-3">Ver Todas las Recetas</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Resumen del Banco de Recetas</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
                 <div class="col-md-3">
-                    <label class="form-label">Calorías máx. por porción</label>
-                    <select class="form-select">
-                        <option>Todas</option>
-                        <option>&lt; 200 kcal</option>
-                        <option>&lt; 400 kcal</option>
-                        <option>&lt; 600 kcal</option>
-                    </select>
+                    <h4 class="text-success">30</h4>
+                    <small>Recetas Totales</small>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="text-warning">10</h4>
+                    <small>Desayunos</small>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="text-info">10</h4>
+                    <small>Almuerzos</small>
+                </div>
+                <div class="col-md-3">
+                    <h4 class="text-primary">10</h4>
+                    <small>Cenas</small>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="mb-5">
-        <h4 class="text-success mb-3">Recetas para Principiantes</h4>
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-success mb-2">15 min</span>
-                        <span class="badge bg-warning mb-2">Principiante</span>
-                        <h5 class="card-title">Omelette Proteico</h5>
-                        <p class="card-text">Alta en proteínas, baja en carbohidratos. Ideal para desayuno.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">2 ingredientes principales</small>
-                            <span class="badge bg-info">250 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-success mb-2">10 min</span>
-                        <span class="badge bg-warning mb-2">Principiante</span>
-                        <span class="badge bg-primary mb-2">Vegano</span>
-                        <h5 class="card-title">Smoothie Verde Energético</h5>
-                        <p class="card-text">Hecho con espinaca, plátano y leche de almendras.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">3 ingredientes principales</small>
-                            <span class="badge bg-info">180 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-success mb-2">20 min</span>
-                        <span class="badge bg-warning mb-2">Principiante</span>
-                        <h5 class="card-title">Ensalada Mediterránea Rápida</h5>
-                        <p class="card-text">Rica en fibra y grasas saludables. Perfecta para almuerzo ligero.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">4 ingredientes principales</small>
-                            <span class="badge bg-info">320 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="mb-5">
-        <h4 class="text-success mb-3">Preparación de Comidas (Meal Prep)</h4>
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-secondary mb-2">45 min</span>
-                        <span class="badge bg-success mb-2">Meal Prep</span>
-                        <h5 class="card-title">Pollo al Horno con Verduras</h5>
-                        <p class="card-text">Prepara 4 comidas en 45 minutos. Fuente de proteínas magras.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">5 ingredientes principales</small>
-                            <span class="badge bg-info">380 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-secondary mb-2">30 min</span>
-                        <span class="badge bg-success mb-2">Meal Prep</span>
-                        <span class="badge bg-primary mb-2">Vegetariano</span>
-                        <h5 class="card-title">Quinoa con Verduras Asadas</h5>
-                        <p class="card-text">Completa proteína vegetal. Dura 4 días en refrigerador.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">6 ingredientes principales</small>
-                            <span class="badge bg-info">290 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-secondary mb-2">60 min</span>
-                        <span class="badge bg-success mb-2">Meal Prep</span>
-                        <span class="badge bg-danger mb-2">Sin gluten</span>
-                        <h5 class="card-title">Lasaña de Calabacín</h5>
-                        <p class="card-text">Versión saludable sin pasta tradicional. Rica en vegetales.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">7 ingredientes principales</small>
-                            <span class="badge bg-info">420 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="mb-5">
-        <h4 class="text-success mb-3">Recetas por Objetivo</h4>
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-warning mb-2">Pérdida de peso</span>
-                        <h5 class="card-title">Wrap de Atún y Espinaca</h5>
-                        <p class="card-text">Rápido y nutritivo. Buena opción para una comida ligera.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">4 ingredientes principales</small>
-                            <span class="badge bg-info">280 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-info mb-2">Ganar masa muscular</span>
-                        <h5 class="card-title">Batido Hiperproteico</h5>
-                        <p class="card-text">35g de proteína por porción. Ideal post-entrenamiento.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">5 ingredientes principales</small>
-                            <span class="badge bg-info">450 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <span class="badge bg-success mb-2">Mantenimiento</span>
-                        <span class="badge bg-primary mb-2">Vegano</span>
-                        <h5 class="card-title">Buddha Bowl Mediterráneo</h5>
-                        <p class="card-text">Balance perfecto de macronutrientes. Lleno de sabor.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">8 ingredientes principales</small>
-                            <span class="badge bg-info">520 kcal</span>
-                        </div>
-                        <button class="btn btn-success btn-sm w-100 mt-2">Ver receta</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 </div>
 
 {% endblock %}
