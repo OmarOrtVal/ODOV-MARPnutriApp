@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import requests
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'nutri_track_secret_key'
@@ -10,7 +11,7 @@ app.secret_key = 'nutri_track_secret_key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'nutritrackop'
+app.config['MYSQL_DB'] = 'nutritrack'
 
 mysql = MySQL(app)
 
@@ -1364,6 +1365,121 @@ def eliminar_alimento(alimento_id):
         flash(f'Error al eliminar alimento: {str(e)}', 'danger')
     
     return redirect(url_for('alimentos'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email_login')
+        password = request.form.get('password_login')
+        
+        if not email or not password:
+            return render_template('login.html', error='Por favor completa todos los campos')
+        
+        usuario = verificar_usuario(email, password)
+        
+        if usuario:
+            session['user_id'] = usuario['id']
+            session['user_email'] = usuario['email']
+            session['user_nombre'] = usuario['nombre']
+            flash(f'¡Bienvenido/a de nuevo, {usuario["nombre"]}!', 'success')
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error='Credenciales incorrectas. Intenta nuevamente.')
+    
+    return render_template('login.html')
+
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        try:
+            nombre = request.form.get('nombre')
+            apellido = request.form.get('apellido')
+            email = request.form.get('contacto')
+            password = request.form.get('contrasena')
+            confirm_password = request.form.get('confirmaContraseña')
+            
+            if not all([nombre, apellido, email, password, confirm_password]):
+                return render_template('registro.html', error='Por favor completa todos los campos obligatorios')
+            
+            if password != confirm_password:
+                return render_template('registro.html', error='Las contraseñas no coinciden')
+            
+            if len(password) < 6:
+                return render_template('registro.html', error='La contraseña debe tener al menos 6 caracteres')
+            
+            if email_existe(email):
+                return render_template('registro.html', error='Este correo electrónico ya está registrado')
+            
+            dia = request.form.get('dia')
+            mes = request.form.get('mes')
+            anio = request.form.get('anio')
+            fecha_nacimiento = None
+            
+            if dia and mes and anio:
+                try:
+                    fecha_nacimiento = f"{anio}-{mes}-{dia}"
+                except ValueError:
+                    fecha_nacimiento = None
+            
+            genero = request.form.get('genero')
+            peso = request.form.get('peso')
+            altura = request.form.get('altura')
+            actividad_fisica = request.form.get('actividad_fisica')
+            dieta_especifica = request.form.get('dieta_especifica')
+            experiencia_cocina = request.form.get('experiencia_cocina')
+            
+            objetivos = request.form.getlist('objetivos')
+            alergias = request.form.getlist('alergias')
+            intolerancias = request.form.getlist('intolerancias')
+            
+            objetivos = [obj for obj in objetivos if obj]
+            alergias = [alg for alg in alergias if alg]
+            intolerancias = [intol for intol in intolerancias if intol]
+            
+            try:
+                peso = float(peso) if peso else None
+                altura = float(altura) if altura else None
+            except (ValueError, TypeError):
+                peso = None
+                altura = None
+            
+            exito, mensaje = registrar_usuario_db(
+                nombre=nombre,
+                apellido=apellido,
+                email=email,
+                password=password,
+                fecha_nacimiento=fecha_nacimiento,
+                genero=genero,
+                peso=peso,
+                altura=altura,
+                actividad_fisica=actividad_fisica,
+                dieta_especifica=dieta_especifica,
+                experiencia_cocina=experiencia_cocina,
+                objetivos=objetivos,
+                alergias=alergias,
+                intolerancias=intolerancias
+            )
+            
+            if exito:
+                usuario = verificar_usuario(email, password)
+                if usuario:
+                    session['user_id'] = usuario['id']
+                    session['user_email'] = usuario['email']
+                    session['user_nombre'] = usuario['nombre']
+                    flash(f'¡Cuenta creada exitosamente! Bienvenido/a, {usuario["nombre"]}', 'success')
+                    return redirect(url_for('index'))
+                else:
+                    flash('Cuenta creada exitosamente. Por favor inicia sesión.', 'success')
+                    return redirect(url_for('login'))
+            else:
+                return render_template('registro.html', error=mensaje)
+                
+        except Exception as e:
+            print(f"Error en registro: {e}")
+            return render_template('registro.html', error='Ocurrió un error durante el registro. Intenta nuevamente.')
+    
+    return render_template('registro.html')
 
 @app.route('/logout')
 def logout():
