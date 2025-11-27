@@ -705,11 +705,7 @@ def perfil():
     return render_template('perfil.html', datos=datos_usuario)
 
 @app.route('/seguimiento')
-def seguimiento():
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
+def seguimiento():    
     metas_diarias = {
         'calorias': 2200,
         'proteinas': 75,
