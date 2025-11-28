@@ -51,17 +51,11 @@
             </div>
 
                 {% if current_user %} 
-                    <li class="nav-item">
                         <span class="nav-link text-white fw-bold me-4">Hola, {{ user_nombre }}</span>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="btn btn-outline-danger btn-sm me-4 text-white" href="{{ url_for('logout') }}">Cerrar Sesión</a>
-                    </li>
+                        <a  class="btn btn-outline-danger text-white btn-sm me-4" href="{{ url_for('logout') }}">Cerrar Sesión</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn btn-outline-light">Iniciar Sesión</a>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light btn-sm me-4" href="{{ url_for('registro') }}">Registro</a>
-                    </li>
+                    <a  class="btn btn-outline-light btn-sm me-4" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                    <a class="btn btn-outline-light btn-sm me-4" href="{{ url_for('registro') }}">Registro</a>
                 {% endif %}
             </div>
         </div>
