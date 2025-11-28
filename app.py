@@ -457,6 +457,7 @@ RECETAS = [
 ]
 
 
+
 def crear_tablas():
     try:
         cursor = mysql.connection.cursor()
@@ -597,6 +598,369 @@ def verificar_usuario(email, password):
     except Exception as e:
         print(f"Error verificando usuario: {e}")
         return None
+
+def parsear_ingrediente(texto_ingrediente):
+    try:
+        texto = texto_ingrediente.lower().strip()
+        
+        import re
+        cantidad_match = re.match(r'^(\d+(\.\d+)?)\s*', texto)
+        cantidad = 1.0
+        
+        if cantidad_match:
+            cantidad = float(cantidad_match.group(1))
+            texto = texto[cantidad_match.end():].strip()
+        
+        unidades = ['taza', 'tazas', 'cucharada', 'cucharadas', 'cda', 'cdas', 
+                'cucharadita', 'cucharaditas', 'gramo', 'gramos', 'g', 'kg',
+                'libra', 'libras', 'lb', 'onza', 'onzas', 'oz', 'unidad', 'unidades',
+                'pizca', 'pizcas', 'diente', 'dientes', 'hoja', 'hojas']
+        
+        unidad = 'unidad'
+        nombre = texto
+        
+        for u in unidades:
+            if texto.startswith(u + ' ') or texto.startswith(u + 's '):
+                unidad = u
+                if unidad.endswith('s'):
+                    unidad = unidad[:-1] 
+                texto = texto[len(u):].strip()
+                if texto.startswith('de '):
+                    texto = texto[3:].strip()
+                nombre = texto
+                break
+        
+        return {
+            'cantidad': cantidad,
+            'unidad': unidad,
+            'nombre': nombre.title()
+        }
+    
+    except Exception as e:
+        print(f"Error parseando ingrediente: {e}")
+        return {
+            'cantidad': 1,
+            'unidad': 'unidad',
+            'nombre': texto_ingrediente.title()
+        }
+
+def analizar_receta_api(ingredientes):
+    try:
+        nutrientes_totales = {
+            'calorias': 0,
+            'proteinas': 0,
+            'grasas': 0,
+            'carbohidratos': 0
+        }
+        
+        ingredientes_analizados = []
+        
+        for ingrediente in ingredientes:
+            resultado = buscar_alimentos_usda(ingrediente['nombre'], page_size=1)
+            
+            if resultado and 'foods' in resultado and resultado['foods']:
+                food = resultado['foods'][0]
+                fdc_id = food.get('fdcId')
+                
+                detalle = obtener_detalle_alimento(fdc_id)
+                if detalle:
+                    nutrientes = extraer_nutrientes(detalle)
+                    
+                    factor = ingrediente['cantidad'] / 100  
+                    
+                    ingrediente_analizado = {
+                        'nombre': ingrediente['nombre'],
+                        'cantidad': ingrediente['cantidad'],
+                        'unidad': ingrediente['unidad'],
+                        'calorias': nutrientes['calorias'] * factor,
+                        'proteinas': nutrientes['proteinas'] * factor,
+                        'grasas': nutrientes['grasas'] * factor,
+                        'carbohidratos': nutrientes['carbohidratos'] * factor
+                    }
+                    
+                    nutrientes_totales['calorias'] += ingrediente_analizado['calorias']
+                    nutrientes_totales['proteinas'] += ingrediente_analizado['proteinas']
+                    nutrientes_totales['grasas'] += ingrediente_analizado['grasas']
+                    nutrientes_totales['carbohidratos'] += ingrediente_analizado['carbohidratos']
+                    
+                    ingredientes_analizados.append(ingrediente_analizado)
+                else:
+                    ingrediente_analizado = {
+                        'nombre': ingrediente['nombre'],
+                        'cantidad': ingrediente['cantidad'],
+                        'unidad': ingrediente['unidad'],
+                        'calorias': 0,
+                        'proteinas': 0,
+                        'grasas': 0,
+                        'carbohidratos': 0
+                    }
+                    ingredientes_analizados.append(ingrediente_analizado)
+            else:
+                ingrediente_analizado = {
+                    'nombre': ingrediente['nombre'],
+                    'cantidad': ingrediente['cantidad'],
+                    'unidad': ingrediente['unidad'],
+                    'calorias': 0,
+                    'proteinas': 0,
+                    'grasas': 0,
+                    'carbohidratos': 0
+                }
+                ingredientes_analizados.append(ingrediente_analizado)
+        
+        return {
+            'nutrientes_totales': nutrientes_totales,
+            'ingredientes_analizados': ingredientes_analizados
+        }
+    
+    except Exception as e:
+        print(f"Error analizando receta: {e}")
+        return None
+
+def analizar_linea_ingrediente(linea):
+    try:
+        partes = linea.split(' ')
+        if len(partes) < 2:
+            return None
+        
+        cantidad = 1
+        unidad = 'unidad'
+        nombre_ingrediente = linea
+        
+        import re
+        patron_cantidad = r'^(\d+\.?\d*)\s*(\w+)?'
+        match = re.match(patron_cantidad, linea)
+        
+        if match:
+            cantidad_str = match.group(1)
+            if '/' in cantidad_str:
+                partes_frac = cantidad_str.split('/')
+                if len(partes_frac) == 2:
+                    cantidad = float(partes_frac[0]) / float(partes_frac[1])
+                else:
+                    cantidad = 1
+            else:
+                cantidad = float(cantidad_str)
+            
+            if match.group(2):
+                unidad = match.group(2)
+            
+            nombre_ingrediente = linea[match.end():].strip()
+        
+        resultados = buscar_alimentos_usda(nombre_ingrediente, page_size=5)
+        
+        if not resultados or 'foods' not in resultados or not resultados['foods']:
+            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
+        
+        alimento = resultados['foods'][0]
+        fdc_id = alimento.get('fdcId')
+        
+        detalle_alimento = obtener_detalle_alimento(fdc_id)
+        if not detalle_alimento:
+            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
+        
+        nutrientes = extraer_nutrientes(detalle_alimento)
+        
+        factor_ajuste = cantidad / 100.0
+        
+        return {
+            'nombre': nombre_ingrediente,
+            'cantidad': cantidad,
+            'unidad': unidad,
+            'calorias': nutrientes['calorias'] * factor_ajuste,
+            'proteinas': nutrientes['proteinas'] * factor_ajuste,
+            'carbohidratos': nutrientes['carbohidratos'] * factor_ajuste,
+            'grasas': nutrientes['grasas'] * factor_ajuste,
+            'encontrado_en_api': True
+        }
+        
+    except Exception as e:
+        print(f"Error analizando ingrediente '{linea}': {e}")
+        return crear_ingrediente_estimado(linea, 1, 'unidad')
+
+def crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad):
+    categorias_estimadas = {
+        'pollo': {'calorias': 165, 'proteinas': 31, 'carbohidratos': 0, 'grasas': 3.6},
+        'carne': {'calorias': 250, 'proteinas': 26, 'carbohidratos': 0, 'grasas': 15},
+        'pescado': {'calorias': 206, 'proteinas': 22, 'carbohidratos': 0, 'grasas': 12},
+        'huevo': {'calorias': 155, 'proteinas': 13, 'carbohidratos': 1.1, 'grasas': 11},
+        'arroz': {'calorias': 130, 'proteinas': 2.7, 'carbohidratos': 28, 'grasas': 0.3},
+        'pasta': {'calorias': 131, 'proteinas': 5, 'carbohidratos': 25, 'grasas': 1},
+        'pan': {'calorias': 265, 'proteinas': 9, 'carbohidratos': 49, 'grasas': 3.2},
+        'queso': {'calorias': 404, 'proteinas': 25, 'carbohidratos': 2, 'grasas': 33},
+        'leche': {'calorias': 42, 'proteinas': 3.4, 'carbohidratos': 5, 'grasas': 1},
+        'yogurt': {'calorias': 59, 'proteinas': 3.5, 'carbohidratos': 4.7, 'grasas': 1.5},
+        'manzana': {'calorias': 52, 'proteinas': 0.3, 'carbohidratos': 14, 'grasas': 0.2},
+        'plátano': {'calorias': 89, 'proteinas': 1.1, 'carbohidratos': 23, 'grasas': 0.3},
+        'naranja': {'calorias': 47, 'proteinas': 0.9, 'carbohidratos': 12, 'grasas': 0.1},
+        'zanahoria': {'calorias': 41, 'proteinas': 0.9, 'carbohidratos': 10, 'grasas': 0.2},
+        'tomate': {'calorias': 18, 'proteinas': 0.9, 'carbohidratos': 3.9, 'grasas': 0.2},
+        'cebolla': {'calorias': 40, 'proteinas': 1.1, 'carbohidratos': 9, 'grasas': 0.1},
+        'lechuga': {'calorias': 15, 'proteinas': 1.4, 'carbohidratos': 2.9, 'grasas': 0.2},
+        'espinaca': {'calorias': 23, 'proteinas': 2.9, 'carbohidratos': 3.6, 'grasas': 0.4},
+        'aguacate': {'calorias': 160, 'proteinas': 2, 'carbohidratos': 9, 'grasas': 15},
+        'aceite': {'calorias': 884, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 100},
+        'mantequilla': {'calorias': 717, 'proteinas': 0.9, 'carbohidratos': 0.1, 'grasas': 81},
+        'azúcar': {'calorias': 387, 'proteinas': 0, 'carbohidratos': 100, 'grasas': 0},
+        'sal': {'calorias': 0, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 0},
+    }
+    
+    nombre_lower = nombre_ingrediente.lower()
+    valores = None
+    
+    for categoria, datos in categorias_estimadas.items():
+        if categoria in nombre_lower:
+            valores = datos
+            break
+    
+    if not valores:
+        valores = {'calorias': 100, 'proteinas': 5, 'carbohidratos': 10, 'grasas': 5}
+    
+    factor_ajuste = cantidad / 100.0
+    
+    return {
+        'nombre': nombre_ingrediente,
+        'cantidad': cantidad,
+        'unidad': unidad,
+        'calorias': valores['calorias'] * factor_ajuste,
+        'proteinas': valores['proteinas'] * factor_ajuste,
+        'carbohidratos': valores['carbohidratos'] * factor_ajuste,
+        'grasas': valores['grasas'] * factor_ajuste,
+        'encontrado_en_api': False
+    }
+
+def buscar_alimentos_usda(query, page_size=10):
+    try:
+        url = f"{USDA_API_URL}/foods/search"
+        params = {
+            'api_key': USDA_API_KEY,
+            'query': query,
+            'pageSize': page_size,
+            'dataType': ['Foundation', 'SR Legacy']
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error al buscar alimentos: {e}")
+        return None
+
+def obtener_detalle_alimento(fdc_id):
+    try:
+        url = f"{USDA_API_URL}/food/{fdc_id}"
+        params = {
+            'api_key': USDA_API_KEY,
+            'nutrients': [203, 204, 205, 208] 
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error al obtener detalle del alimento: {e}")
+        return None
+
+def extraer_nutrientes(alimento_data):
+    nutrientes = {
+        'calorias': 0,
+        'proteinas': 0,
+        'grasas': 0,
+        'carbohidratos': 0
+    }
+    
+    if 'foodNutrients' not in alimento_data:
+        return nutrientes
+    
+    for nutriente in alimento_data['foodNutrients']:
+        if 'nutrient' in nutriente:
+            nutrient_id = nutriente['nutrient'].get('id')
+            amount = nutriente.get('amount', 0)
+            
+            if nutrient_id == 208:  
+                nutrientes['calorias'] = amount
+            elif nutrient_id == 203:  
+                nutrientes['proteinas'] = amount
+            elif nutrient_id == 204:  
+                nutrientes['grasas'] = amount
+            elif nutrient_id == 205:  
+                nutrientes['carbohidratos'] = amount
+    
+    return nutrientes
+
+def buscar_alimentos_usda_simple(query):
+    try:
+        url = f"{USDA_API_URL}/foods/search"
+        params = {
+            'api_key': USDA_API_KEY,
+            'query': query,
+            'pageSize': 10,
+            'dataType': ['Foundation', 'SR Legacy']
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            alimentos = []
+            
+            for food in data.get('foods', [])[:10]:
+                alimento_info = {
+                    'fdc_id': food.get('fdcId'),
+                    'descripcion': food.get('description', 'Sin descripción'),
+                    'marca': food.get('brandOwner', ''),
+                    'categoria': food.get('foodCategory', 'General')
+                }
+                alimentos.append(alimento_info)
+            
+            return alimentos
+        else:
+            return []
+    
+    except Exception as e:
+        print(f"Error buscando alimentos USDA: {e}")
+        return []
+
+def obtener_nutrientes_usda_simple(fdc_id):
+    try:
+        url = f"{USDA_API_URL}/food/{fdc_id}"
+        params = {'api_key': USDA_API_KEY}
+        
+        response = requests.get(url, params=params, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            
+            nutrientes = {
+                'calorias': 0,
+                'proteinas': 0,
+                'carbohidratos': 0,
+                'grasas': 0
+            }
+            
+            for nutrient in data.get('foodNutrients', []):
+                nutrient_id = nutrient.get('nutrient', {}).get('id')
+                amount = nutrient.get('amount', 0)
+                
+                if nutrient_id == 208:  
+                    nutrientes['calorias'] = amount
+                elif nutrient_id == 203:  
+                    nutrientes['proteinas'] = amount
+                elif nutrient_id == 205:  
+                    nutrientes['carbohidratos'] = amount
+                elif nutrient_id == 204: 
+                    nutrientes['grasas'] = amount
+            
+            return {
+                'nombre': data.get('description', 'Alimento'),
+                'nutrientes': nutrientes,
+                'fdc_id': fdc_id
+            }
+    
+    except Exception as e:
+        print(f"Error obteniendo nutrientes: {e}")
+    
+    return None
+
 
 
 @app.context_processor
@@ -795,123 +1159,6 @@ def receta_detalle(receta_id):
     
     return render_template('receta_detalle.html', receta=receta)
 
-def analizar_receta_api(ingredientes):
-    try:
-        nutrientes_totales = {
-            'calorias': 0,
-            'proteinas': 0,
-            'grasas': 0,
-            'carbohidratos': 0
-        }
-        
-        ingredientes_analizados = []
-        
-        for ingrediente in ingredientes:
-            resultado = buscar_alimentos_usda(ingrediente['nombre'], page_size=1)
-            
-            if resultado and 'foods' in resultado and resultado['foods']:
-                food = resultado['foods'][0]
-                fdc_id = food.get('fdcId')
-                
-                detalle = obtener_detalle_alimento(fdc_id)
-                if detalle:
-                    nutrientes = extraer_nutrientes(detalle)
-                    
-                    factor = ingrediente['cantidad'] / 100  
-                    
-                    ingrediente_analizado = {
-                        'nombre': ingrediente['nombre'],
-                        'cantidad': ingrediente['cantidad'],
-                        'unidad': ingrediente['unidad'],
-                        'calorias': nutrientes['calorias'] * factor,
-                        'proteinas': nutrientes['proteinas'] * factor,
-                        'grasas': nutrientes['grasas'] * factor,
-                        'carbohidratos': nutrientes['carbohidratos'] * factor
-                    }
-                    
-                    nutrientes_totales['calorias'] += ingrediente_analizado['calorias']
-                    nutrientes_totales['proteinas'] += ingrediente_analizado['proteinas']
-                    nutrientes_totales['grasas'] += ingrediente_analizado['grasas']
-                    nutrientes_totales['carbohidratos'] += ingrediente_analizado['carbohidratos']
-                    
-                    ingredientes_analizados.append(ingrediente_analizado)
-                else:
-                    ingrediente_analizado = {
-                        'nombre': ingrediente['nombre'],
-                        'cantidad': ingrediente['cantidad'],
-                        'unidad': ingrediente['unidad'],
-                        'calorias': 0,
-                        'proteinas': 0,
-                        'grasas': 0,
-                        'carbohidratos': 0
-                    }
-                    ingredientes_analizados.append(ingrediente_analizado)
-            else:
-                ingrediente_analizado = {
-                    'nombre': ingrediente['nombre'],
-                    'cantidad': ingrediente['cantidad'],
-                    'unidad': ingrediente['unidad'],
-                    'calorias': 0,
-                    'proteinas': 0,
-                    'grasas': 0,
-                    'carbohidratos': 0
-                }
-                ingredientes_analizados.append(ingrediente_analizado)
-        
-        return {
-            'nutrientes_totales': nutrientes_totales,
-            'ingredientes_analizados': ingredientes_analizados
-        }
-    
-    except Exception as e:
-        print(f"Error analizando receta: {e}")
-        return None
-
-def parsear_ingrediente(texto_ingrediente):
-    try:
-        texto = texto_ingrediente.lower().strip()
-        
-        import re
-        cantidad_match = re.match(r'^(\d+(\.\d+)?)\s*', texto)
-        cantidad = 1.0
-        
-        if cantidad_match:
-            cantidad = float(cantidad_match.group(1))
-            texto = texto[cantidad_match.end():].strip()
-        
-        unidades = ['taza', 'tazas', 'cucharada', 'cucharadas', 'cda', 'cdas', 
-                'cucharadita', 'cucharaditas', 'gramo', 'gramos', 'g', 'kg',
-                'libra', 'libras', 'lb', 'onza', 'onzas', 'oz', 'unidad', 'unidades',
-                'pizca', 'pizcas', 'diente', 'dientes', 'hoja', 'hojas']
-        
-        unidad = 'unidad'
-        nombre = texto
-        
-        for u in unidades:
-            if texto.startswith(u + ' ') or texto.startswith(u + 's '):
-                unidad = u
-                if unidad.endswith('s'):
-                    unidad = unidad[:-1] 
-                texto = texto[len(u):].strip()
-                if texto.startswith('de '):
-                    texto = texto[3:].strip()
-                nombre = texto
-                break
-        
-        return {
-            'cantidad': cantidad,
-            'unidad': unidad,
-            'nombre': nombre.title()
-        }
-    
-    except Exception as e:
-        print(f"Error parseando ingrediente: {e}")
-        return {
-            'cantidad': 1,
-            'unidad': 'unidad',
-            'nombre': texto_ingrediente.title()
-        }
-
 @app.route('/analizador_de_recetas', methods=['GET', 'POST'])
 def analizador_de_recetas():
     if 'user_id' not in session:
@@ -974,183 +1221,9 @@ def analizador_de_recetas():
                         resultado_analisis=resultado_analisis,
                         ingredientes_analizados=ingredientes_analizados)
 
-def analizar_linea_ingrediente(linea):
-    try:
-        partes = linea.split(' ')
-        if len(partes) < 2:
-            return None
-        
-        cantidad = 1
-        unidad = 'unidad'
-        nombre_ingrediente = linea
-        
-        import re
-        patron_cantidad = r'^(\d+\.?\d*)\s*(\w+)?'
-        match = re.match(patron_cantidad, linea)
-        
-        if match:
-            cantidad_str = match.group(1)
-            if '/' in cantidad_str:
-                partes_frac = cantidad_str.split('/')
-                if len(partes_frac) == 2:
-                    cantidad = float(partes_frac[0]) / float(partes_frac[1])
-                else:
-                    cantidad = 1
-            else:
-                cantidad = float(cantidad_str)
-            
-            if match.group(2):
-                unidad = match.group(2)
-            
-            nombre_ingrediente = linea[match.end():].strip()
-        
-        resultados = buscar_alimentos_usda(nombre_ingrediente, page_size=5)
-        
-        if not resultados or 'foods' not in resultados or not resultados['foods']:
-            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
-        
-        alimento = resultados['foods'][0]
-        fdc_id = alimento.get('fdcId')
-        
-        detalle_alimento = obtener_detalle_alimento(fdc_id)
-        if not detalle_alimento:
-            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
-        
-        nutrientes = extraer_nutrientes(detalle_alimento)
-        
-        factor_ajuste = cantidad / 100.0
-        
-        return {
-            'nombre': nombre_ingrediente,
-            'cantidad': cantidad,
-            'unidad': unidad,
-            'calorias': nutrientes['calorias'] * factor_ajuste,
-            'proteinas': nutrientes['proteinas'] * factor_ajuste,
-            'carbohidratos': nutrientes['carbohidratos'] * factor_ajuste,
-            'grasas': nutrientes['grasas'] * factor_ajuste,
-            'encontrado_en_api': True
-        }
-        
-    except Exception as e:
-        print(f"Error analizando ingrediente '{linea}': {e}")
-        return crear_ingrediente_estimado(linea, 1, 'unidad')
-
-def crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad):
-    categorias_estimadas = {
-        'pollo': {'calorias': 165, 'proteinas': 31, 'carbohidratos': 0, 'grasas': 3.6},
-        'carne': {'calorias': 250, 'proteinas': 26, 'carbohidratos': 0, 'grasas': 15},
-        'pescado': {'calorias': 206, 'proteinas': 22, 'carbohidratos': 0, 'grasas': 12},
-        'huevo': {'calorias': 155, 'proteinas': 13, 'carbohidratos': 1.1, 'grasas': 11},
-        'arroz': {'calorias': 130, 'proteinas': 2.7, 'carbohidratos': 28, 'grasas': 0.3},
-        'pasta': {'calorias': 131, 'proteinas': 5, 'carbohidratos': 25, 'grasas': 1},
-        'pan': {'calorias': 265, 'proteinas': 9, 'carbohidratos': 49, 'grasas': 3.2},
-        'queso': {'calorias': 404, 'proteinas': 25, 'carbohidratos': 2, 'grasas': 33},
-        'leche': {'calorias': 42, 'proteinas': 3.4, 'carbohidratos': 5, 'grasas': 1},
-        'yogurt': {'calorias': 59, 'proteinas': 3.5, 'carbohidratos': 4.7, 'grasas': 1.5},
-        'manzana': {'calorias': 52, 'proteinas': 0.3, 'carbohidratos': 14, 'grasas': 0.2},
-        'plátano': {'calorias': 89, 'proteinas': 1.1, 'carbohidratos': 23, 'grasas': 0.3},
-        'naranja': {'calorias': 47, 'proteinas': 0.9, 'carbohidratos': 12, 'grasas': 0.1},
-        'zanahoria': {'calorias': 41, 'proteinas': 0.9, 'carbohidratos': 10, 'grasas': 0.2},
-        'tomate': {'calorias': 18, 'proteinas': 0.9, 'carbohidratos': 3.9, 'grasas': 0.2},
-        'cebolla': {'calorias': 40, 'proteinas': 1.1, 'carbohidratos': 9, 'grasas': 0.1},
-        'lechuga': {'calorias': 15, 'proteinas': 1.4, 'carbohidratos': 2.9, 'grasas': 0.2},
-        'espinaca': {'calorias': 23, 'proteinas': 2.9, 'carbohidratos': 3.6, 'grasas': 0.4},
-        'aguacate': {'calorias': 160, 'proteinas': 2, 'carbohidratos': 9, 'grasas': 15},
-        'aceite': {'calorias': 884, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 100},
-        'mantequilla': {'calorias': 717, 'proteinas': 0.9, 'carbohidratos': 0.1, 'grasas': 81},
-        'azúcar': {'calorias': 387, 'proteinas': 0, 'carbohidratos': 100, 'grasas': 0},
-        'sal': {'calorias': 0, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 0},
-    }
-    
-    nombre_lower = nombre_ingrediente.lower()
-    valores = None
-    
-    for categoria, datos in categorias_estimadas.items():
-        if categoria in nombre_lower:
-            valores = datos
-            break
-    
-    if not valores:
-        valores = {'calorias': 100, 'proteinas': 5, 'carbohidratos': 10, 'grasas': 5}
-    
-    factor_ajuste = cantidad / 100.0
-    
-    return {
-        'nombre': nombre_ingrediente,
-        'cantidad': cantidad,
-        'unidad': unidad,
-        'calorias': valores['calorias'] * factor_ajuste,
-        'proteinas': valores['proteinas'] * factor_ajuste,
-        'carbohidratos': valores['carbohidratos'] * factor_ajuste,
-        'grasas': valores['grasas'] * factor_ajuste,
-        'encontrado_en_api': False
-    }
-
 @app.route('/habitos')
 def habitos():
     return render_template('habitos.html')
-
-
-def buscar_alimentos_usda(query, page_size=10):
-    try:
-        url = f"{USDA_API_URL}/foods/search"
-        params = {
-            'api_key': USDA_API_KEY,
-            'query': query,
-            'pageSize': page_size,
-            'dataType': ['Foundation', 'SR Legacy']
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-        
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error al buscar alimentos: {e}")
-        return None
-
-def obtener_detalle_alimento(fdc_id):
-    try:
-        url = f"{USDA_API_URL}/food/{fdc_id}"
-        params = {
-            'api_key': USDA_API_KEY,
-            'nutrients': [203, 204, 205, 208] 
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-        
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error al obtener detalle del alimento: {e}")
-        return None
-
-def extraer_nutrientes(alimento_data):
-    nutrientes = {
-        'calorias': 0,
-        'proteinas': 0,
-        'grasas': 0,
-        'carbohidratos': 0
-    }
-    
-    if 'foodNutrients' not in alimento_data:
-        return nutrientes
-    
-    for nutriente in alimento_data['foodNutrients']:
-        if 'nutrient' in nutriente:
-            nutrient_id = nutriente['nutrient'].get('id')
-            amount = nutriente.get('amount', 0)
-            
-            if nutrient_id == 208:  
-                nutrientes['calorias'] = amount
-            elif nutrient_id == 203:  
-                nutrientes['proteinas'] = amount
-            elif nutrient_id == 204:  
-                nutrientes['grasas'] = amount
-            elif nutrient_id == 205:  
-                nutrientes['carbohidratos'] = amount
-    
-    return nutrientes
 
 @app.route('/buscar_alimentos', methods=['POST'])
 def buscar_alimentos():
@@ -1187,7 +1260,6 @@ def obtener_nutrientes(fdc_id):
     except Exception as e:
         print(f"Error al obtener nutrientes: {e}")
         return jsonify({'error': 'Error al obtener información nutricional'}), 500
-
 
 @app.route('/alimentos', methods=['GET', 'POST'])
 def alimentos():
@@ -1272,78 +1344,6 @@ def alimentos():
                         query_busqueda=query_busqueda,
                         alimento_seleccionado=alimento_seleccionado)
 
-def buscar_alimentos_usda_simple(query):
-    try:
-        url = f"{USDA_API_URL}/foods/search"
-        params = {
-            'api_key': USDA_API_KEY,
-            'query': query,
-            'pageSize': 10,
-            'dataType': ['Foundation', 'SR Legacy']
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            alimentos = []
-            
-            for food in data.get('foods', [])[:10]:
-                alimento_info = {
-                    'fdc_id': food.get('fdcId'),
-                    'descripcion': food.get('description', 'Sin descripción'),
-                    'marca': food.get('brandOwner', ''),
-                    'categoria': food.get('foodCategory', 'General')
-                }
-                alimentos.append(alimento_info)
-            
-            return alimentos
-        else:
-            return []
-    
-    except Exception as e:
-        print(f"Error buscando alimentos USDA: {e}")
-        return []
-
-def obtener_nutrientes_usda_simple(fdc_id):
-    try:
-        url = f"{USDA_API_URL}/food/{fdc_id}"
-        params = {'api_key': USDA_API_KEY}
-        
-        response = requests.get(url, params=params, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            
-            nutrientes = {
-                'calorias': 0,
-                'proteinas': 0,
-                'carbohidratos': 0,
-                'grasas': 0
-            }
-            
-            for nutrient in data.get('foodNutrients', []):
-                nutrient_id = nutrient.get('nutrient', {}).get('id')
-                amount = nutrient.get('amount', 0)
-                
-                if nutrient_id == 208:  
-                    nutrientes['calorias'] = amount
-                elif nutrient_id == 203:  
-                    nutrientes['proteinas'] = amount
-                elif nutrient_id == 205:  
-                    nutrientes['carbohidratos'] = amount
-                elif nutrient_id == 204: 
-                    nutrientes['grasas'] = amount
-            
-            return {
-                'nombre': data.get('description', 'Alimento'),
-                'nutrientes': nutrientes,
-                'fdc_id': fdc_id
-            }
-    
-    except Exception as e:
-        print(f"Error obteniendo nutrientes: {e}")
-    
-    return None
-
 @app.route('/eliminar_alimento/<int:alimento_id>', methods=['POST'])
 def eliminar_alimento(alimento_id):
     if 'user_id' not in session:
@@ -1361,7 +1361,6 @@ def eliminar_alimento(alimento_id):
         flash(f'Error al eliminar alimento: {str(e)}', 'danger')
     
     return redirect(url_for('alimentos'))
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
