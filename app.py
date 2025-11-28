@@ -828,40 +828,6 @@ def crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad):
         'encontrado_en_api': False
     }
 
-def buscar_alimentos_usda(query, page_size=10):
-    try:
-        url = f"{USDA_API_URL}/foods/search"
-        params = {
-            'api_key': USDA_API_KEY,
-            'query': query,
-            'pageSize': page_size,
-            'dataType': ['Foundation', 'SR Legacy']
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-        
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error al buscar alimentos: {e}")
-        return None
-
-def obtener_detalle_alimento(fdc_id):
-    try:
-        url = f"{USDA_API_URL}/food/{fdc_id}"
-        params = {
-            'api_key': USDA_API_KEY,
-            'nutrients': [203, 204, 205, 208] 
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-        
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error al obtener detalle del alimento: {e}")
-        return None
-
 def extraer_nutrientes(alimento_data):
     nutrientes = {
         'calorias': 0,
@@ -975,10 +941,6 @@ def index():
 
 @app.route('/perfil', methods=['GET', 'POST'])
 def perfil():
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
     user_id = session['user_id']
     cursor = mysql.connection.cursor()
     
@@ -1098,11 +1060,7 @@ def articulo(article_id):
         return redirect(url_for('educacion'))
 
 @app.route('/recetas', methods=['GET', 'POST'])
-def recetas():
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
+def recetas():    
     categoria = request.args.get('categoria', 'todas')
     tiempo = request.args.get('tiempo', 'todos')
     dificultad = request.args.get('dificultad', 'todas')
@@ -1147,11 +1105,7 @@ def recetas():
                         })
 
 @app.route('/receta/<int:receta_id>')
-def receta_detalle(receta_id):
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
+def receta_detalle(receta_id):    
     receta = next((r for r in RECETAS if r['id'] == receta_id), None)
     if not receta:
         flash('Receta no encontrada', 'danger')
@@ -1160,11 +1114,7 @@ def receta_detalle(receta_id):
     return render_template('receta_detalle.html', receta=receta)
 
 @app.route('/analizador_de_recetas', methods=['GET', 'POST'])
-def analizador_de_recetas():
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
+def analizador_de_recetas():    
     resultado_analisis = None
     ingredientes_analizados = []
     
