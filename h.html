@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tarjeta de Salud - Nutri-Track{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous"></head>
+
+<body class="bg-success-subtle d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='img/NutriTrack.png') }}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+        Nutri-Track
+        </a>  
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('perfil') }}">Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('recomendaciones') }}">Recomendaciones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('educacion') }}">Educacion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('habitos') }}">Hábitos Saludables</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('alimentos') }}">Registro de Alimentos</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Recetas y Herramientas
+                        </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('recetas') }}">Banco de Recetas</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('analizador_de_recetas') }}">Analizador de Recetas</a></li>
+                    </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Calculadoras
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('imc') }}">Índice de Masa Corporal (IMC)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('tmb') }}">Tasa Metabólica Basal (TMB)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('gct') }}">Gasto Calórico Total (GCT)</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('peso_ideal') }}">Peso Corporal Ideal</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('macronutrientes') }}">Macronutrientes</a></li>
+                        </ul>
+            </div>
+
+                {% if current_user %} 
+                        <span class="nav-link text-white fw-bold me-4">Hola, {{ user_nombre }}</span>
+                        <a  class="btn btn-outline-danger text-white btn-sm me-4" href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                {% else %}
+                    <a  class="btn btn-outline-light btn-sm me-4" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                    <a class="btn btn-outline-light btn-sm me-4" href="{{ url_for('registro') }}">Registrarse</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5 flex-fill">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-success text-white text-center py-3 mt-auto">
+        <div class="container">
+            © 2025 Nuestro primer proyecto de aplicación nutricional. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script></body>
+</html>
