@@ -603,7 +603,6 @@ def parsear_ingrediente(texto_ingrediente):
     try:
         texto = texto_ingrediente.lower().strip()
         
-        import re
         cantidad_match = re.match(r'^(\d+(\.\d+)?)\s*', texto)
         cantidad = 1.0
         
@@ -637,7 +636,6 @@ def parsear_ingrediente(texto_ingrediente):
         }
     
     except Exception as e:
-        print(f"Error parseando ingrediente: {e}")
         return {
             'cantidad': 1,
             'unidad': 'unidad',
@@ -653,207 +651,140 @@ def analizar_receta_api(ingredientes):
             'carbohidratos': 0
         }
         
-        ingredientes_analizados = []
+        ingredientes_encontrados = []
+        ingredientes_no_encontrados = []
         
         for ingrediente in ingredientes:
-            resultado = buscar_alimentos_usda(ingrediente['nombre'], page_size=1)
             
-            if resultado and 'foods' in resultado and resultado['foods']:
-                food = resultado['foods'][0]
-                fdc_id = food.get('fdcId')
+            resultados = buscar_alimentos_usda_simple(ingrediente['nombre'])
+            
+            ingrediente_encontrado = False
+            
+            if resultados and len(resultados) > 0:
+                alimento = resultados[0]
+                fdc_id = alimento.get('fdc_id')
                 
-                detalle = obtener_detalle_alimento(fdc_id)
-                if detalle:
-                    nutrientes = extraer_nutrientes(detalle)
+                if fdc_id:
+                    detalle_nutrientes = obtener_nutrientes_usda_simple(fdc_id)
                     
-                    factor = ingrediente['cantidad'] / 100  
-                    
-                    ingrediente_analizado = {
-                        'nombre': ingrediente['nombre'],
-                        'cantidad': ingrediente['cantidad'],
-                        'unidad': ingrediente['unidad'],
-                        'calorias': nutrientes['calorias'] * factor,
-                        'proteinas': nutrientes['proteinas'] * factor,
-                        'grasas': nutrientes['grasas'] * factor,
-                        'carbohidratos': nutrientes['carbohidratos'] * factor
-                    }
-                    
-                    nutrientes_totales['calorias'] += ingrediente_analizado['calorias']
-                    nutrientes_totales['proteinas'] += ingrediente_analizado['proteinas']
-                    nutrientes_totales['grasas'] += ingrediente_analizado['grasas']
-                    nutrientes_totales['carbohidratos'] += ingrediente_analizado['carbohidratos']
-                    
-                    ingredientes_analizados.append(ingrediente_analizado)
-                else:
-                    ingrediente_analizado = {
-                        'nombre': ingrediente['nombre'],
-                        'cantidad': ingrediente['cantidad'],
-                        'unidad': ingrediente['unidad'],
-                        'calorias': 0,
-                        'proteinas': 0,
-                        'grasas': 0,
-                        'carbohidratos': 0
-                    }
-                    ingredientes_analizados.append(ingrediente_analizado)
-            else:
-                ingrediente_analizado = {
+                    if detalle_nutrientes and detalle_nutrientes.get('nutrientes'):
+                        nutrientes = detalle_nutrientes['nutrientes']
+                        
+                        cantidad_gramos = convertir_a_gramos(ingrediente['cantidad'], ingrediente['unidad'])
+                        factor = cantidad_gramos / 100.0  
+                        
+                        ingrediente_analizado = {
+                            'nombre': ingrediente['nombre'],
+                            'cantidad': ingrediente['cantidad'],
+                            'unidad': ingrediente['unidad'],
+                            'cantidad_gramos': cantidad_gramos,
+                            'calorias': nutrientes.get('calorias', 0) * factor,
+                            'proteinas': nutrientes.get('proteinas', 0) * factor,
+                            'grasas': nutrientes.get('grasas', 0) * factor,
+                            'carbohidratos': nutrientes.get('carbohidratos', 0) * factor,
+                            'encontrado_en_api': True,
+                            'estado': 'encontrado',
+                            'fdc_id': fdc_id,
+                            'descripcion_usda': detalle_nutrientes.get('nombre', '')
+                        }
+                                                
+                        nutrientes_totales['calorias'] += ingrediente_analizado['calorias']
+                        nutrientes_totales['proteinas'] += ingrediente_analizado['proteinas']
+                        nutrientes_totales['grasas'] += ingrediente_analizado['grasas']
+                        nutrientes_totales['carbohidratos'] += ingrediente_analizado['carbohidratos']
+                        
+                        ingredientes_encontrados.append(ingrediente_analizado)
+                        ingrediente_encontrado = True
+
+            
+            if not ingrediente_encontrado:
+                ingrediente_no_encontrado = {
                     'nombre': ingrediente['nombre'],
                     'cantidad': ingrediente['cantidad'],
                     'unidad': ingrediente['unidad'],
+                    'cantidad_gramos': convertir_a_gramos(ingrediente['cantidad'], ingrediente['unidad']),
                     'calorias': 0,
                     'proteinas': 0,
                     'grasas': 0,
-                    'carbohidratos': 0
+                    'carbohidratos': 0,
+                    'encontrado_en_api': False,
+                    'estado': 'no_encontrado',
+                    'fdc_id': None,
+                    'descripcion_usda': None
                 }
-                ingredientes_analizados.append(ingrediente_analizado)
+                ingredientes_no_encontrados.append(ingrediente_no_encontrado)
         
+        todos_los_ingredientes = ingredientes_encontrados + ingredientes_no_encontrados
         return {
             'nutrientes_totales': nutrientes_totales,
-            'ingredientes_analizados': ingredientes_analizados
+            'ingredientes_analizados': todos_los_ingredientes,
+            'ingredientes_encontrados': ingredientes_encontrados,
+            'ingredientes_no_encontrados': ingredientes_no_encontrados,
+            'total_encontrados': len(ingredientes_encontrados),
+            'total_no_encontrados': len(ingredientes_no_encontrados),
+            'total_ingredientes': len(ingredientes)
         }
     
     except Exception as e:
-        print(f"Error analizando receta: {e}")
+        print(f"Error analizando receta: {e}") 
         return None
 
-def analizar_linea_ingrediente(linea):
+def convertir_a_gramos(cantidad, unidad):
     try:
-        partes = linea.split(' ')
-        if len(partes) < 2:
-            return None
-        
-        cantidad = 1
-        unidad = 'unidad'
-        nombre_ingrediente = linea
-        
-        import re
-        patron_cantidad = r'^(\d+\.?\d*)\s*(\w+)?'
-        match = re.match(patron_cantidad, linea)
-        
-        if match:
-            cantidad_str = match.group(1)
-            if '/' in cantidad_str:
-                partes_frac = cantidad_str.split('/')
-                if len(partes_frac) == 2:
-                    cantidad = float(partes_frac[0]) / float(partes_frac[1])
-                else:
-                    cantidad = 1
-            else:
-                cantidad = float(cantidad_str)
+        unidad = unidad.lower().strip()
+        conversiones = {
+            'taza': 240,           
+            'tazas': 240,
+            'cucharada': 15,       
+            'cucharadas': 15,
+            'cda': 15,
+            'cdas': 15,
+            'cucharadita': 5,     
+            'cucharaditas': 5,
+            'cucharita': 5,
+            'cucharitas': 5,
             
-            if match.group(2):
-                unidad = match.group(2)
+            'gramo': 1,
+            'gramos': 1,
+            'g': 1,
+            'kg': 1000,
+            'kilogramo': 1000,
+            'kilogramos': 1000,
+            'libra': 453.592,      
+            'libras': 453.592,
+            'lb': 453.592,
+            'onza': 28.3495,      
+            'onzas': 28.3495,
+            'oz': 28.3495,
             
-            nombre_ingrediente = linea[match.end():].strip()
-        
-        resultados = buscar_alimentos_usda(nombre_ingrediente, page_size=5)
-        
-        if not resultados or 'foods' not in resultados or not resultados['foods']:
-            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
-        
-        alimento = resultados['foods'][0]
-        fdc_id = alimento.get('fdcId')
-        
-        detalle_alimento = obtener_detalle_alimento(fdc_id)
-        if not detalle_alimento:
-            return crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad)
-        
-        nutrientes = extraer_nutrientes(detalle_alimento)
-        
-        factor_ajuste = cantidad / 100.0
-        
-        return {
-            'nombre': nombre_ingrediente,
-            'cantidad': cantidad,
-            'unidad': unidad,
-            'calorias': nutrientes['calorias'] * factor_ajuste,
-            'proteinas': nutrientes['proteinas'] * factor_ajuste,
-            'carbohidratos': nutrientes['carbohidratos'] * factor_ajuste,
-            'grasas': nutrientes['grasas'] * factor_ajuste,
-            'encontrado_en_api': True
+            'unidad': 100,         
+            'unidades': 100,
+            'pieza': 100,
+            'piezas': 100,
+            'pizca': 0.5,         
+            'pizcas': 0.5,
+            'diente': 5,           
+            'dientes': 5,
+            'hoja': 3,            
+            'hojas': 3,
+            'rebanada': 30,       
+            'rebanadas': 30,
+            'filete': 150,         
+            'filetes': 150,
+            'lata': 400,           
+            'latas': 400,
+            'rodaja': 20,          
+            'rodajas': 20
         }
         
+        if unidad in conversiones:
+            return cantidad * conversiones[unidad]
+        else:
+            return cantidad  
+    
     except Exception as e:
-        print(f"Error analizando ingrediente '{linea}': {e}")
-        return crear_ingrediente_estimado(linea, 1, 'unidad')
-
-def crear_ingrediente_estimado(nombre_ingrediente, cantidad, unidad):
-    categorias_estimadas = {
-        'pollo': {'calorias': 165, 'proteinas': 31, 'carbohidratos': 0, 'grasas': 3.6},
-        'carne': {'calorias': 250, 'proteinas': 26, 'carbohidratos': 0, 'grasas': 15},
-        'pescado': {'calorias': 206, 'proteinas': 22, 'carbohidratos': 0, 'grasas': 12},
-        'huevo': {'calorias': 155, 'proteinas': 13, 'carbohidratos': 1.1, 'grasas': 11},
-        'arroz': {'calorias': 130, 'proteinas': 2.7, 'carbohidratos': 28, 'grasas': 0.3},
-        'pasta': {'calorias': 131, 'proteinas': 5, 'carbohidratos': 25, 'grasas': 1},
-        'pan': {'calorias': 265, 'proteinas': 9, 'carbohidratos': 49, 'grasas': 3.2},
-        'queso': {'calorias': 404, 'proteinas': 25, 'carbohidratos': 2, 'grasas': 33},
-        'leche': {'calorias': 42, 'proteinas': 3.4, 'carbohidratos': 5, 'grasas': 1},
-        'yogurt': {'calorias': 59, 'proteinas': 3.5, 'carbohidratos': 4.7, 'grasas': 1.5},
-        'manzana': {'calorias': 52, 'proteinas': 0.3, 'carbohidratos': 14, 'grasas': 0.2},
-        'plátano': {'calorias': 89, 'proteinas': 1.1, 'carbohidratos': 23, 'grasas': 0.3},
-        'naranja': {'calorias': 47, 'proteinas': 0.9, 'carbohidratos': 12, 'grasas': 0.1},
-        'zanahoria': {'calorias': 41, 'proteinas': 0.9, 'carbohidratos': 10, 'grasas': 0.2},
-        'tomate': {'calorias': 18, 'proteinas': 0.9, 'carbohidratos': 3.9, 'grasas': 0.2},
-        'cebolla': {'calorias': 40, 'proteinas': 1.1, 'carbohidratos': 9, 'grasas': 0.1},
-        'lechuga': {'calorias': 15, 'proteinas': 1.4, 'carbohidratos': 2.9, 'grasas': 0.2},
-        'espinaca': {'calorias': 23, 'proteinas': 2.9, 'carbohidratos': 3.6, 'grasas': 0.4},
-        'aguacate': {'calorias': 160, 'proteinas': 2, 'carbohidratos': 9, 'grasas': 15},
-        'aceite': {'calorias': 884, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 100},
-        'mantequilla': {'calorias': 717, 'proteinas': 0.9, 'carbohidratos': 0.1, 'grasas': 81},
-        'azúcar': {'calorias': 387, 'proteinas': 0, 'carbohidratos': 100, 'grasas': 0},
-        'sal': {'calorias': 0, 'proteinas': 0, 'carbohidratos': 0, 'grasas': 0},
-    }
-    
-    nombre_lower = nombre_ingrediente.lower()
-    valores = None
-    
-    for categoria, datos in categorias_estimadas.items():
-        if categoria in nombre_lower:
-            valores = datos
-            break
-    
-    if not valores:
-        valores = {'calorias': 100, 'proteinas': 5, 'carbohidratos': 10, 'grasas': 5}
-    
-    factor_ajuste = cantidad / 100.0
-    
-    return {
-        'nombre': nombre_ingrediente,
-        'cantidad': cantidad,
-        'unidad': unidad,
-        'calorias': valores['calorias'] * factor_ajuste,
-        'proteinas': valores['proteinas'] * factor_ajuste,
-        'carbohidratos': valores['carbohidratos'] * factor_ajuste,
-        'grasas': valores['grasas'] * factor_ajuste,
-        'encontrado_en_api': False
-    }
-
-def extraer_nutrientes(alimento_data):
-    nutrientes = {
-        'calorias': 0,
-        'proteinas': 0,
-        'grasas': 0,
-        'carbohidratos': 0
-    }
-    
-    if 'foodNutrients' not in alimento_data:
-        return nutrientes
-    
-    for nutriente in alimento_data['foodNutrients']:
-        if 'nutrient' in nutriente:
-            nutrient_id = nutriente['nutrient'].get('id')
-            amount = nutriente.get('amount', 0)
-            
-            if nutrient_id == 208:  
-                nutrientes['calorias'] = amount
-            elif nutrient_id == 203:  
-                nutrientes['proteinas'] = amount
-            elif nutrient_id == 204:  
-                nutrientes['grasas'] = amount
-            elif nutrient_id == 205:  
-                nutrientes['carbohidratos'] = amount
-    
-    return nutrientes
+        print(f"Error en convertir_a_gramos: {e}")
+        return cantidad
 
 def buscar_alimentos_usda_simple(query):
     try:
@@ -865,17 +796,34 @@ def buscar_alimentos_usda_simple(query):
             'dataType': ['Foundation', 'SR Legacy']
         }
         
+        
         response = requests.get(url, params=params, timeout=10)
         if response.status_code == 200:
             data = response.json()
             alimentos = []
             
-            for food in data.get('foods', [])[:10]:
+            for food in data.get('foods', []):
+                nutrientes_basicos = {}
+                if 'foodNutrients' in food:
+                    for nutrient in food['foodNutrients']:
+                        nutrient_name = nutrient.get('nutrientName', '').lower()
+                        amount = nutrient.get('value', 0)
+                        
+                        if 'energy' in nutrient_name or 'calories' in nutrient_name:
+                            nutrientes_basicos['calorias'] = amount
+                        elif 'protein' in nutrient_name:
+                            nutrientes_basicos['proteinas'] = amount
+                        elif 'fat' in nutrient_name or 'lipid' in nutrient_name:
+                            nutrientes_basicos['grasas'] = amount
+                        elif 'carbohydrate' in nutrient_name:
+                            nutrientes_basicos['carbohidratos'] = amount
+                
                 alimento_info = {
                     'fdc_id': food.get('fdcId'),
                     'descripcion': food.get('description', 'Sin descripción'),
                     'marca': food.get('brandOwner', ''),
-                    'categoria': food.get('foodCategory', 'General')
+                    'categoria': food.get('foodCategory', 'General'),
+                    'nutrientes_basicos': nutrientes_basicos
                 }
                 alimentos.append(alimento_info)
             
@@ -884,14 +832,14 @@ def buscar_alimentos_usda_simple(query):
             return []
     
     except Exception as e:
-        print(f"Error buscando alimentos USDA: {e}")
+        print(f"Error buscando alimentos USDA: {e}")  
         return []
 
 def obtener_nutrientes_usda_simple(fdc_id):
     try:
         url = f"{USDA_API_URL}/food/{fdc_id}"
         params = {'api_key': USDA_API_KEY}
-        
+                
         response = requests.get(url, params=params, timeout=10)
         if response.status_code == 200:
             data = response.json()
@@ -903,29 +851,31 @@ def obtener_nutrientes_usda_simple(fdc_id):
                 'grasas': 0
             }
             
+            nutrient_map = {
+                1008: 'calorias', 
+                1003: 'proteinas',  
+                1005: 'carbohidratos',  
+                1004: 'grasas'  
+            }
+            
             for nutrient in data.get('foodNutrients', []):
                 nutrient_id = nutrient.get('nutrient', {}).get('id')
                 amount = nutrient.get('amount', 0)
                 
-                if nutrient_id == 208:  
-                    nutrientes['calorias'] = amount
-                elif nutrient_id == 203:  
-                    nutrientes['proteinas'] = amount
-                elif nutrient_id == 205:  
-                    nutrientes['carbohidratos'] = amount
-                elif nutrient_id == 204: 
-                    nutrientes['grasas'] = amount
-            
+                if nutrient_id in nutrient_map:
+                    nutrientes[nutrient_map[nutrient_id]] = amount
+                        
             return {
                 'nombre': data.get('description', 'Alimento'),
                 'nutrientes': nutrientes,
                 'fdc_id': fdc_id
             }
+        else:
+            return None
     
     except Exception as e:
-        print(f"Error obteniendo nutrientes: {e}")
-    
-    return None
+        print(f"Error en obtener_nutrientes_usda_simple: {e}")  
+        return None
 
 
 
@@ -1116,7 +1066,6 @@ def receta_detalle(receta_id):
 @app.route('/analizador_de_recetas', methods=['GET', 'POST'])
 def analizador_de_recetas():    
     resultado_analisis = None
-    ingredientes_analizados = []
     
     if request.method == 'POST':
         try:
@@ -1129,7 +1078,8 @@ def analizador_de_recetas():
             
             for linea in lineas_ingredientes:
                 ingrediente_parseado = parsear_ingrediente(linea)
-                ingredientes.append(ingrediente_parseado)
+                if ingrediente_parseado:
+                    ingredientes.append(ingrediente_parseado)
             
             if ingredientes:
                 analisis = analizar_receta_api(ingredientes)
@@ -1137,40 +1087,35 @@ def analizador_de_recetas():
                 if analisis:
                     factor_porcion = 1 / porciones
                     
-                    nutrientes_totales = analisis['nutrientes_totales']
-                    ingredientes_analizados = analisis['ingredientes_analizados']
-                    
                     resultado_analisis = {
                         'nombre_receta': nombre_receta,
                         'porciones': porciones,
                         'nutrientes_totales': {
-                            'calorias': nutrientes_totales['calorias'],
-                            'proteinas': nutrientes_totales['proteinas'],
-                            'grasas': nutrientes_totales['grasas'],
-                            'carbohidratos': nutrientes_totales['carbohidratos']
+                            'calorias': analisis['nutrientes_totales']['calorias'],
+                            'proteinas': analisis['nutrientes_totales']['proteinas'],
+                            'grasas': analisis['nutrientes_totales']['grasas'],
+                            'carbohidratos': analisis['nutrientes_totales']['carbohidratos']
                         },
                         'nutrientes_porcion': {
-                            'calorias': nutrientes_totales['calorias'] * factor_porcion,
-                            'proteinas': nutrientes_totales['proteinas'] * factor_porcion,
-                            'grasas': nutrientes_totales['grasas'] * factor_porcion,
-                            'carbohidratos': nutrientes_totales['carbohidratos'] * factor_porcion
+                            'calorias': analisis['nutrientes_totales']['calorias'] / factor_porcion,
+                            'proteinas': analisis['nutrientes_totales']['proteinas'] / factor_porcion,
+                            'grasas': analisis['nutrientes_totales']['grasas'] / factor_porcion,
+                            'carbohidratos': analisis['nutrientes_totales']['carbohidratos'] / factor_porcion
                         },
-                        'ingredientes_analizados': ingredientes_analizados
+                        'ingredientes_analizados': analisis['ingredientes_analizados'],
+                        'estadisticas': {
+                            'total_ingredientes': analisis['total_ingredientes'],
+                            'encontrados': analisis['total_encontrados'],
+                            'no_encontrados': analisis['total_no_encontrados']
+                        }
                     }
-                    
-                    flash('Receta analizada exitosamente', 'success')
-                else:
-                    flash('Error al analizar la receta con la API', 'danger')
-            else:
-                flash('Por favor ingresa al menos un ingrediente', 'warning')
-                
+                    flash('Receta analizada exitosamente', 'success')                 
         except Exception as e:
             flash(f'Error al procesar la receta: {str(e)}', 'danger')
     
     return render_template('analizador_de_recetas.html', 
-                        resultado_analisis=resultado_analisis,
-                        ingredientes_analizados=ingredientes_analizados)
-
+                        resultado_analisis=resultado_analisis)
+    
 @app.route('/habitos')
 def habitos():
     return render_template('habitos.html')
@@ -1572,11 +1517,11 @@ def peso_ideal():
             peso_medio_imc = (peso_minimo_imc + peso_maximo_imc) / 2
             
             if peso_ideal_formula < peso_minimo_imc:
-                recomendacion = f"Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está por debajo del rango saludable mínimo ({peso_minimo_imc:.1f} kg). Considera consultar con un nutricionista."
+                recomendacion = f"Tu peso ideal  ({peso_ideal_formula:.1f} kg) está por debajo del rango saludable mínimo ({peso_minimo_imc:.1f} kg). Considera consultar con un nutricionista."
             elif peso_ideal_formula > peso_maximo_imc:
-                recomendacion = f"Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está por encima del rango saludable máximo ({peso_maximo_imc:.1f} kg). Un profesional puede ayudarte a establecer metas realistas."
+                recomendacion = f"Tu peso ideal  ({peso_ideal_formula:.1f} kg) está por encima del rango saludable máximo ({peso_maximo_imc:.1f} kg). Un profesional puede ayudarte a establecer metas realistas."
             else:
-                recomendacion = f"¡Excelente! Tu peso ideal según Lorentz ({peso_ideal_formula:.1f} kg) está dentro del rango saludable recomendado ({peso_minimo_imc:.1f} - {peso_maximo_imc:.1f} kg)."
+                recomendacion = f"¡Excelente! Tu peso ideal  ({peso_ideal_formula:.1f} kg) está dentro del rango saludable recomendado ({peso_minimo_imc:.1f} - {peso_maximo_imc:.1f} kg)."
             
             return render_template('peso_ideal.html', 
                                 peso_ideal_formula=f"{peso_ideal_formula:.2f}",
@@ -1599,9 +1544,6 @@ def peso_ideal():
 
 @app.route('/macronutrientes', methods=['GET', 'POST'])
 def macronutrientes():
-    if 'user_email' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
     if request.method == 'POST':
         try:
             objetivo = request.form.get('objetivo')

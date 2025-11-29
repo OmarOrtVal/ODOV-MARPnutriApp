@@ -63,7 +63,7 @@
 
                     <div class="col-md-2">
                         <label class="form-label">&nbsp;</label>
-                        <a href="{{ url_for('recetas') }}" class="btn btn-outline-secondary w-100">Limpiar Filtros</a>
+                        <a href="{{ url_for('recetas') }}" class="btn btn-outline-danger w-100">Limpiar Filtros</a>
                     </div>
                 </div>
             </form>
@@ -79,7 +79,6 @@
                     Todas las Recetas
                 {% endif %}
             </h4>
-            <span class="badge bg-success fs-6">{{ recetas|length }} recetas encontradas</span>
         </div>
 
         {% if recetas %}
@@ -124,32 +123,6 @@
                 <a href="{{ url_for('recetas') }}" class="btn btn-success mt-3">Ver Todas las Recetas</a>
             </div>
         {% endif %}
-    </div>
-
-    <div class="card shadow-sm mt-5">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">Resumen del Banco de Recetas</h5>
-        </div>
-        <div class="card-body">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <h4 class="text-success">30</h4>
-                    <small>Recetas Totales</small>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-warning">10</h4>
-                    <small>Desayunos</small>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-info">10</h4>
-                    <small>Almuerzos</small>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="text-primary">10</h4>
-                    <small>Cenas</small>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
