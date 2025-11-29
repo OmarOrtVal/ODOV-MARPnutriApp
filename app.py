@@ -1177,9 +1177,6 @@ def habitos():
 
 @app.route('/buscar_alimentos', methods=['POST'])
 def buscar_alimentos():
-    if 'user_id' not in session:
-        return jsonify({'error': 'Debes iniciar sesión'}), 401
-    
     query = request.json.get('query', '')
     if not query or len(query) < 2:
         return jsonify({'error': 'La búsqueda debe tener al menos 2 caracteres'}), 400
@@ -1194,9 +1191,6 @@ def buscar_alimentos():
 
 @app.route('/obtener_nutrientes/<int:fdc_id>', methods=['GET'])
 def obtener_nutrientes(fdc_id):
-    if 'user_id' not in session:
-        return jsonify({'error': 'Debes iniciar sesión'}), 401
-    
     try:
         alimento_data = obtener_nutrientes_usda_simple(fdc_id)
         if not alimento_data:
@@ -1213,10 +1207,6 @@ def obtener_nutrientes(fdc_id):
 
 @app.route('/alimentos', methods=['GET', 'POST'])
 def alimentos():
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
     cursor = mysql.connection.cursor()
     cursor.execute('''
         SELECT id, alimento, cantidad, unidad, calorias, proteinas, carbohidratos, grasas, fecha_registro
@@ -1296,10 +1286,6 @@ def alimentos():
 
 @app.route('/eliminar_alimento/<int:alimento_id>', methods=['POST'])
 def eliminar_alimento(alimento_id):
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para acceder a esta función.', 'warning')
-        return redirect(url_for('login'))
-    
     try:
         cursor = mysql.connection.cursor()
         cursor.execute('DELETE FROM alimentos_registrados WHERE id = %s AND usuario_id = %s', 
@@ -1433,14 +1419,6 @@ def logout():
     session.pop('user_nombre', None)
     flash('Has cerrado sesión exitosamente.', 'info')
     return redirect(url_for('index'))
-
-@app.route('/calculadoras')
-def calculadoras():
-    return render_template('calculadoras.html')
-
-@app.route('/herramientas_de_recetas')
-def herramientas_de_recetas():
-    return render_template('herramientas_de_recetas.html')
 
 @app.route('/imc', methods=['GET', 'POST'])
 def imc():
